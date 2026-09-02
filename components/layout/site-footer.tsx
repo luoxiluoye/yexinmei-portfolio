@@ -9,7 +9,7 @@ export function SiteFooter() {
             assetId="world.grassLong"
             decorative
             width={236}
-            height={60}
+            height={118}
             className="absolute bottom-0 left-0 z-0 w-[236px]"
           />
           <PixelIcon
@@ -23,14 +23,14 @@ export function SiteFooter() {
             assetId="world.pineTree"
             decorative
             width={42}
-            height={62}
+            height={56}
             className="absolute bottom-[16px] left-[100px] z-10"
           />
           <PixelIcon
             assetId="world.tree"
             decorative
             width={52}
-            height={62}
+            height={69}
             className="absolute bottom-[16px] left-[160px] z-10"
           />
         </div>
