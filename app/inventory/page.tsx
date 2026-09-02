@@ -36,7 +36,7 @@ const specialAssetIds: AssetId[] = [
 export default function InventoryPage() {
   return (
     <main className="site-container py-4 lg:py-8">
-      <header className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-end">
+      <header className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-center">
         <div>
           <p className="font-pixel text-[12px] text-muted">05. INVENTORY</p>
           <h1 className="rpg-page-title mt-2">INVENTORY & SKILLS</h1>
@@ -45,7 +45,7 @@ export default function InventoryPage() {
           </p>
         </div>
 
-        <CharacterScene variant="inventory" className="min-h-[210px] lg:min-h-[240px]" />
+        <CharacterScene variant="inventory" />
       </header>
 
       <section className="mt-4 grid gap-4 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5">
