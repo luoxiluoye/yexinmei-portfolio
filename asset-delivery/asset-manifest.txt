@@ -1,0 +1,335 @@
+WEB ASSET PACK MANIFEST
+=======================
+
+Total assets: 42
+Package folders: character/, cat/, world/, ui/, items/
+
+[CHARACTER]
+---------
+File name: player-full-body.png
+Category: character
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 96–128 px wide
+Suggested use: 主页 Hero 人物主立绘、关于页角色展示
+
+File name: player-idle.png
+Category: character
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 96–128 px wide
+Suggested use: 角色静止状态、资料卡、页面角落装饰
+
+File name: player-wave.png
+Category: character
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 96–128 px wide
+Suggested use: 欢迎区、Contact/404 友好引导
+
+File name: player-avatar.png
+Category: character
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 56–88 px wide
+Suggested use: 头像、Player Card、导航头像位
+
+[CAT]
+---
+File name: cat-sit.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 导航角标、地面陪伴宠物、页脚装饰
+
+File name: cat-stand.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 页面陪伴 mascot、卡片点缀
+
+File name: cat-wave.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 欢迎提示、交互动效帧替代
+
+File name: cat-sleep.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 空状态、夜间/休息提示、footer 装饰
+
+File name: cat-peek.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 56–88 px wide
+Suggested use: 面板边缘探头、Tooltip 附近装饰
+
+File name: cat-love.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 点赞/喜欢反馈、成就提示
+
+File name: cat-happy.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 48–72 px wide
+Suggested use: 完成任务、成功提示、节日氛围
+
+File name: cat-head.png
+Category: cat
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 28–40 px wide
+Suggested use: favicon 替代、导航小头像、角标
+
+[WORLD]
+-----
+File name: cloud-large.png
+Category: world
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 180–280 px wide
+Suggested use: Hero 背景云朵、大面积留白装饰
+
+File name: cloud-medium.png
+Category: world
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 120–180 px wide
+Suggested use: 卡片背景、分区过渡装饰
+
+File name: cloud-small.png
+Category: world
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 72–120 px wide
+Suggested use: 小型背景点缀、角落装饰
+
+File name: grass-platform-long.png
+Category: world
+PNG actual size: 1774 x 887 px
+Transparent background: Yes
+Suggested web display size: 240–420 px wide
+Suggested use: 角色站立底座、横向分隔装饰
+
+File name: grass-platform-short.png
+Category: world
+PNG actual size: 2172 x 724 px
+Transparent background: Yes
+Suggested web display size: 140–240 px wide
+Suggested use: 短底座、小模块托底、列表分隔
+
+File name: tree.png
+Category: world
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 80–140 px wide
+Suggested use: 场景边角、大型自然元素
+
+File name: pine-tree.png
+Category: world
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 80–140 px wide
+Suggested use: RPG 场景、冬季/探索感氛围
+
+File name: bush.png
+Category: world
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 100–160 px wide
+Suggested use: 场景底部填充、过渡装饰
+
+File name: flower.png
+Category: world
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: 细节点缀、面板边缘小装饰
+
+File name: fence.png
+Category: world
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 60–120 px wide
+Suggested use: 地图感分隔、小型世界道具
+
+File name: castle.png
+Category: world
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 120–200 px wide
+Suggested use: 页脚世界观装饰、404/首页角标
+
+File name: wooden-sign.png
+Category: world
+PNG actual size: 1086 x 1448 px
+Transparent background: Yes
+Suggested web display size: 100–180 px wide
+Suggested use: CTA 附近装饰、空白区导视
+
+[UI]
+--
+File name: heart.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 16–28 px wide
+Suggested use: HP、喜欢、收藏、计数图标
+
+File name: empty-heart.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 16–28 px wide
+Suggested use: 未激活心形状态、评分占位
+
+File name: star.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 16–28 px wide
+Suggested use: 成就、收藏、评分、亮点提示
+
+File name: empty-star.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 16–28 px wide
+Suggested use: 未激活星级状态、占位评分
+
+File name: sparkle.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 12–24 px wide
+Suggested use: 标题旁点缀、hover 装饰
+
+File name: arrow.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 16–24 px wide
+Suggested use: 按钮方向箭头、列表前缀
+
+File name: cursor.png
+Category: ui
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 16–24 px wide
+Suggested use: 模拟鼠标指针、交互演示装饰
+
+File name: exclamation.png
+Category: ui
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 18–28 px wide
+Suggested use: 提醒、任务提示、notice 图标
+
+File name: speech-bubble.png
+Category: ui
+PNG actual size: 1448 x 1086 px
+Transparent background: Yes
+Suggested web display size: 180–320 px wide
+Suggested use: 对话气泡、短文案容器
+
+[ITEMS]
+-----
+File name: camera.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: 摄影技能、项目标签、工具图标
+
+File name: notebook.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: Journal、记录、笔记相关模块
+
+File name: laptop.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 28–44 px wide
+Suggested use: 数字工作、项目、技能标签
+
+File name: mail.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: 联系方式、消息、联系入口
+
+File name: sword.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: Quest、挑战、行动力象征
+
+File name: shield.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 24–40 px wide
+Suggested use: 能力值、防护、徽章类 UI
+
+File name: potion.png
+Category: items
+PNG actual size: 1254 x 1254 px
+Transparent background: Yes
+Suggested web display size: 20–36 px wide
+Suggested use: 状态恢复、提示、趣味 UI 元素
+
+File name: chest.png
+Category: items
+PNG actual size: 153 x 130 px
+Transparent background: Yes
+Suggested web display size: 28–44 px wide
+Suggested use: 奖励、资源库、收藏入口
+
+File name: key.png
+Category: items
+PNG actual size: 87 x 139 px
+Transparent background: Yes
+Suggested web display size: 20–32 px wide
+Suggested use: 解锁、权限、隐藏入口提示
+
+SELF-CHECK REPORT
+=================
+1. Are all PNGs true transparent background? Yes.
+   Note: All files contain alpha transparency. No file was detected as a fully opaque rectangular background image.
+
+2. Any residual white edge / black background? No obvious opaque background residue detected.
+   Result: No opaque black background or solid white canvas residue was detected in image corners. Some assets use semi-transparent anti-aliased edges, so light/dark background QA in-browser is still recommended.
+
+3. Any duplicate files? No identical duplicates detected.
+   Result: No byte-identical duplicate PNG files were found.
+
+4. Any file names inconsistent with the agreed naming? No.
+   Result: All files in this delivery use the agreed final names and are placed under character/, cat/, world/, ui/, items/.
+
+5. Are the cat actions the same character setting? Yes, basically consistent.
+   Result: All cat files depict the same black cat mascot with the same face concept and color language. Minor variation exists in expression intensity and accessory/detail rendering.
+
+6. Are the girl actions the same character setting? Yes, basically consistent.
+   Result: All girl files depict the same brown-haired character with black outfit and red crossbody accent. Minor variation exists in face framing and pose detail.
+
+7. Is pixel density consistent within similar asset types? Partially consistent, not fully unified.
+   Result: The overall style direction is consistent, but canvas sizes vary significantly across files, and some assets (especially chest.png and key.png) are much smaller than the others. Semi-transparent anti-aliased edges also indicate mixed export density rather than a single strict sprite resolution.
+
+8. Are any originally planned assets missing? No.
+   Result: The current delivery contains 42 assets and covers the full planned list in this scope.
