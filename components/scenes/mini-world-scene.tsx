@@ -22,7 +22,7 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
           assetId="world.cloudSmall"
           decorative
           width={62}
-          height={42}
+          height={47}
           className="absolute right-3 top-2 z-0 opacity-85"
         />
       )}
@@ -32,7 +32,7 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
           assetId="world.cloudSmall"
           decorative
           width={46}
-          height={32}
+          height={35}
           className="absolute left-4 top-5 z-0 opacity-75"
         />
       )}

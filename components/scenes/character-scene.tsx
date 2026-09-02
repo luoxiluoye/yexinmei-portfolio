@@ -43,8 +43,8 @@ export function CharacterScene({
           className={cn(
             "pointer-events-none absolute z-0 opacity-75",
             isHome
-              ? "-left-5 top-[35%] w-[120px] lg:left-[2%] lg:top-[33%] lg:w-[150px]"
-              : "left-[4%] top-[20%] w-[116px] lg:w-[142px]"
+              ? "-left-5 top-[35%] w-[120px] h-auto lg:left-[2%] lg:top-[33%] lg:w-[150px]"
+              : "left-[4%] top-[20%] w-[116px] h-auto lg:w-[142px]"
           )}
         />
       )}
@@ -58,8 +58,8 @@ export function CharacterScene({
           className={cn(
             "pointer-events-none absolute z-0 opacity-80",
             isHome
-              ? "right-[5%] top-[11%] w-[84px] lg:right-[7%] lg:top-[12%] lg:w-[104px]"
-              : "right-[7%] top-[14%] w-[86px] lg:w-[102px]"
+              ? "right-[5%] top-[11%] w-[84px] h-auto lg:right-[7%] lg:top-[12%] lg:w-[104px]"
+              : "right-[7%] top-[14%] w-[86px] h-auto lg:w-[102px]"
           )}
         />
       )}
@@ -69,8 +69,8 @@ export function CharacterScene({
           assetId="world.cloudSmall"
           decorative
           width={66}
-          height={44}
-          className="pointer-events-none absolute right-[31%] top-[34%] z-0 w-[50px] opacity-80 lg:w-[62px]"
+          height={50}
+          className="pointer-events-none absolute right-[31%] top-[34%] z-0 w-[50px] h-auto opacity-80 lg:w-[62px]"
         />
       )}
 
@@ -121,15 +121,16 @@ export function CharacterScene({
         <PixelIcon
           assetId="world.grassLong"
           decorative
+          priority={isHome}
           width={560}
-          height={144}
+          height={280}
           className={cn(
             "absolute left-1/2 z-10 -translate-x-1/2",
             compact
-              ? "bottom-[2px] w-[78%] lg:w-[66%]"
+              ? "bottom-[2px] w-[78%] h-auto lg:w-[66%]"
               : isPlayer
-                ? "bottom-[2px] w-[82%] lg:w-[72%]"
-                : "bottom-[2px] w-[90%] lg:w-[80%]"
+                ? "bottom-[2px] w-[82%] h-auto lg:w-[72%]"
+                : "bottom-[2px] w-[90%] h-auto lg:w-[80%]"
           )}
         />
 
