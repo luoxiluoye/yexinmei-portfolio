@@ -5,26 +5,24 @@ const statIcons = ["ui.heart", "ui.star", "world.cloudSmall"] as const;
 
 export function DataBadges() {
   return (
-    <div className="grid grid-cols-3 gap-2 lg:gap-4">
+    <div className="grid grid-cols-3 gap-2">
       {homeStats.map((stat, index) => (
         <article key={stat.label} className="pixel-cut-frame min-w-0">
-          <div className="pixel-cut-surface flex min-h-[78px] items-center gap-2 p-3 lg:min-h-[92px] lg:gap-3 lg:p-4">
+          <div className="pixel-cut-surface flex min-h-[72px] items-center gap-2 px-3 py-2.5">
             <PixelIcon
               assetId={statIcons[index]}
               decorative
-              width={26}
-              height={index === 2 ? 20 : 26}
+              width={22}
+              height={index === 2 ? 17 : 22}
               className="hidden shrink-0 sm:block"
             />
             <div className="min-w-0">
-              <div className="flex flex-col gap-1 lg:flex-row lg:items-baseline lg:gap-2">
-                <strong className="text-2xl font-black text-accent lg:text-3xl">
-                  {stat.value}
-                </strong>
-                <span className="text-[11px] leading-4 lg:text-[12px]">
-                  {stat.label}
-                </span>
-              </div>
+              <strong className="block text-[22px] font-black leading-none text-accent lg:text-[24px]">
+                {stat.value}
+              </strong>
+              <span className="mt-1 block text-[10px] leading-4 lg:text-[11px]">
+                {stat.label}
+              </span>
             </div>
           </div>
         </article>
