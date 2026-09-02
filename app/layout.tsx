@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Pixelify_Sans } from "next/font/google";
+import { Silkscreen } from "next/font/google";
 
 import "./globals.css";
 
@@ -7,9 +7,9 @@ import { Navbar } from "@/components/layout/navbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-const pixelFont = Pixelify_Sans({
+const pixelFont = Silkscreen({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   variable: "--font-pixel-source",
   display: "swap",
   preload: true,
