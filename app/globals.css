@@ -55,9 +55,6 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  img {
-    max-width: 100%;
-  }
 }
 
 .site-container {
@@ -114,6 +111,7 @@
 }
 
 .pixelated {
+  max-width: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }

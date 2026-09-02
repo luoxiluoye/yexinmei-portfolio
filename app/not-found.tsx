@@ -36,7 +36,7 @@ export default function NotFound() {
             assetId="world.cloudSmall"
             decorative
             width={70}
-            height={46}
+            height={53}
             className="absolute right-[9%] top-[20%] z-0 opacity-85"
           />
           <PixelIcon
@@ -58,8 +58,8 @@ export default function NotFound() {
             assetId="world.grassLong"
             decorative
             width={440}
-            height={110}
-            className="absolute bottom-0 left-[47%] z-10 w-[70%] -translate-x-1/2"
+            height={220}
+            className="absolute bottom-0 left-[47%] z-10 w-[70%] h-auto -translate-x-1/2"
           />
           <PixelIcon
             assetId="world.flower"
