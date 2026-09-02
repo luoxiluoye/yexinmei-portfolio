@@ -11,7 +11,7 @@ export function QuestStatusSidebar() {
   return (
     <div className="space-y-4">
       <PixelPanel eyebrow="QUEST" title="STATUS">
-        <div className="grid grid-cols-3 gap-2 lg:grid-cols-1">
+        <div className="grid min-w-0 grid-cols-3 gap-1.5 lg:grid-cols-1 lg:gap-2">
           <Stat label="TOTAL" value={quests.length} />
           <Stat label="ACTIVE" value={active} accent />
           <Stat label="ONGOING" value={ongoing} />
@@ -72,9 +72,9 @@ function Stat({
   accent?: boolean;
 }) {
   return (
-    <div className="border border-divider bg-soft p-3">
+    <div className="min-w-0 overflow-hidden border border-divider bg-soft p-2.5 lg:p-3">
       <p className="font-pixel text-[10px] text-muted">{label}</p>
-      <p className={accent ? "mt-1 text-2xl font-black text-accent" : "mt-1 text-2xl font-black"}>
+      <p className={accent ? "mt-1 text-xl font-black text-accent lg:text-2xl" : "mt-1 text-xl font-black lg:text-2xl"}>
         {String(value).padStart(2, "0")}
       </p>
     </div>
