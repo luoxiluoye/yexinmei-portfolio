@@ -24,7 +24,7 @@ const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
 export default function ContactPage() {
   return (
     <main className="site-container py-4 lg:py-8">
-      <section className="grid gap-4 lg:grid-cols-[52fr_48fr] lg:items-center lg:gap-5">
+      <section className="grid gap-4 lg:grid-cols-[52fr_48fr] lg:items-center lg:gap-8">
         <div>
           <p className="font-pixel text-[12px] text-muted">07. CONTACT</p>
           <h1 className="rpg-page-title mt-2">{contact.heading}</h1>
@@ -33,13 +33,13 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <CharacterScene variant="contact" className="min-h-[280px] lg:min-h-[340px]" />
+        <CharacterScene variant="contact" />
       </section>
 
       <section className="mt-4 grid gap-3 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-4 lg:pb-0">
         {contact.items.map((item) => {
           const pending = item.value === "TODO";
-          const displayValue = pending ? "稍后补充" : item.value;
+          const displayValue = pending ? "暂不公开" : item.value;
 
           return (
             <PixelPanel key={item.type} title={item.label}>
@@ -59,7 +59,7 @@ export default function ContactPage() {
 
                 <div className="mt-auto pt-5">
                   <PixelButton variant="secondary" disabled={pending} className="w-full">
-                    {pending ? "待开放" : displayValue}
+                    {pending ? "未公开" : displayValue}
                   </PixelButton>
                 </div>
               </div>
