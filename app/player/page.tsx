@@ -31,8 +31,8 @@ export default function PlayerPage() {
         <h1 className="rpg-page-title mt-2">PLAYER PROFILE</h1>
       </header>
 
-      <section className="grid gap-4 lg:grid-cols-[40fr_60fr] lg:gap-5">
-        <CharacterScene variant="player" className="min-h-[340px] lg:min-h-[410px]" />
+      <section className="grid gap-4 lg:grid-cols-[36fr_64fr] lg:items-start lg:gap-5">
+        <CharacterScene variant="player" />
 
         <PixelPanel eyebrow="PLAYER" title={profile.nameEn.toUpperCase()} accent>
           <div className="grid gap-5 lg:grid-cols-[1fr_160px]">
@@ -65,14 +65,32 @@ export default function PlayerPage() {
         </PixelPanel>
 
         <PixelPanel eyebrow="WORLD MAP" title="JOURNEY">
-          <div className="hidden items-center justify-between gap-2 lg:flex">
+          <div className="hidden grid-cols-4 gap-2 lg:grid">
             {journey.map((item, index) => (
-              <div key={item} className="flex min-w-0 flex-1 items-center gap-2">
-                <div className="flex min-h-[78px] flex-1 items-center justify-center border border-divider bg-soft px-2 text-center text-[13px] leading-5">
-                  {item}
-                </div>
+              <div
+                key={item}
+                className={[
+                  "relative min-h-[76px] border border-divider px-3 py-3",
+                  item === "NOW" ? "bg-foreground text-white" : "bg-soft",
+                ].join(" ")}
+              >
+                <span
+                  className={[
+                    "font-pixel text-[10px]",
+                    item === "NOW" ? "text-white/60" : "text-accent",
+                  ].join(" ")}
+                >
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <p className="mt-2 text-[13px] leading-5">{item}</p>
                 {index < journey.length - 1 && (
-                  <PixelIcon assetId="ui.arrow" decorative width={18} height={18} />
+                  <PixelIcon
+                    assetId="ui.arrow"
+                    decorative
+                    width={14}
+                    height={14}
+                    className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 bg-paper"
+                  />
                 )}
               </div>
             ))}
