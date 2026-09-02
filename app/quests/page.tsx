@@ -25,7 +25,7 @@ export default function QuestsPage() {
       </header>
 
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
-        <div>
+        <div className="min-w-0">
           <div className="mb-4 lg:hidden">
             <QuestStatusSidebar />
           </div>
