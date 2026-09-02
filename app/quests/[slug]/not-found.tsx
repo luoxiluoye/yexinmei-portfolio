@@ -26,7 +26,7 @@ export default function QuestNotFound() {
           <div className="absolute inset-x-0 bottom-0 flex items-end justify-center">
             <PixelIcon assetId="cat.sit" decorative width={92} height={92} className="relative z-20 mb-8" />
             <PixelIcon assetId="world.woodenSign" decorative width={98} height={128} className="relative z-20 mb-6" />
-            <PixelIcon assetId="world.grassLong" decorative width={430} height={108} className="absolute bottom-0 left-1/2 z-10 w-[86%] -translate-x-1/2" />
+            <PixelIcon assetId="world.grassLong" decorative width={430} height={215} className="absolute bottom-0 left-1/2 z-10 w-[86%] -translate-x-1/2" />
           </div>
         </div>
       </section>
