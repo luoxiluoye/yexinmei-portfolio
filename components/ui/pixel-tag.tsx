@@ -35,7 +35,7 @@ export function PixelTag({
   return (
     <span
       className={cn(
-        "inline-flex h-6 items-center gap-1.5 border px-2 font-pixel text-[12px] leading-none",
+        "inline-flex h-6 items-center gap-1.5 border px-2 font-pixel text-[11px] leading-none",
         variants[variant],
         className
       )}
@@ -44,7 +44,7 @@ export function PixelTag({
         <span
           aria-hidden="true"
           className={cn(
-            "h-1.5 w-1.5",
+            "rpg-blink h-1.5 w-1.5",
             variant === "accent" || variant === "active"
               ? "bg-white"
               : "bg-accent"
