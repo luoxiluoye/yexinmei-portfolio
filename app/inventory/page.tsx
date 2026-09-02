@@ -49,7 +49,7 @@ export default function InventoryPage() {
       </header>
 
       <section className="mt-4 grid gap-4 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5">
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <PixelPanel eyebrow="01" title={`TOOLS · ${skills.tools.length}`}>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
               {skills.tools.map((tool, index) => (
