@@ -10,6 +10,7 @@ type PixelPanelProps = {
   rightSlot?: ReactNode;
   accent?: boolean;
   catPeek?: boolean;
+  windowChrome?: boolean;
   className?: string;
   surfaceClassName?: string;
   contentClassName?: string;
@@ -22,6 +23,7 @@ export function PixelPanel({
   rightSlot,
   accent = false,
   catPeek = false,
+  windowChrome = true,
   className,
   surfaceClassName,
   contentClassName,
@@ -47,25 +49,33 @@ export function PixelPanel({
         )}
 
         {(title || eyebrow || rightSlot) && (
-          <div className="flex min-h-[42px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
+          <div className="flex min-h-[44px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
             <div className="min-w-0">
               {eyebrow && (
-                <p className="font-pixel text-[11px] leading-4 text-accent">
+                <p className="font-pixel text-[10px] leading-4 text-accent">
                   {eyebrow}
                 </p>
               )}
               {title && (
-                <h2 className="truncate font-pixel text-[15px] leading-5 lg:text-[17px]">
+                <h2 className="truncate font-pixel text-[14px] leading-5 lg:text-[16px]">
                   {title}
                 </h2>
               )}
             </div>
 
-            {rightSlot && <div className="shrink-0">{rightSlot}</div>}
+            {rightSlot ? (
+              <div className="shrink-0">{rightSlot}</div>
+            ) : windowChrome ? (
+              <div aria-hidden="true" className="hidden shrink-0 items-center gap-2 font-pixel text-[11px] leading-none text-muted lg:flex">
+                <span>−</span>
+                <span>□</span>
+                <span>×</span>
+              </div>
+            ) : null}
           </div>
         )}
 
-        <div className={cn("p-4 lg:p-5", contentClassName)}>{children}</div>
+        <div className={cn("p-4 lg:p-[18px]", contentClassName)}>{children}</div>
       </div>
     </section>
   );
