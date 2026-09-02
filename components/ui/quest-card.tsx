@@ -26,8 +26,8 @@ export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
       href={`/quests/${quest.slug}`}
       className="group pixel-cut-frame block transition-transform hover:-translate-x-px hover:-translate-y-px active:translate-x-px active:translate-y-px"
     >
-      <article className="pixel-cut-surface flex min-h-[220px] flex-col p-4 lg:p-5">
-        <div className="flex items-start justify-between gap-4">
+      <article className="pixel-cut-surface flex min-h-[204px] flex-col p-4 lg:min-h-[220px] lg:p-5">
+        <div className="grid min-w-0 grid-cols-[1fr_auto] items-start gap-3">
           <div className="flex min-w-0 items-start gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center border border-divider bg-soft">
               <PixelIcon
@@ -42,14 +42,14 @@ export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
               <p className="font-pixel text-[11px] text-muted">
                 {quest.code} · {String(index + 1).padStart(2, "0")}
               </p>
-              <h2 className="mt-1 text-[18px] font-bold leading-7">{quest.title}</h2>
+              <h2 className="mt-1 text-[17px] font-bold leading-6 lg:text-[18px] lg:leading-7">{quest.title}</h2>
             </div>
           </div>
 
           <PixelTag variant={getStatusVariant(quest.status)}>{quest.status}</PixelTag>
         </div>
 
-        <p className="mt-4 line-clamp-3 text-[14px] leading-6 text-muted">
+        <p className="mt-3 line-clamp-2 text-[14px] leading-6 text-muted lg:mt-4 lg:line-clamp-3">
           {quest.subtitle}
         </p>
 
