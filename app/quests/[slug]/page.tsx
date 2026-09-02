@@ -53,7 +53,7 @@ export default async function QuestPage({ params }: QuestPageProps) {
       </div>
 
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
-        <article>
+        <article className="min-w-0">
           <QuestMeta quest={quest} />
 
           <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
