@@ -13,7 +13,7 @@ export function DataBadges() {
               assetId={statIcons[index]}
               decorative
               width={26}
-              height={26}
+              height={index === 2 ? 20 : 26}
               className="hidden shrink-0 sm:block"
             />
             <div className="min-w-0">
