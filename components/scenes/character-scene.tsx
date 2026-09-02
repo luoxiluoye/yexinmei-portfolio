@@ -24,12 +24,21 @@ export function CharacterScene({
   const isPlayer = variant === "player";
   const isContact = variant === "contact";
   const isJournal = variant === "journal";
-  const compact = isContact || isJournal;
+  const isInventory = variant === "inventory";
+  const compact = isContact || isInventory || isJournal;
+  const sceneHeight = isHome
+    ? "min-h-[300px] lg:min-h-[390px]"
+    : isPlayer
+      ? "min-h-[270px] lg:min-h-[320px]"
+      : isContact
+        ? "min-h-[220px] lg:min-h-[270px]"
+        : "min-h-[180px] lg:min-h-[210px]";
 
   return (
     <div
       className={cn(
-        "rpg-scene rpg-scene-open isolate min-h-[300px] bg-transparent lg:min-h-[390px]",
+        "rpg-scene rpg-scene-open isolate bg-transparent",
+        sceneHeight,
         className
       )}
     >
