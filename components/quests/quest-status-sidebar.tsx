@@ -38,7 +38,7 @@ export function QuestStatusSidebar() {
               assetId="world.cloudSmall"
               decorative
               width={72}
-              height={48}
+              height={54}
               className="absolute right-4 top-3"
             />
             <PixelIcon
