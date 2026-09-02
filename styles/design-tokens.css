@@ -1,12 +1,12 @@
 :root {
-  /* UI FINAL v1.1 — single source of truth */
+  /* UI Fidelity v1.7 — closer to the approved pixel RPG board */
   /* Colors */
   --rpg-color-bg: #faf8f3;
   --rpg-color-surface: #fffdf8;
   --rpg-color-text: #111111;
   --rpg-color-text-2: #606060;
-  --rpg-color-border: #1e1e1e;
-  --rpg-color-red: #e74c3c;
+  --rpg-color-border: #161616;
+  --rpg-color-red: #e74736;
   --rpg-color-yellow: #f6c945;
   --rpg-color-green: #7db57a;
   --rpg-color-soft: #f3f0e9;
@@ -23,7 +23,7 @@
   --rpg-panel-title: 17px;
   --rpg-tag-text: 12px;
 
-  /* Spacing — only the approved scale */
+  /* Spacing */
   --rpg-space-1: 4px;
   --rpg-space-2: 8px;
   --rpg-space-3: 12px;
@@ -35,26 +35,26 @@
   --rpg-space-12: 48px;
   --rpg-space-16: 64px;
 
-  --rpg-section-gap: 32px;
-  --rpg-panel-gap: 24px;
-  --rpg-card-gap: 16px;
-  --rpg-panel-padding: 20px;
+  --rpg-section-gap: 24px;
+  --rpg-panel-gap: 18px;
+  --rpg-card-gap: 14px;
+  --rpg-panel-padding: 18px;
   --rpg-panel-padding-mobile: 16px;
 
-  /* Layout */
-  --rpg-content-max-width: 1320px;
+  /* Layout — the reference board is deliberately wide and dashboard-like */
+  --rpg-content-max-width: 1400px;
   --rpg-page-gutter-mobile: 16px;
-  --rpg-page-gutter-desktop: 32px;
-  --rpg-desktop-grid-gap: 20px;
+  --rpg-page-gutter-desktop: 18px;
+  --rpg-desktop-grid-gap: 18px;
 
   /* Border / pixel cut / shadow */
   --rpg-border-width: 2px;
   --rpg-border-hairline: 1px;
-  --rpg-pixel-cut: 8px;
-  --rpg-shadow: 3px 3px 0 rgba(17, 17, 17, 0.06);
+  --rpg-pixel-cut: 9px;
+  --rpg-shadow: 2px 2px 0 rgba(17, 17, 17, 0.08);
 
   /* Fixed component sizes */
-  --rpg-navbar-height: 68px;
+  --rpg-navbar-height: 84px;
   --rpg-mobile-header-height: 60px;
   --rpg-mobile-level-height: 32px;
   --rpg-bottom-tab-height: 64px;
