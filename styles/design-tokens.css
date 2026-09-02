@@ -1,0 +1,75 @@
+:root {
+  /* UI FINAL v1.1 — single source of truth */
+  /* Colors */
+  --rpg-color-bg: #faf8f3;
+  --rpg-color-surface: #fffdf8;
+  --rpg-color-text: #111111;
+  --rpg-color-text-2: #606060;
+  --rpg-color-border: #1e1e1e;
+  --rpg-color-red: #e74c3c;
+  --rpg-color-yellow: #f6c945;
+  --rpg-color-green: #7db57a;
+  --rpg-color-soft: #f3f0e9;
+  --rpg-color-divider: #d8d2c8;
+
+  /* Typography */
+  --rpg-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --rpg-font-pixel: var(--font-pixel-source, "Courier New"), "Courier New", "Lucida Console", ui-monospace, monospace;
+  --rpg-text-body: 15px;
+  --rpg-line-body: 26px;
+  --rpg-text-body-lg: 16px;
+  --rpg-page-title: 50px;
+  --rpg-hero-title: 64px;
+  --rpg-panel-title: 17px;
+  --rpg-tag-text: 12px;
+
+  /* Spacing — only the approved scale */
+  --rpg-space-1: 4px;
+  --rpg-space-2: 8px;
+  --rpg-space-3: 12px;
+  --rpg-space-4: 16px;
+  --rpg-space-5: 20px;
+  --rpg-space-6: 24px;
+  --rpg-space-8: 32px;
+  --rpg-space-10: 40px;
+  --rpg-space-12: 48px;
+  --rpg-space-16: 64px;
+
+  --rpg-section-gap: 32px;
+  --rpg-panel-gap: 24px;
+  --rpg-card-gap: 16px;
+  --rpg-panel-padding: 20px;
+  --rpg-panel-padding-mobile: 16px;
+
+  /* Layout */
+  --rpg-content-max-width: 1320px;
+  --rpg-page-gutter-mobile: 16px;
+  --rpg-page-gutter-desktop: 32px;
+  --rpg-desktop-grid-gap: 20px;
+
+  /* Border / pixel cut / shadow */
+  --rpg-border-width: 2px;
+  --rpg-border-hairline: 1px;
+  --rpg-pixel-cut: 8px;
+  --rpg-shadow: 3px 3px 0 rgba(17, 17, 17, 0.06);
+
+  /* Fixed component sizes */
+  --rpg-navbar-height: 68px;
+  --rpg-mobile-header-height: 60px;
+  --rpg-mobile-level-height: 32px;
+  --rpg-bottom-tab-height: 64px;
+  --rpg-button-height: 44px;
+  --rpg-button-height-mobile: 48px;
+  --rpg-tag-height: 24px;
+  --rpg-status-height: 40px;
+  --rpg-status-height-mobile: 36px;
+  --rpg-xp-width: 150px;
+  --rpg-xp-width-mobile: 128px;
+  --rpg-xp-height: 10px;
+
+  /* Pixel scale */
+  --rpg-pixel-unit: 2px;
+  --rpg-icon-sm: 16px;
+  --rpg-icon-md: 24px;
+  --rpg-icon-lg: 34px;
+}
