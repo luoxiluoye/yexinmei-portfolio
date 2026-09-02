@@ -30,7 +30,9 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background: var(--rpg-color-bg);
+    background-color: var(--rpg-color-bg);
+    background-image: radial-gradient(rgba(17, 17, 17, 0.025) 0.75px, transparent 0.75px);
+    background-size: 18px 18px;
     color: var(--rpg-color-text);
     font-family: var(--rpg-font-body);
     font-size: var(--rpg-text-body);
@@ -54,7 +56,6 @@
   a {
     -webkit-tap-highlight-color: transparent;
   }
-
 }
 
 .site-container {
@@ -78,8 +79,8 @@
   font-family: var(--rpg-font-pixel);
   font-synthesis: none;
   font-variant-ligatures: none;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .rpg-hero-title {
@@ -180,6 +181,45 @@
 ::selection {
   background: var(--rpg-color-red);
   color: white;
+}
+
+@keyframes rpg-blink {
+  0%, 44%, 100% { opacity: 1; }
+  45%, 55% { opacity: 0.25; }
+}
+
+@keyframes rpg-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+@keyframes rpg-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(-5deg); }
+  70% { transform: rotate(4deg); }
+}
+
+.rpg-blink {
+  animation: rpg-blink 1.8s steps(2, end) infinite;
+}
+
+.rpg-bob {
+  animation: rpg-bob 2.8s steps(2, end) infinite;
+}
+
+.rpg-logo-cat {
+  transform-origin: 50% 80%;
+}
+
+.group:hover .rpg-logo-cat {
+  animation: rpg-wiggle 0.45s steps(2, end) 1;
+}
+
+@media (pointer: fine) {
+  a,
+  button {
+    cursor: url("/assets/ui/cursor.png") 2 2, pointer;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
