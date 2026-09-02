@@ -19,7 +19,7 @@ export default function JournalPage() {
       </header>
 
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[75fr_25fr] lg:gap-5 lg:pb-0">
-        <div>
+        <div className="min-w-0">
           <div className="no-scrollbar mb-4 flex min-w-0 gap-2 overflow-x-auto border-y border-divider py-3">
             <PixelTag variant="dark">ALL</PixelTag>
             {journalCategories.map((category) => (
