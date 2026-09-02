@@ -21,7 +21,7 @@ export default function QuestsPage() {
             这里记录做过的项目、正在探索的方向，以及一些从兴趣出发的 Side Quests。
           </p>
         </div>
-        <MiniWorldScene kind="cat" />
+        <MiniWorldScene kind="cat" className="min-h-[104px] lg:min-h-[118px]" />
       </header>
 
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
