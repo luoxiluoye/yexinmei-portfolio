@@ -20,60 +20,57 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 hidden h-[var(--rpg-navbar-height)] border-b-2 border-border bg-background lg:block">
-      <div className="site-container flex h-full items-center justify-between gap-5">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5">
-          <PixelIcon
-            assetId="cat.head"
-            alt=""
-            decorative
-            width={34}
-            height={34}
-          />
-          <span className="truncate font-pixel text-[18px] leading-none">
-            YEXINMEI LUO
-          </span>
-          <span className="text-accent">♥</span>
-          <span className="hidden font-pixel text-[13px] text-muted xl:inline">
-            · PIXEL RPG PORTFOLIO
-          </span>
-        </Link>
+    <header className="sticky top-0 z-50 hidden bg-background/95 py-3 backdrop-blur-[2px] lg:block">
+      <div className="site-container pixel-cut-frame">
+        <div className="pixel-cut-surface flex h-[58px] items-center justify-between gap-4 px-4 xl:px-5">
+          <Link href="/" className="group flex shrink-0 items-center gap-2" aria-label="返回首页">
+            <PixelIcon
+              assetId="cat.head"
+              alt=""
+              decorative
+              width={36}
+              height={36}
+              className="rpg-logo-cat"
+            />
+            <PixelIcon assetId="ui.heart" decorative width={20} height={20} />
+          </Link>
 
-        <nav aria-label="Main navigation" className="shrink-0">
-          <ul className="flex items-center gap-1">
-            {items.map((item) => {
-              const active =
-                item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          <nav aria-label="Main navigation" className="min-w-0 flex-1">
+            <ul className="flex items-center gap-1.5">
+              {items.map((item) => {
+                const active =
+                  item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    className={cn(
-                      "flex h-[38px] items-center px-2.5 font-pixel text-[12px] transition-colors",
-                      active
-                        ? "bg-foreground text-white"
-                        : "text-foreground hover:bg-soft"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={cn(
+                        "flex h-[38px] items-center border border-transparent px-3 font-pixel text-[11px] transition-[transform,background-color,border-color,color] hover:-translate-y-px",
+                        active
+                          ? "border-border bg-foreground text-white shadow-[2px_2px_0_rgba(17,17,17,.12)]"
+                          : "text-foreground hover:border-divider hover:bg-soft"
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
 
-        <div className="flex shrink-0 items-center gap-2">
-          <PixelIcon assetId="items.potion" decorative width={22} height={22} />
-          <XPBar
-            compact
-            level={28}
-            current={7888}
-            max={10000}
-            label="XP"
-          />
+          <div className="flex shrink-0 items-center gap-2 border-l border-divider pl-4">
+            <PixelIcon assetId="items.potion" decorative width={22} height={22} />
+            <XPBar
+              compact
+              level={28}
+              current={7888}
+              max={10000}
+              label="XP"
+            />
+          </div>
         </div>
       </div>
     </header>
