@@ -7,7 +7,7 @@ import { PixelTag } from "@/components/ui/pixel-tag";
 export default function JournalPage() {
   return (
     <main className="site-container py-4 lg:py-8">
-      <header className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-end">
+      <header className="grid gap-4 lg:grid-cols-[1fr_300px] lg:items-center">
         <div className="min-w-0">
           <p className="font-pixel text-[12px] text-muted">06. JOURNAL</p>
           <h1 className="rpg-page-title mt-2">JOURNAL</h1>
@@ -15,7 +15,7 @@ export default function JournalPage() {
             一些写作、照片、内容观察，以及正在尝试的小东西。
           </p>
         </div>
-        <CharacterScene variant="journal" className="min-h-[210px] lg:min-h-[230px]" />
+        <CharacterScene variant="journal" />
       </header>
 
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[75fr_25fr] lg:gap-5 lg:pb-0">
@@ -54,7 +54,7 @@ export default function JournalPage() {
 
         <aside className="hidden lg:block">
           <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY">
-            <div className="relative flex min-h-[220px] items-end justify-center overflow-hidden">
+            <div className="relative flex min-h-[190px] items-end justify-center overflow-hidden">
               <PixelIcon
                 assetId="world.cloudMedium"
                 decorative
