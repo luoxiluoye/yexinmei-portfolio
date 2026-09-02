@@ -8,7 +8,7 @@ export default function JournalPage() {
   return (
     <main className="site-container py-4 lg:py-8">
       <header className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-end">
-        <div>
+        <div className="min-w-0">
           <p className="font-pixel text-[12px] text-muted">06. JOURNAL</p>
           <h1 className="rpg-page-title mt-2">JOURNAL</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-[26px] text-muted">
