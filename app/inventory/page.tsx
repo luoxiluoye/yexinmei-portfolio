@@ -50,7 +50,7 @@ export default function InventoryPage() {
 
       <section className="mt-5 grid gap-4 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5">
         <div className="min-w-0 space-y-4">
-          <PixelPanel eyebrow="01" title={`TOOLS · ${skills.tools.length}`}>
+          <PixelPanel eyebrow="01" title={`TOOLS · ${skills.tools.length}`} interactive>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
               {skills.tools.map((tool, index) => (
                 <InventorySlot
@@ -65,7 +65,7 @@ export default function InventoryPage() {
             </div>
           </PixelPanel>
 
-          <PixelPanel eyebrow="02" title={`SKILLS · ${skills.core.length}`}>
+          <PixelPanel eyebrow="02" title={`SKILLS · ${skills.core.length}`} interactive>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {skills.core.map((skill, index) => (
                 <InventorySlot
@@ -79,15 +79,21 @@ export default function InventoryPage() {
             </div>
           </PixelPanel>
 
-          <PixelPanel eyebrow="03" title={`SPECIAL ITEMS · ${skills.specialItems.length}`}>
+          <PixelPanel eyebrow="03" title={`SPECIAL ITEMS · ${skills.specialItems.length}`} interactive>
             <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
               {skills.specialItems.map((item, index) => (
                 <div
                   key={item.name}
-                  className="flex min-w-[148px] flex-col items-center justify-center border border-divider bg-soft p-4 text-center lg:min-w-0"
+                  className="rpg-item-slot group flex min-w-[148px] flex-col items-center justify-center border border-divider bg-soft p-4 text-center lg:min-w-0"
                 >
                   <div className="flex h-[58px] w-[58px] items-center justify-center border border-divider bg-paper">
-                    <PixelIcon assetId={specialAssetIds[index]} decorative width={46} height={46} />
+                    <PixelIcon
+                      assetId={specialAssetIds[index]}
+                      decorative
+                      width={46}
+                      height={46}
+                      className="rpg-item-icon"
+                    />
                   </div>
                   <span className="mt-3 font-pixel text-[11px]">{item.name}</span>
                   <span className="mt-2 text-[12px] leading-5 text-muted">{item.buff}</span>
@@ -98,7 +104,7 @@ export default function InventoryPage() {
         </div>
 
         <aside className="lg:sticky lg:top-[84px] lg:self-start">
-          <PixelPanel eyebrow="SKILLS" title="SUMMARY" accent>
+          <PixelPanel eyebrow="SKILLS" title="SUMMARY" accent interactive>
             <div className="space-y-3 text-[13px] leading-6">
               <p><strong>主线：</strong>内容策划 / 新媒体 / 社区运营</p>
               <p><strong>辅助：</strong>摄影 / 数据分析 / AI 提效</p>
@@ -145,15 +151,21 @@ function InventorySlot({
   iconSize: number;
 }) {
   return (
-    <div className="flex min-h-[116px] flex-col justify-between border border-divider bg-soft p-3">
+    <div className="rpg-item-slot group flex min-h-[116px] flex-col justify-between border border-divider bg-soft p-3">
       <div className="flex items-start justify-between gap-2">
         <div className="flex h-[52px] w-[52px] items-center justify-center border border-divider bg-paper">
-          <PixelIcon assetId={assetId} decorative width={iconSize} height={iconSize} />
+          <PixelIcon
+            assetId={assetId}
+            decorative
+            width={iconSize}
+            height={iconSize}
+            className="rpg-item-icon"
+          />
         </div>
         <span className="font-pixel text-[10px] text-muted">{String(index + 1).padStart(2, "0")}</span>
       </div>
       <div className="mt-3">
-        <p className="text-[13px] font-medium leading-5">{label}</p>
+        <p className="text-[13px] font-semibold leading-5">{label}</p>
         {detail && <p className="mt-1 text-[11px] leading-5 text-muted">{detail}</p>}
       </div>
     </div>
