@@ -1,18 +1,16 @@
 :root {
-  /* UI Final v1.1 — implementation follows the approved board */
-  /* Colors */
+  /* UI Final v1.1 — exact visual tokens */
   --rpg-color-bg: #faf8f3;
   --rpg-color-surface: #fffdf8;
   --rpg-color-text: #111111;
   --rpg-color-text-2: #606060;
-  --rpg-color-border: #161616;
-  --rpg-color-red: #e74736;
+  --rpg-color-border: #1e1e1e;
+  --rpg-color-red: #e74c3c;
   --rpg-color-yellow: #f6c945;
   --rpg-color-green: #7db57a;
   --rpg-color-soft: #f3f0e9;
   --rpg-color-divider: #d8d2c8;
 
-  /* Typography */
   --rpg-font-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   --rpg-font-pixel: var(--font-pixel-source, "Courier New"), "Courier New", "Lucida Console", ui-monospace, monospace;
   --rpg-text-body: 15px;
@@ -23,7 +21,6 @@
   --rpg-panel-title: 17px;
   --rpg-tag-text: 12px;
 
-  /* Spacing — matches the v1.1 handoff rhythm */
   --rpg-space-1: 4px;
   --rpg-space-2: 8px;
   --rpg-space-3: 12px;
@@ -41,20 +38,17 @@
   --rpg-panel-padding: 20px;
   --rpg-panel-padding-mobile: 16px;
 
-  /* Layout — approved UI Final: centered 1320px / 12-col / 20px gap */
   --rpg-content-max-width: 1320px;
   --rpg-page-gutter-mobile: 16px;
   --rpg-page-gutter-desktop: 32px;
   --rpg-desktop-grid-gap: 20px;
 
-  /* Border / pixel cut / shadow */
   --rpg-border-width: 2px;
   --rpg-border-hairline: 1px;
-  --rpg-pixel-cut: 9px;
-  --rpg-shadow: 2px 2px 0 rgba(17, 17, 17, 0.08);
+  --rpg-pixel-cut: 8px;
+  --rpg-shadow: 3px 3px 0 rgba(17, 17, 17, 0.06);
 
-  /* Fixed component sizes */
-  --rpg-navbar-height: 84px;
+  --rpg-navbar-height: 68px;
   --rpg-mobile-header-height: 60px;
   --rpg-mobile-level-height: 32px;
   --rpg-bottom-tab-height: 64px;
@@ -67,7 +61,6 @@
   --rpg-xp-width-mobile: 128px;
   --rpg-xp-height: 10px;
 
-  /* Pixel scale */
   --rpg-pixel-unit: 2px;
   --rpg-icon-sm: 16px;
   --rpg-icon-md: 24px;
