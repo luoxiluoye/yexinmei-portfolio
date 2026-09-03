@@ -18,9 +18,7 @@
 }
 
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   html {
     scroll-behavior: smooth;
@@ -30,9 +28,7 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background-color: var(--rpg-color-bg);
-    background-image: radial-gradient(rgba(17, 17, 17, 0.025) 0.75px, transparent 0.75px);
-    background-size: 18px 18px;
+    background: var(--rpg-color-bg);
     color: var(--rpg-color-text);
     font-family: var(--rpg-font-body);
     font-size: var(--rpg-text-body);
@@ -40,38 +36,19 @@
     text-rendering: optimizeLegibility;
   }
 
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  button,
-  input,
-  textarea,
-  select {
-    font: inherit;
-  }
-
-  button,
-  a {
-    -webkit-tap-highlight-color: transparent;
-  }
+  a { color: inherit; text-decoration: none; }
+  button, input, textarea, select { font: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
 }
 
 .site-container {
-  width: min(
-    var(--rpg-content-max-width),
-    calc(100% - (var(--rpg-page-gutter-mobile) * 2))
-  );
+  width: min(var(--rpg-content-max-width), calc(100% - (var(--rpg-page-gutter-mobile) * 2)));
   margin-inline: auto;
 }
 
 @media (min-width: 1024px) {
   .site-container {
-    width: min(
-      var(--rpg-content-max-width),
-      calc(100% - (var(--rpg-page-gutter-desktop) * 2))
-    );
+    width: min(var(--rpg-content-max-width), calc(100% - (var(--rpg-page-gutter-desktop) * 2)));
   }
 }
 
@@ -79,8 +56,8 @@
   font-family: var(--rpg-font-pixel);
   font-synthesis: none;
   font-variant-ligatures: none;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
 .rpg-hero-title {
@@ -89,7 +66,7 @@
   font-variant-ligatures: none;
   font-size: clamp(44px, 13vw, 56px);
   line-height: 0.98;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 .rpg-page-title {
@@ -98,17 +75,12 @@
   font-variant-ligatures: none;
   font-size: clamp(38px, 10vw, 46px);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 @media (min-width: 1024px) {
-  .rpg-hero-title {
-    font-size: var(--rpg-hero-title);
-  }
-
-  .rpg-page-title {
-    font-size: var(--rpg-page-title);
-  }
+  .rpg-hero-title { font-size: var(--rpg-hero-title); }
+  .rpg-page-title { font-size: var(--rpg-page-title); }
 }
 
 .pixelated {
@@ -154,14 +126,10 @@
 .rpg-scene {
   position: relative;
   overflow: hidden;
-  background:
-    linear-gradient(to bottom, rgba(255,255,255,.35), rgba(255,255,255,0)),
-    var(--rpg-color-bg);
+  background: var(--rpg-color-bg);
 }
 
-.rpg-scene-open {
-  background: transparent;
-}
+.rpg-scene-open { background: transparent; }
 
 .rpg-soft-grid {
   background-image:
@@ -170,27 +138,14 @@
   background-size: 20px 20px;
 }
 
-.no-scrollbar {
-  scrollbar-width: none;
-}
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-::selection {
-  background: var(--rpg-color-red);
-  color: white;
-}
+::selection { background: var(--rpg-color-red); color: white; }
 
 @keyframes rpg-blink {
   0%, 44%, 100% { opacity: 1; }
   45%, 55% { opacity: 0.25; }
-}
-
-@keyframes rpg-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-2px); }
 }
 
 @keyframes rpg-wiggle {
@@ -199,37 +154,17 @@
   70% { transform: rotate(4deg); }
 }
 
-.rpg-blink {
-  animation: rpg-blink 1.8s steps(2, end) infinite;
-}
-
-.rpg-bob {
-  animation: rpg-bob 2.8s steps(2, end) infinite;
-}
-
-.rpg-logo-cat {
-  transform-origin: 50% 80%;
-}
-
-.group:hover .rpg-logo-cat {
-  animation: rpg-wiggle 0.45s steps(2, end) 1;
-}
+.rpg-blink { animation: rpg-blink 1.8s steps(2, end) infinite; }
+.rpg-logo-cat { transform-origin: 50% 80%; }
+.group:hover .rpg-logo-cat { animation: rpg-wiggle 0.45s steps(2, end) 1; }
 
 @media (pointer: fine) {
-  a,
-  button {
-    cursor: url("/assets/ui/cursor.png") 2 2, pointer;
-  }
+  a, button { cursor: url("/assets/ui/cursor.png") 2 2, pointer; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
