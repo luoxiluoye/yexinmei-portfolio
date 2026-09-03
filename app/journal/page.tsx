@@ -1,12 +1,13 @@
 import { journalCategories, journalSeed } from "@/data/journal";
 import { CharacterScene } from "@/components/scenes/character-scene";
+import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
 
 export default function JournalPage() {
   return (
-    <main className="site-container py-4 lg:py-8">
+    <main className="site-container py-5 lg:py-8">
       <header className="grid gap-4 lg:grid-cols-[1fr_300px] lg:items-center">
         <div className="min-w-0">
           <p className="font-pixel text-[12px] text-muted">06. JOURNAL</p>
@@ -18,7 +19,7 @@ export default function JournalPage() {
         <CharacterScene variant="journal" />
       </header>
 
-      <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[75fr_25fr] lg:gap-5 lg:pb-0">
+      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[75fr_25fr] lg:gap-5 lg:pb-0">
         <div className="min-w-0">
           <div className="no-scrollbar mb-4 flex min-w-0 gap-2 overflow-x-auto border-y border-divider py-3">
             <PixelTag variant="dark">ALL</PixelTag>
@@ -27,14 +28,14 @@ export default function JournalPage() {
             ))}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {journalSeed.map((entry) => (
               <article
                 key={entry.title}
-                className="grid grid-cols-[76px_1fr] gap-4 border-2 border-border bg-paper p-3 sm:block sm:min-h-[230px] sm:p-4"
+                className="grid grid-cols-[76px_1fr] gap-4 border-2 border-border bg-paper p-3 sm:block sm:min-h-[236px] sm:p-4"
               >
                 <div className="flex h-[76px] items-center justify-center border border-divider bg-soft sm:h-[96px]">
-                  <PixelIcon assetId="items.notebook" decorative width={42} height={42} />
+                  <PixelIcon assetId="items.notebook" decorative width={44} height={44} />
                 </div>
 
                 <div className="min-w-0 sm:mt-4">
@@ -47,43 +48,15 @@ export default function JournalPage() {
             ))}
           </div>
 
-          <div className="mt-4 text-[13px] text-muted">
-            更多内容持续更新中…
-          </div>
+          <div className="mt-4 text-[13px] text-muted">更多内容持续更新中…</div>
         </div>
 
         <aside className="hidden lg:block">
-          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY">
-            <div className="relative flex min-h-[190px] items-end justify-center overflow-hidden">
-              <PixelIcon
-                assetId="world.cloudMedium"
-                decorative
-                width={110}
-                height={70}
-                className="absolute right-1 top-2"
-              />
-              <PixelIcon
-                assetId="world.flower"
-                decorative
-                width={34}
-                height={34}
-                className="relative z-20 mb-6"
-              />
-              <PixelIcon
-                assetId="cat.stand"
-                decorative
-                width={62}
-                height={62}
-                className="relative z-20 mb-6"
-              />
-              <PixelIcon
-                assetId="world.grassShort"
-                decorative
-                width={220}
-                height={70}
-                className="absolute bottom-0 left-1/2 z-10 -translate-x-1/2"
-              />
-            </div>
+          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY" contentClassName="p-3">
+            <MiniWorldScene kind="garden" className="min-h-[190px] border-0" />
+            <p className="mt-3 px-2 pb-2 text-[13px] leading-6 text-muted">
+              这里会慢慢长出写作、照片、内容观察和一些还在发芽的小项目。
+            </p>
           </PixelPanel>
         </aside>
       </section>
