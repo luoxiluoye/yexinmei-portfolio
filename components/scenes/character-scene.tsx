@@ -1,3 +1,4 @@
+import { HeroCatQuest } from "@/components/game/hero-cat-quest";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { SpeechBubble } from "@/components/ui/speech-bubble";
 import { cn } from "@/lib/cn";
@@ -165,21 +166,23 @@ export function CharacterScene({
           </>
         )}
 
-        <PixelIcon
-          assetId="cat.sit"
-          decorative
-          width={120}
-          height={120}
-          className={cn(
-            "absolute top-[68%] z-30 h-auto max-w-none",
-            compact
-              ? "left-[38%] w-[72px] lg:left-[39%] lg:w-[82px]"
-              : isPlayer
-                ? "left-[34%] w-[84px] lg:left-[36%] lg:w-[96px]"
-                : "left-[37%] w-[92px] lg:left-[38%] lg:w-[112px]"
-          )}
-          style={{ transform: "translate(-50%, -79.9%)" }}
-        />
+        {!isHome && (
+          <PixelIcon
+            assetId="cat.sit"
+            decorative
+            width={120}
+            height={120}
+            className={cn(
+              "absolute top-[68%] z-30 h-auto max-w-none",
+              compact
+                ? "left-[38%] w-[72px] lg:left-[39%] lg:w-[82px]"
+                : isPlayer
+                  ? "left-[34%] w-[84px] lg:left-[36%] lg:w-[96px]"
+                  : "left-[37%] w-[92px] lg:left-[38%] lg:w-[112px]"
+            )}
+            style={{ transform: "translate(-50%, -79.9%)" }}
+          />
+        )}
 
         <PixelIcon
           assetId={characterId}
@@ -209,6 +212,8 @@ export function CharacterScene({
           />
         )}
       </div>
+
+      {isHome && <HeroCatQuest />}
     </div>
   );
 }
