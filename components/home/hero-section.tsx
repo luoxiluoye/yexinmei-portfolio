@@ -13,9 +13,12 @@ export function HeroSection() {
           </p>
 
           <h1 className="mt-3">
-            <span className="block text-[clamp(46px,12vw,58px)] font-black leading-[1.02] tracking-[-0.045em] lg:text-[64px]">
+            <span
+              className="block text-[clamp(48px,12vw,60px)] font-normal leading-[1.02] tracking-[-0.025em] lg:text-[68px]"
+              style={{ fontFamily: "var(--font-zh-display), var(--rpg-font-body)" }}
+            >
               {homeContent.titleZh}
-              <span className="ml-2 align-top text-[0.34em] text-accent">♥</span>
+              <span className="ml-2 align-top font-pixel text-[0.30em] text-accent">♥</span>
             </span>
             <span className="mt-1.5 block font-pixel text-[16px] uppercase tracking-[-0.02em] text-muted lg:text-[19px]">
               {homeContent.titleEn}
