@@ -1,3 +1,4 @@
+import { FooterCatEasterEgg } from "@/components/game/footer-cat-easter-egg";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 
 export function SiteFooter() {
@@ -46,20 +47,7 @@ export function SiteFooter() {
               <span className="ml-3">Stay curious. Keep building. Make impact.</span>
             </div>
 
-            <div className="relative h-full w-[260px]">
-              <PixelIcon
-                assetId="cat.sit"
-                decorative
-                width={66}
-                height={66}
-                className="absolute bottom-[5px] right-[108px] z-10 h-auto w-[66px]"
-              />
-              <div className="absolute bottom-[24px] right-3 flex gap-1.5">
-                <PixelIcon assetId="ui.heart" decorative width={20} height={20} />
-                <PixelIcon assetId="ui.heart" decorative width={20} height={20} />
-                <PixelIcon assetId="ui.heart" decorative width={20} height={20} />
-              </div>
-            </div>
+            <FooterCatEasterEgg />
           </div>
         </div>
       </div>
