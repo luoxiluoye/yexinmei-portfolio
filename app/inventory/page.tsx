@@ -1,6 +1,7 @@
 import type { AssetId } from "@/lib/assets";
 import { skills } from "@/data/skills";
 
+import { InventoryChest } from "@/components/game/inventory-chest";
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
@@ -15,6 +16,8 @@ const toolIcons: AssetId[] = [
   "items.chest",
   "items.mail",
 ];
+
+const toolIconSizes = [40, 40, 38, 28, 38, 36] as const;
 
 const skillIcons: AssetId[] = [
   "items.sword",
@@ -59,7 +62,7 @@ export default function InventoryPage() {
                   index={index}
                   label={tool.name}
                   detail={tool.level}
-                  iconSize={40}
+                  iconSize={toolIconSizes[index]}
                 />
               ))}
             </div>
@@ -119,6 +122,8 @@ export default function InventoryPage() {
                 ))}
               </div>
             </div>
+
+            <InventoryChest />
           </PixelPanel>
         </aside>
       </section>
