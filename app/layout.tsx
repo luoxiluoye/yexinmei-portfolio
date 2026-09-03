@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Pixelify_Sans, ZCOOL_QingKe_HuangYou } from "next/font/google";
+import { Pixelify_Sans } from "next/font/google";
 
 import "./globals.css";
 
@@ -17,13 +17,6 @@ const pixelFont = Pixelify_Sans({
   fallback: ["Courier New", "Lucida Console", "monospace"],
 });
 
-const zhDisplayFont = ZCOOL_QingKe_HuangYou({
-  weight: "400",
-  variable: "--font-zh-display",
-  display: "swap",
-  preload: false,
-});
-
 export const metadata: Metadata = {
   title: {
     default: "罗叶馨梅 | Yexinmei Luo",
@@ -39,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={`${pixelFont.variable} ${zhDisplayFont.variable}`}>
+    <html lang="zh-CN" className={pixelFont.variable}>
       <body className="pb-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom))] lg:pb-0">
         <Navbar />
         <MobileNav />
