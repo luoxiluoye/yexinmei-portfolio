@@ -23,7 +23,7 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
           decorative
           width={62}
           height={47}
-          className="absolute right-3 top-2 z-0 opacity-85"
+          className="absolute right-3 top-2 z-0 h-auto w-[62px] opacity-80"
         />
       )}
 
@@ -33,25 +33,28 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
           decorative
           width={46}
           height={35}
-          className="absolute left-4 top-5 z-0 opacity-75"
+          className="absolute left-4 top-5 z-0 h-auto w-[46px] opacity-70"
         />
       )}
 
+      {/* The visible green surface of grassShort sits at ~49% of its source canvas. */}
       <PixelIcon
         assetId="world.grassShort"
         decorative
-        width={230}
-        height={70}
-        className="absolute bottom-0 left-1/2 z-10 w-[70%] -translate-x-1/2"
+        width={330}
+        height={110}
+        className="absolute left-1/2 top-[68%] z-10 h-auto w-[86%] max-w-[360px]"
+        style={{ transform: "translate(-50%, -49%)" }}
       />
 
       {kind === "cat" && (
         <PixelIcon
           assetId="cat.sit"
           decorative
-          width={62}
-          height={62}
-          className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2"
+          width={72}
+          height={72}
+          className="absolute left-1/2 top-[68%] z-20 h-auto w-[72px]"
+          style={{ transform: "translate(-50%, -79.9%)" }}
         />
       )}
 
@@ -60,16 +63,18 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
           <PixelIcon
             assetId="world.flower"
             decorative
-            width={28}
-            height={28}
-            className="absolute bottom-4 left-[38%] z-20"
+            width={30}
+            height={30}
+            className="absolute left-[36%] top-[68%] z-20 h-auto w-[30px]"
+            style={{ transform: "translate(-50%, -73.6%)" }}
           />
           <PixelIcon
             assetId="cat.stand"
             decorative
-            width={58}
-            height={58}
-            className="absolute bottom-4 left-[52%] z-20 -translate-x-1/2"
+            width={72}
+            height={72}
+            className="absolute left-[55%] top-[68%] z-20 h-auto w-[72px]"
+            style={{ transform: "translate(-50%, -84.1%)" }}
           />
         </>
       )}
@@ -78,9 +83,10 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
         <PixelIcon
           assetId="items.camera"
           decorative
-          width={54}
-          height={54}
-          className="absolute bottom-5 left-1/2 z-20 -translate-x-1/2"
+          width={58}
+          height={58}
+          className="absolute left-1/2 top-[68%] z-20 h-auto w-[58px]"
+          style={{ transform: "translate(-50%, -69.7%)" }}
         />
       )}
     </div>
