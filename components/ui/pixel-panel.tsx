@@ -49,7 +49,7 @@ export function PixelPanel({
         )}
 
         {(title || eyebrow || rightSlot) && (
-          <div className="flex min-h-[44px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
+          <div className="flex min-h-[42px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
             <div className="min-w-0">
               {eyebrow && (
                 <p className="font-pixel text-[10px] leading-4 text-accent">
@@ -57,7 +57,7 @@ export function PixelPanel({
                 </p>
               )}
               {title && (
-                <h2 className="truncate font-pixel text-[14px] leading-5 lg:text-[16px]">
+                <h2 className="truncate font-pixel text-[14px] leading-5 lg:text-[17px]">
                   {title}
                 </h2>
               )}
@@ -75,7 +75,7 @@ export function PixelPanel({
           </div>
         )}
 
-        <div className={cn("p-4 lg:p-[18px]", contentClassName)}>{children}</div>
+        <div className={cn("p-4 lg:p-5", contentClassName)}>{children}</div>
       </div>
     </section>
   );
