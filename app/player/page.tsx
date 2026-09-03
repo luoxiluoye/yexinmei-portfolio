@@ -25,17 +25,17 @@ const facts = [
 
 export default function PlayerPage() {
   return (
-    <main className="site-container py-4 lg:py-8">
-      <header className="mb-4 lg:mb-8">
+    <main className="site-container py-5 lg:py-8">
+      <header className="mb-5 lg:mb-8">
         <p className="font-pixel text-[12px] text-muted">02. PLAYER</p>
         <h1 className="rpg-page-title mt-2">PLAYER PROFILE</h1>
       </header>
 
-      <section className="grid gap-4 lg:grid-cols-[36fr_64fr] lg:items-start lg:gap-5">
+      <section className="grid gap-4 lg:grid-cols-[40fr_60fr] lg:items-start lg:gap-5">
         <CharacterScene variant="player" />
 
         <PixelPanel eyebrow="PLAYER" title={profile.nameEn.toUpperCase()} accent>
-          <div className="grid gap-5 lg:grid-cols-[1fr_160px]">
+          <div className="grid gap-5 lg:grid-cols-[1fr_170px]">
             <dl className="space-y-4">
               <ProfileRow label="Name" value={profile.nameZh} />
               <ProfileRow label="Base" value={profile.base} />
@@ -55,7 +55,7 @@ export default function PlayerPage() {
         </PixelPanel>
       </section>
 
-      <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[30fr_40fr_30fr] lg:gap-5 lg:pb-0">
+      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:gap-5 lg:pb-0">
         <PixelPanel eyebrow="STORY" title="CHARACTER STORY">
           <div className="space-y-4 text-[15px] leading-[26px] text-muted">
             {profile.introLong.map((paragraph) => (
@@ -65,21 +65,21 @@ export default function PlayerPage() {
         </PixelPanel>
 
         <PixelPanel eyebrow="WORLD MAP" title="JOURNEY">
-          <div className="hidden grid-cols-4 gap-2 lg:grid">
+          <div className="relative hidden grid-cols-4 gap-2 lg:grid">
+            <PixelIcon assetId="world.tree" decorative width={34} height={45} className="absolute -right-1 -top-2 z-0 opacity-65" />
+            <PixelIcon assetId="world.castle" decorative width={40} height={40} className="absolute -bottom-1 left-1 z-0 opacity-55" />
             {journey.map((item, index) => (
               <div
                 key={item}
                 className={[
-                  "relative min-h-[76px] border border-divider px-3 py-3",
+                  "relative z-10 min-h-[78px] border border-divider px-3 py-3",
                   item === "NOW" ? "bg-foreground text-white" : "bg-soft",
                 ].join(" ")}
               >
-                <span
-                  className={[
-                    "font-pixel text-[10px]",
-                    item === "NOW" ? "text-white/60" : "text-accent",
-                  ].join(" ")}
-                >
+                <span className={[
+                  "font-pixel text-[10px]",
+                  item === "NOW" ? "text-white/60" : "text-accent",
+                ].join(" ")}>
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <p className="mt-2 text-[13px] leading-5">{item}</p>
@@ -89,7 +89,7 @@ export default function PlayerPage() {
                     decorative
                     width={14}
                     height={14}
-                    className="absolute -right-2 top-1/2 z-10 -translate-y-1/2 bg-paper"
+                    className="absolute -right-2 top-1/2 z-20 -translate-y-1/2 bg-paper"
                   />
                 )}
               </div>
@@ -112,11 +112,8 @@ export default function PlayerPage() {
         <PixelPanel eyebrow="INTERESTS" title="FUN FACTS">
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
             {facts.map(([assetId, fact]) => (
-              <div
-                key={fact}
-                className="flex min-h-[64px] items-center gap-3 border border-divider bg-soft p-3"
-              >
-                <PixelIcon assetId={assetId} decorative width={28} height={28} />
+              <div key={fact} className="flex min-h-[64px] items-center gap-3 border border-divider bg-soft p-3">
+                <PixelIcon assetId={assetId} decorative width={30} height={30} />
                 <span className="text-sm leading-6">{fact}</span>
               </div>
             ))}
