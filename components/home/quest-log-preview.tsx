@@ -26,6 +26,7 @@ export function QuestLogPreview() {
       eyebrow="CURRENT"
       title="QUEST LOG"
       rightSlot={<span className="font-pixel text-[11px] text-muted">03</span>}
+      interactive
       className="h-full"
     >
       <div className="divide-y divide-divider">
@@ -33,18 +34,19 @@ export function QuestLogPreview() {
           <Link
             key={quest.slug}
             href={`/quests/${quest.slug}`}
-            className="group grid grid-cols-[32px_1fr_auto] items-center gap-3 py-3 first:pt-0 last:pb-0"
+            className="rpg-row-link group grid grid-cols-[36px_1fr_auto] items-center gap-3 py-3 first:pt-0 last:pb-0"
           >
             <PixelIcon
               assetId={questIconBySlug[quest.slug] ?? "items.notebook"}
               decorative
-              width={28}
-              height={28}
+              width={32}
+              height={32}
+              className="transition-transform duration-100 group-hover:-translate-y-px"
             />
 
             <div className="min-w-0">
-              <p className="truncate font-medium">{quest.title}</p>
-              <p className="truncate font-pixel text-[11px] leading-5 text-muted">{quest.code}</p>
+              <p className="truncate text-[14px] font-semibold leading-5">{quest.title}</p>
+              <p className="truncate font-pixel text-[10px] leading-5 text-muted">{quest.code}</p>
             </div>
 
             <PixelTag variant={getStatusVariant(quest.status)}>
