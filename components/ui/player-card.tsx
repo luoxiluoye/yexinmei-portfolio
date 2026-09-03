@@ -42,7 +42,7 @@ export function PlayerCard({
   className,
 }: PlayerCardProps) {
   return (
-    <PixelPanel eyebrow="PLAYER" title="PROFILE" accent className={className}>
+    <PixelPanel eyebrow="PLAYER" title="PROFILE" accent interactive className={className}>
       <div className="flex items-center gap-4">
         <div className="flex h-[72px] w-[72px] shrink-0 items-center justify-center border border-divider bg-soft">
           {avatar ?? (
