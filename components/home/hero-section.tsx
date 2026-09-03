@@ -1,7 +1,6 @@
 import { homeContent } from "@/data/home";
 import { DataBadges } from "@/components/home/data-badges";
 import { PixelButton } from "@/components/ui/pixel-button";
-import { PixelIcon } from "@/components/ui/pixel-icon";
 import { CharacterScene } from "@/components/scenes/character-scene";
 
 export function HeroSection() {
@@ -23,10 +22,13 @@ export function HeroSection() {
             </span>
           </h1>
 
-          <div className="mt-4 inline-flex items-center gap-2 bg-foreground px-3 py-1.5 text-[12px] text-white shadow-[2px_2px_0_rgba(17,17,17,.12)]">
-            <PixelIcon assetId="ui.arrow" decorative width={14} height={14} className="brightness-0 invert" />
-            <span>{homeContent.keywords.join(" / ")}</span>
-            <span className="text-accent">◆</span>
+          <div className="mt-4 inline-grid max-w-full grid-cols-[auto_minmax(0,1fr)] border-2 border-border bg-paper shadow-[2px_2px_0_rgba(17,17,17,.10)]">
+            <span className="flex items-center bg-foreground px-2.5 py-2 font-pixel text-[10px] leading-none text-white lg:px-3 lg:text-[11px]">
+              CLASS
+            </span>
+            <span className="min-w-0 px-3 py-1.5 text-[12px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[13px]">
+              {homeContent.keywords.join(" · ")}
+            </span>
           </div>
 
           <p className="mt-4 max-w-[560px] text-[15px] leading-[26px] text-muted lg:text-[16px]">
