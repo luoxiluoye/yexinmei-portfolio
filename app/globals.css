@@ -154,9 +154,91 @@
   70% { transform: rotate(4deg); }
 }
 
+@keyframes rpg-icon-hop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
 .rpg-blink { animation: rpg-blink 1.8s steps(2, end) infinite; }
 .rpg-logo-cat { transform-origin: 50% 80%; }
 .group:hover .rpg-logo-cat { animation: rpg-wiggle 0.45s steps(2, end) 1; }
+
+/*
+ * Micro interactions intentionally stay tiny: old-game feedback rather than
+ * modern SaaS motion. They only run on precise hover devices.
+ */
+.rpg-window-interactive,
+.rpg-stat-card,
+.rpg-item-slot,
+.rpg-note-card {
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.rpg-row-link {
+  transition: color 120ms ease, background-color 120ms ease, padding 120ms ease;
+}
+
+.rpg-window-controls {
+  transition: color 120ms ease, opacity 120ms ease;
+  opacity: .72;
+}
+
+.rpg-window-control {
+  display: inline-block;
+  min-width: 9px;
+  text-align: center;
+  transition: color 120ms ease, transform 120ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rpg-window-interactive:hover,
+  .rpg-stat-card:hover,
+  .rpg-item-slot:hover,
+  .rpg-note-card:hover {
+    transform: translate(-2px, -2px);
+    filter: drop-shadow(4px 4px 0 rgba(17,17,17,.12));
+  }
+
+  .rpg-window-interactive:active,
+  .rpg-stat-card:active,
+  .rpg-item-slot:active,
+  .rpg-note-card:active {
+    transform: translate(1px, 1px);
+    filter: drop-shadow(1px 1px 0 rgba(17,17,17,.08));
+  }
+
+  .rpg-stat-card:hover .rpg-stat-icon,
+  .rpg-item-slot:hover .rpg-item-icon,
+  .rpg-note-card:hover .rpg-note-icon {
+    animation: rpg-icon-hop .34s steps(2, end) 1;
+  }
+
+  .rpg-row-link:hover {
+    background: var(--rpg-color-soft);
+    color: var(--rpg-color-text);
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .rpg-window-interactive:hover .rpg-window-controls {
+    opacity: 1;
+  }
+
+  .rpg-window-interactive:hover .rpg-window-control:nth-child(1) {
+    color: var(--rpg-color-yellow);
+    transform: translateY(-1px);
+  }
+
+  .rpg-window-interactive:hover .rpg-window-control:nth-child(2) {
+    color: var(--rpg-color-green);
+    transform: translateY(-1px);
+  }
+
+  .rpg-window-interactive:hover .rpg-window-control:nth-child(3) {
+    color: var(--rpg-color-red);
+    transform: translateY(-1px);
+  }
+}
 
 @media (pointer: fine) {
   a, button { cursor: url("/assets/ui/cursor.png") 2 2, pointer; }
