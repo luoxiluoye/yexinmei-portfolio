@@ -6,9 +6,9 @@ import { CharacterScene } from "@/components/scenes/character-scene";
 
 export function HeroSection() {
   return (
-    <section className="site-container pt-3 lg:pt-4">
-      <div className="grid gap-3 lg:grid-cols-[44fr_56fr] lg:items-center lg:gap-[18px]">
-        <div className="order-2 py-2 lg:order-1 lg:py-5">
+    <section className="site-container pt-4 lg:pt-8">
+      <div className="grid gap-4 lg:grid-cols-[45fr_55fr] lg:items-center lg:gap-5">
+        <div className="order-2 py-2 lg:order-1 lg:py-4">
           <p className="font-pixel text-[11px] text-muted lg:text-[12px]">
             {homeContent.eyebrow}
           </p>
