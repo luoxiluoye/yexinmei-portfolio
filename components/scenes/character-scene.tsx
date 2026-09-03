@@ -208,7 +208,10 @@ export function CharacterScene({
             width={210}
             height={280}
             className="absolute left-[80%] top-[68%] z-10 h-auto w-[145px] max-w-none lg:left-[81%] lg:w-[180px]"
-            style={{ transform: "translate(-50%, -70%)" }}
+            style={{
+              transform: "translate(-50%, -70%)",
+              clipPath: "polygon(0 0,100% 0,100% 63%,58% 63%,58% 100%,42% 100%,42% 63%,0 63%)",
+            }}
           />
         )}
       </div>
