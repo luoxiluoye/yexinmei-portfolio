@@ -18,16 +18,9 @@ const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
 };
 
 const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
-  email: "邮箱",
-  phone: "手机号",
-  wechat: "微信",
-  resume: "简历",
-};
-
-const noteByType: Record<(typeof contact.items)[number]["type"], string> = {
   email: "求职 / 合作 / 内容交流",
   phone: "需要时可以直接联系",
-  wechat: "点击右侧即可复制",
+  wechat: "点击按钮复制微信号",
   resume: "PDF 版本之后补充",
 };
 
@@ -46,105 +39,87 @@ export default function ContactPage() {
 
   return (
     <main className="site-container py-5 lg:py-8">
-      <PixelPanel
-        eyebrow="07. CONTACT"
-        className="mx-auto max-w-[980px]"
-        contentClassName="p-4 sm:p-5 lg:p-6"
-      >
-        <div className="grid items-center gap-4 lg:grid-cols-[44fr_56fr] lg:gap-7">
-          <div className="order-2 lg:order-1">
-            <h1 className="font-pixel text-[28px] leading-[1.05] sm:text-[34px] lg:text-[40px]">
-              {contact.heading}
-            </h1>
-            <p className="mt-3 max-w-[38ch] text-[14px] leading-6 text-muted lg:text-[15px]">
-              {contact.bubble}
-            </p>
-            <p className="mt-4 font-pixel text-[10px] text-accent">
-              MAILBOX OPEN · PLAYER ONLINE
-            </p>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <CharacterScene variant="contact" />
-          </div>
+      <section className="mx-auto grid max-w-[1080px] items-center gap-4 lg:grid-cols-[44fr_56fr] lg:gap-6">
+        <div className="order-2 lg:order-1">
+          <p className="font-pixel text-[12px] text-muted">07. CONTACT</p>
+          <h1 className="rpg-page-title mt-2">{contact.heading}</h1>
+          <p className="mt-4 max-w-[42ch] text-[15px] leading-[26px] text-muted">
+            {contact.bubble}
+          </p>
+          <p className="mt-4 font-pixel text-[10px] text-accent">MAILBOX OPEN · PLAYER ONLINE</p>
         </div>
 
-        <div className="mt-4 space-y-2 lg:mt-5">
-          {contact.items.map((item, index) => {
-            const pending = item.value === "TODO";
-            const displayValue = pending ? "COMING SOON" : item.value;
-            const isWechat = item.type === "wechat";
-            const href =
-              item.type === "email"
-                ? `mailto:${item.value}`
-                : item.type === "phone"
-                  ? `tel:${item.value}`
-                  : undefined;
+        <div className="order-1 lg:order-2">
+          <CharacterScene variant="contact" bubbleText="欢迎来找我聊聊 :)" />
+        </div>
+      </section>
 
-            const row = (
-              <div className="flex min-h-[68px] items-center gap-3 border border-divider bg-paper px-3 py-2.5 transition-colors hover:border-border sm:gap-4 sm:px-4">
-                <div className="flex h-[50px] w-[50px] shrink-0 items-center justify-center border border-divider bg-soft sm:h-[54px] sm:w-[54px]">
+      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
+        {contact.items.map((item, index) => {
+          const pending = item.value === "TODO";
+          const displayValue = pending ? "COMING SOON" : item.value;
+          const isWechat = item.type === "wechat";
+          const href =
+            item.type === "email"
+              ? `mailto:${item.value}`
+              : item.type === "phone"
+                ? `tel:${item.value}`
+                : undefined;
+
+          return (
+            <PixelPanel
+              key={item.type}
+              eyebrow={`0${index + 1}`}
+              title={item.label}
+              accent={index === 0}
+              className="h-full"
+              contentClassName="flex h-[190px] flex-col p-4 lg:p-5"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-[54px] w-[54px] shrink-0 items-center justify-center border border-divider bg-soft">
                   <PixelIcon
                     assetId={assetByType[item.type]}
                     decorative
-                    width={44}
-                    height={44}
-                    className="h-[42px] w-[42px] sm:h-[46px] sm:w-[46px]"
+                    width={46}
+                    height={46}
+                    className="h-[44px] w-[44px]"
                   />
                 </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-pixel text-[9px] text-accent">SLOT 0{index + 1}</span>
-                    <span className="font-pixel text-[10px]">{item.label}</span>
-                  </div>
-                  <p className="mt-0.5 break-all text-[14px] font-semibold leading-5 sm:text-[15px]">
-                    {displayValue}
-                  </p>
-                  <p className="mt-0.5 text-[11px] leading-4 text-muted sm:text-[12px]">
-                    {hintByType[item.type]} · {noteByType[item.type]}
-                  </p>
-                </div>
-
-                <div className="shrink-0 text-right">
-                  {isWechat && !pending ? (
-                    <button
-                      type="button"
-                      onClick={() => copyWechat(item.value)}
-                      className="min-h-11 border border-border bg-soft px-3 font-pixel text-[9px] hover:border-accent hover:text-accent"
-                    >
-                      {copied ? "COPIED ✓" : "COPY"}
-                    </button>
-                  ) : (
-                    <span className="font-pixel text-[9px] text-muted">
-                      {pending ? "LOCKED" : href ? "OPEN →" : "READY"}
-                    </span>
-                  )}
+                <div className="min-w-0">
+                  <p className="break-all text-[14px] font-semibold leading-5">{displayValue}</p>
+                  <p className="mt-2 text-[12px] leading-5 text-muted">{hintByType[item.type]}</p>
                 </div>
               </div>
-            );
 
-            if (href && !pending) {
-              return (
-                <a key={item.type} href={href} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                  {row}
-                </a>
-              );
-            }
+              <div className="mt-auto pt-4">
+                {pending ? (
+                  <PixelButton variant="secondary" disabled className="w-full">
+                    简历稍后补充
+                  </PixelButton>
+                ) : isWechat ? (
+                  <PixelButton
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => copyWechat(item.value)}
+                  >
+                    {copied ? "已复制 ✓" : "复制微信号"}
+                  </PixelButton>
+                ) : (
+                  <PixelButton href={href} variant={index === 0 ? "primary" : "secondary"} className="w-full">
+                    {item.type === "email" ? "发送邮件" : "拨打电话"}
+                  </PixelButton>
+                )}
+              </div>
+            </PixelPanel>
+          );
+        })}
+      </section>
 
-            return <div key={item.type}>{row}</div>;
-          })}
+      {copied && (
+        <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
+          WECHAT COPIED · 微信号已复制
         </div>
-
-        <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:mt-5">
-          <PixelButton href={`mailto:${contact.items[0].value}`} variant="primary" className="w-full">
-            发送邮件
-          </PixelButton>
-          <PixelButton variant="secondary" disabled className="w-full">
-            简历稍后补充
-          </PixelButton>
-        </div>
-      </PixelPanel>
+      )}
     </main>
   );
 }
