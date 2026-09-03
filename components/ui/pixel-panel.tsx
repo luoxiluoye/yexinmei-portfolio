@@ -11,6 +11,7 @@ type PixelPanelProps = {
   accent?: boolean;
   catPeek?: boolean;
   windowChrome?: boolean;
+  interactive?: boolean;
   className?: string;
   surfaceClassName?: string;
   contentClassName?: string;
@@ -24,12 +25,19 @@ export function PixelPanel({
   accent = false,
   catPeek = false,
   windowChrome = true,
+  interactive = false,
   className,
   surfaceClassName,
   contentClassName,
 }: PixelPanelProps) {
   return (
-    <section className={cn("pixel-cut-frame", className)}>
+    <section
+      className={cn(
+        "pixel-cut-frame",
+        interactive && "rpg-window-interactive group",
+        className
+      )}
+    >
       <div className={cn("pixel-cut-surface relative", surfaceClassName)}>
         {accent && (
           <span
@@ -66,10 +74,13 @@ export function PixelPanel({
             {rightSlot ? (
               <div className="shrink-0">{rightSlot}</div>
             ) : windowChrome ? (
-              <div aria-hidden="true" className="hidden shrink-0 items-center gap-2 font-pixel text-[11px] leading-none text-muted lg:flex">
-                <span>−</span>
-                <span>□</span>
-                <span>×</span>
+              <div
+                aria-hidden="true"
+                className="rpg-window-controls hidden shrink-0 items-center gap-2 font-pixel text-[11px] leading-none text-muted lg:flex"
+              >
+                <span className="rpg-window-control">−</span>
+                <span className="rpg-window-control">□</span>
+                <span className="rpg-window-control">×</span>
               </div>
             ) : null}
           </div>
