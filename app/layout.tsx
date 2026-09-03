@@ -18,7 +18,6 @@ const pixelFont = Pixelify_Sans({
 });
 
 const zhDisplayFont = ZCOOL_QingKe_HuangYou({
-  subsets: ["latin", "chinese-simplified"],
   weight: "400",
   variable: "--font-zh-display",
   display: "swap",
