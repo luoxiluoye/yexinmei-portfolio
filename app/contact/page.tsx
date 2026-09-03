@@ -72,17 +72,18 @@ export default function ContactPage() {
               eyebrow={`0${index + 1}`}
               title={item.label}
               accent={index === 0}
+              interactive
               className="h-full"
               contentClassName="flex h-[190px] flex-col p-4 lg:p-5"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-[54px] w-[54px] shrink-0 items-center justify-center border border-divider bg-soft">
+                <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-divider bg-soft">
                   <PixelIcon
                     assetId={assetByType[item.type]}
                     decorative
-                    width={46}
-                    height={46}
-                    className="h-[44px] w-[44px]"
+                    width={48}
+                    height={48}
+                    className="rpg-item-icon h-[46px] w-[46px]"
                   />
                 </div>
                 <div className="min-w-0">
