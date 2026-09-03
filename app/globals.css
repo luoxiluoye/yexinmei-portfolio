@@ -159,9 +159,15 @@
   50% { transform: translateY(-3px); }
 }
 
+@keyframes rpg-heart-pop {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.16) translateY(-3px); }
+}
+
 .rpg-blink { animation: rpg-blink 1.8s steps(2, end) infinite; }
 .rpg-logo-cat { transform-origin: 50% 80%; }
 .group:hover .rpg-logo-cat { animation: rpg-wiggle 0.45s steps(2, end) 1; }
+.rpg-quest-heart { animation: rpg-heart-pop .7s steps(2, end) infinite; }
 
 /*
  * Micro interactions intentionally stay tiny: old-game feedback rather than
