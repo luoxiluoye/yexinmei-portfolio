@@ -32,15 +32,23 @@ export default function JournalPage() {
             {journalSeed.map((entry) => (
               <article
                 key={entry.title}
-                className="grid grid-cols-[76px_1fr] gap-4 border-2 border-border bg-paper p-3 sm:block sm:min-h-[236px] sm:p-4"
+                className="rpg-note-card group grid grid-cols-[80px_1fr] gap-4 border-2 border-border bg-paper p-3 sm:block sm:min-h-[236px] sm:p-4"
               >
-                <div className="flex h-[76px] items-center justify-center border border-divider bg-soft sm:h-[96px]">
-                  <PixelIcon assetId="items.notebook" decorative width={44} height={44} />
+                <div className="flex h-[80px] items-center justify-center border border-divider bg-soft sm:h-[100px]">
+                  <PixelIcon
+                    assetId="items.notebook"
+                    decorative
+                    width={48}
+                    height={48}
+                    className="rpg-note-icon"
+                  />
                 </div>
 
                 <div className="min-w-0 sm:mt-4">
                   <p className="font-pixel text-[10px] text-accent">{entry.category}</p>
-                  <h2 className="mt-1 text-[16px] font-bold leading-6">{entry.title}</h2>
+                  <h2 className="mt-1 text-[16px] font-bold leading-6 transition-colors group-hover:text-accent">
+                    {entry.title}
+                  </h2>
                   <p className="mt-2 text-[13px] leading-6 text-muted">{entry.summary}</p>
                   <p className="mt-3 font-pixel text-[10px] text-muted">{entry.status}</p>
                 </div>
@@ -52,7 +60,7 @@ export default function JournalPage() {
         </div>
 
         <aside className="hidden lg:block">
-          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY" contentClassName="p-3">
+          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY" interactive contentClassName="p-3">
             <MiniWorldScene kind="garden" className="min-h-[190px] border-0" />
             <p className="mt-3 px-2 pb-2 text-[13px] leading-6 text-muted">
               这里会慢慢长出写作、照片、内容观察和一些还在发芽的小项目。
