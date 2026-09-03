@@ -135,7 +135,7 @@ export function CharacterScene({
           width={1040}
           height={520}
           className={cn(
-            "absolute left-1/2 top-[68%] h-auto max-w-none",
+            "absolute left-1/2 top-[68%] z-20 h-auto max-w-none",
             compact
               ? "w-[420px] lg:w-[500px]"
               : isPlayer
@@ -207,8 +207,8 @@ export function CharacterScene({
             decorative
             width={210}
             height={280}
-            className="absolute left-[80%] top-[68%] z-20 h-auto w-[145px] max-w-none lg:left-[81%] lg:w-[180px]"
-            style={{ transform: "translate(-50%, -77.7%)" }}
+            className="absolute left-[80%] top-[68%] z-10 h-auto w-[145px] max-w-none lg:left-[81%] lg:w-[180px]"
+            style={{ transform: "translate(-50%, -70%)" }}
           />
         )}
       </div>
