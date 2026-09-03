@@ -1,4 +1,4 @@
-import { PixelIcon } from "@/components/ui/pixel-icon";
+import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const sections = [
@@ -12,7 +12,7 @@ const sections = [
 
 export function QuestDetailSidebar() {
   return (
-    <div className="sticky top-[92px] space-y-4">
+    <div className="sticky top-[84px] space-y-4">
       <PixelPanel eyebrow="QUEST" title="MAP">
         <div className="space-y-2">
           {sections.map(([index, label]) => (
@@ -24,30 +24,8 @@ export function QuestDetailSidebar() {
         </div>
       </PixelPanel>
 
-      <PixelPanel eyebrow="MASCOT" title="CURRENT QUEST">
-        <div className="relative min-h-[150px] overflow-hidden">
-          <PixelIcon
-            assetId="world.grassShort"
-            decorative
-            width={190}
-            height={60}
-            className="absolute bottom-0 left-1/2 z-10 w-[76%] -translate-x-1/2"
-          />
-          <PixelIcon
-            assetId="cat.sit"
-            decorative
-            width={68}
-            height={68}
-            className="absolute bottom-[22px] left-1/2 z-20 -translate-x-1/2"
-          />
-          <PixelIcon
-            assetId="ui.sparkle"
-            decorative
-            width={16}
-            height={16}
-            className="absolute right-[18%] top-[20%] z-0"
-          />
-        </div>
+      <PixelPanel eyebrow="MASCOT" title="CURRENT QUEST" contentClassName="p-3">
+        <MiniWorldScene kind="cat" className="min-h-[145px] border-0" />
       </PixelPanel>
     </div>
   );
