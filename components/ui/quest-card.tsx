@@ -22,20 +22,28 @@ export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
   return (
     <Link
       href={`/quests/${quest.slug}`}
-      className="group pixel-cut-frame block transition-transform hover:-translate-x-px hover:-translate-y-px active:translate-x-px active:translate-y-px"
+      className="group pixel-cut-frame rpg-window-interactive block"
     >
       <article className="pixel-cut-surface flex min-h-[198px] flex-col p-4 lg:min-h-[210px] lg:p-5">
         <div className="grid min-w-0 grid-cols-[1fr_auto] items-start gap-3">
           <div className="flex min-w-0 items-start gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-divider bg-soft">
-              <PixelIcon assetId={getQuestIcon(quest)} decorative width={36} height={36} />
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-divider bg-soft transition-colors group-hover:border-border group-hover:bg-paper">
+              <PixelIcon
+                assetId={getQuestIcon(quest)}
+                decorative
+                width={36}
+                height={36}
+                className="rpg-item-icon"
+              />
             </div>
 
             <div className="min-w-0">
-              <p className="font-pixel text-[11px] text-muted">
+              <p className="font-pixel text-[10px] text-muted">
                 {quest.code} · {String(index + 1).padStart(2, "0")}
               </p>
-              <h2 className="mt-1 text-[17px] font-bold leading-6 lg:text-[18px]">{quest.title}</h2>
+              <h2 className="mt-1 text-[17px] font-bold leading-6 transition-colors group-hover:text-accent lg:text-[18px]">
+                {quest.title}
+              </h2>
             </div>
           </div>
 
@@ -54,7 +62,9 @@ export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
 
         <div className="mt-auto flex items-center justify-between border-t border-divider pt-3">
           <span className="text-[12px] text-muted">{quest.role}</span>
-          <span className="font-pixel text-[11px] transition-colors group-hover:text-accent">OPEN →</span>
+          <span className="font-pixel text-[11px] transition-transform duration-100 group-hover:translate-x-1 group-hover:text-accent">
+            OPEN →
+          </span>
         </div>
       </article>
     </Link>
