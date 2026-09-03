@@ -1,5 +1,5 @@
 :root {
-  /* UI Fidelity v1.7 — closer to the approved pixel RPG board */
+  /* UI Final v1.1 — implementation follows the approved board */
   /* Colors */
   --rpg-color-bg: #faf8f3;
   --rpg-color-surface: #fffdf8;
@@ -23,7 +23,7 @@
   --rpg-panel-title: 17px;
   --rpg-tag-text: 12px;
 
-  /* Spacing */
+  /* Spacing — matches the v1.1 handoff rhythm */
   --rpg-space-1: 4px;
   --rpg-space-2: 8px;
   --rpg-space-3: 12px;
@@ -35,17 +35,17 @@
   --rpg-space-12: 48px;
   --rpg-space-16: 64px;
 
-  --rpg-section-gap: 24px;
-  --rpg-panel-gap: 18px;
-  --rpg-card-gap: 14px;
-  --rpg-panel-padding: 18px;
+  --rpg-section-gap: 32px;
+  --rpg-panel-gap: 20px;
+  --rpg-card-gap: 16px;
+  --rpg-panel-padding: 20px;
   --rpg-panel-padding-mobile: 16px;
 
-  /* Layout — the reference board is deliberately wide and dashboard-like */
-  --rpg-content-max-width: 1400px;
+  /* Layout — approved UI Final: centered 1320px / 12-col / 20px gap */
+  --rpg-content-max-width: 1320px;
   --rpg-page-gutter-mobile: 16px;
-  --rpg-page-gutter-desktop: 18px;
-  --rpg-desktop-grid-gap: 18px;
+  --rpg-page-gutter-desktop: 32px;
+  --rpg-desktop-grid-gap: 20px;
 
   /* Border / pixel cut / shadow */
   --rpg-border-width: 2px;
