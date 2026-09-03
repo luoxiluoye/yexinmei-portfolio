@@ -4,34 +4,38 @@ export function SiteFooter() {
   return (
     <footer className="mt-8 border-t-2 border-border bg-background">
       <div className="site-container hidden h-[92px] items-end justify-between lg:flex">
-        <div className="relative h-full w-[260px]">
+        <div className="relative h-full w-[280px] overflow-hidden">
           <PixelIcon
-            assetId="world.grassLong"
+            assetId="world.grassShort"
             decorative
-            width={236}
-            height={118}
-            className="absolute bottom-0 left-0 z-0 w-[236px]"
+            width={270}
+            height={90}
+            className="absolute left-[48%] top-[68%] z-0 h-auto w-[270px] max-w-none"
+            style={{ transform: "translate(-50%, -49%)" }}
           />
           <PixelIcon
             assetId="world.castle"
             decorative
-            width={70}
-            height={70}
-            className="absolute bottom-[16px] left-[10px] z-10"
+            width={92}
+            height={92}
+            className="absolute left-[18%] top-[68%] z-10 h-auto w-[92px]"
+            style={{ transform: "translate(-50%, -85.2%)" }}
           />
           <PixelIcon
             assetId="world.pineTree"
             decorative
-            width={42}
-            height={56}
-            className="absolute bottom-[16px] left-[100px] z-10"
+            width={62}
+            height={83}
+            className="absolute left-[48%] top-[68%] z-10 h-auto w-[62px]"
+            style={{ transform: "translate(-50%, -82.9%)" }}
           />
           <PixelIcon
             assetId="world.tree"
             decorative
-            width={52}
-            height={69}
-            className="absolute bottom-[16px] left-[160px] z-10"
+            width={62}
+            height={83}
+            className="absolute left-[72%] top-[68%] z-10 h-auto w-[62px]"
+            style={{ transform: "translate(-50%, -89.4%)" }}
           />
         </div>
 
@@ -44,9 +48,9 @@ export function SiteFooter() {
           <PixelIcon
             assetId="cat.sit"
             decorative
-            width={64}
-            height={64}
-            className="absolute bottom-[12px] right-[104px] z-10"
+            width={72}
+            height={72}
+            className="absolute bottom-[7px] right-[104px] z-10 h-auto w-[72px]"
           />
           <div className="absolute bottom-[28px] right-0 flex gap-1.5">
             <PixelIcon assetId="ui.heart" decorative width={22} height={22} />
