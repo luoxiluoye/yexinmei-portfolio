@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @import "../styles/design-tokens.css";
 
+@font-face {
+  font-family: "Fusion Pixel 12px Proportional SC";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("https://raw.githubusercontent.com/fontsource/font-files/main/fonts/other/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff2") format("woff2");
+}
+
 @theme inline {
   --font-pixel: var(--rpg-font-pixel);
   --font-body: var(--rpg-font-body);
@@ -57,6 +65,14 @@
   font-synthesis: none;
   font-variant-ligatures: none;
   font-weight: 600;
+  letter-spacing: 0;
+}
+
+.font-pixel-zh {
+  font-family: "Fusion Pixel 12px Proportional SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+  font-variant-ligatures: none;
+  font-weight: 400;
   letter-spacing: 0;
 }
 
@@ -164,10 +180,29 @@
   50% { transform: scale(1.16) translateY(-3px); }
 }
 
+@keyframes rpg-cloud-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 8px 0; }
+}
+
+@keyframes rpg-twinkle {
+  0%, 100% { opacity: .55; transform: scale(.88); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes rpg-toast-in {
+  from { transform: translateY(8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .rpg-blink { animation: rpg-blink 1.8s steps(2, end) infinite; }
 .rpg-logo-cat { transform-origin: 50% 80%; }
 .group:hover .rpg-logo-cat { animation: rpg-wiggle 0.45s steps(2, end) 1; }
 .rpg-quest-heart { animation: rpg-heart-pop .7s steps(2, end) infinite; }
+.rpg-cloud-drift { animation: rpg-cloud-drift 7s steps(4, end) infinite; }
+.rpg-cloud-drift-slow { animation: rpg-cloud-drift 10s steps(5, end) infinite reverse; }
+.rpg-twinkle { animation: rpg-twinkle 1.6s steps(2, end) infinite; }
+.rpg-achievement-toast { animation: rpg-toast-in .18s steps(2, end) both; }
 
 /*
  * Micro interactions intentionally stay tiny: old-game feedback rather than
