@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { QuestVisitAchievement } from "@/components/game/quest-visit-achievement";
 import { getQuestBySlug, getQuestSlugs } from "@/data/quests";
 import { QuestDetailSidebar } from "@/components/quests/quest-detail-sidebar";
 import { QuestGallery } from "@/components/quests/quest-gallery";
@@ -41,6 +42,8 @@ export default async function QuestPage({ params }: QuestPageProps) {
 
   return (
     <main className="site-container py-4 lg:py-8">
+      <QuestVisitAchievement slug={slug} />
+
       <Link
         href="/quests"
         className="inline-flex min-h-11 items-center text-[13px] hover:text-accent"
