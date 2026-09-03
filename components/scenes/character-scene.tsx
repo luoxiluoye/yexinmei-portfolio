@@ -8,6 +8,22 @@ type CharacterSceneProps = {
   bubbleText?: string;
 };
 
+/**
+ * Scene assets have generous transparent canvases. Positioning their box bottoms
+ * independently made the character, cat and sign look pasted on top of each other.
+ *
+ * UI Final v1.1 treats the grass as the physical ground. Every foreground asset is
+ * therefore anchored to the SAME visible grass-top line:
+ * - grass visible top: ~46.2% down its source canvas
+ * - full body visible feet: ~88.5%
+ * - idle visible feet: ~90.5%
+ * - wave visible feet: ~92.9%
+ * - sitting cat visible feet: ~79.9%
+ * - wooden sign visible base: ~77.7%
+ *
+ * Because transforms are percentages of each asset's own box, the feet remain on
+ * the same ground line at different responsive sizes.
+ */
 export function CharacterScene({
   variant = "home",
   className,
@@ -26,13 +42,20 @@ export function CharacterScene({
   const isJournal = variant === "journal";
   const isInventory = variant === "inventory";
   const compact = isContact || isInventory || isJournal;
+
   const sceneHeight = isHome
     ? "min-h-[300px] lg:min-h-[400px]"
     : isPlayer
-      ? "min-h-[270px] lg:min-h-[320px]"
+      ? "min-h-[250px] lg:min-h-[310px]"
       : isContact
-        ? "min-h-[220px] lg:min-h-[270px]"
-        : "min-h-[180px] lg:min-h-[210px]";
+        ? "min-h-[205px] lg:min-h-[245px]"
+        : "min-h-[175px] lg:min-h-[205px]";
+
+  const characterTransform = isContact
+    ? "translate(-50%, -92.9%)"
+    : isInventory
+      ? "translate(-50%, -90.5%)"
+      : "translate(-50%, -88.5%)";
 
   return (
     <div
@@ -42,18 +65,18 @@ export function CharacterScene({
         className
       )}
     >
-      {/* SKY LAYER */}
+      {/* SKY / DISTANCE — decoration stays away from the information area. */}
       {(isHome || isPlayer || isJournal) && (
         <PixelIcon
           assetId="world.cloudLarge"
           decorative
-          width={160}
-          height={102}
+          width={180}
+          height={135}
           className={cn(
-            "pointer-events-none absolute z-0 opacity-75",
+            "pointer-events-none absolute z-0 h-auto opacity-70",
             isHome
-              ? "-left-5 top-[35%] w-[120px] h-auto lg:left-[2%] lg:top-[33%] lg:w-[150px]"
-              : "left-[4%] top-[20%] w-[116px] h-auto lg:w-[142px]"
+              ? "left-[1%] top-[30%] w-[128px] lg:left-[2%] lg:top-[30%] lg:w-[168px]"
+              : "left-[3%] top-[18%] w-[112px] lg:w-[140px]"
           )}
         />
       )}
@@ -62,13 +85,13 @@ export function CharacterScene({
         <PixelIcon
           assetId="world.cloudMedium"
           decorative
-          width={108}
-          height={70}
+          width={132}
+          height={99}
           className={cn(
-            "pointer-events-none absolute z-0 opacity-80",
+            "pointer-events-none absolute z-0 h-auto opacity-78",
             isHome
-              ? "right-[4%] top-[10%] w-[84px] h-auto lg:right-[5%] lg:top-[11%] lg:w-[108px]"
-              : "right-[7%] top-[14%] w-[86px] h-auto lg:w-[102px]"
+              ? "right-[3%] top-[9%] w-[96px] lg:right-[4%] lg:w-[126px]"
+              : "right-[6%] top-[12%] w-[88px] lg:w-[104px]"
           )}
         />
       )}
@@ -77,9 +100,9 @@ export function CharacterScene({
         <PixelIcon
           assetId="world.cloudSmall"
           decorative
-          width={66}
-          height={50}
-          className="pointer-events-none absolute right-[29%] top-[34%] z-0 w-[50px] h-auto opacity-80 lg:w-[62px]"
+          width={88}
+          height={66}
+          className="pointer-events-none absolute right-[27%] top-[31%] z-0 h-auto w-[62px] opacity-78 lg:w-[78px]"
         />
       )}
 
@@ -90,74 +113,54 @@ export function CharacterScene({
             decorative
             width={18}
             height={18}
-            className="pointer-events-none absolute left-[23%] top-[47%] z-0 h-[14px] w-[14px] lg:h-[18px] lg:w-[18px]"
+            className="pointer-events-none absolute left-[20%] top-[43%] z-0 h-[14px] w-[14px] lg:h-[18px] lg:w-[18px]"
           />
           <PixelIcon
             assetId="ui.star"
             decorative
             width={18}
             height={18}
-            className="pointer-events-none absolute right-[15%] top-[42%] z-0 h-[14px] w-[14px] lg:h-[18px] lg:w-[18px]"
+            className="pointer-events-none absolute right-[12%] top-[38%] z-0 h-[14px] w-[14px] lg:h-[18px] lg:w-[18px]"
           />
-          {isHome && (
-            <PixelIcon
-              assetId="ui.sparkle"
-              decorative
-              width={14}
-              height={14}
-              className="pointer-events-none absolute right-[42%] top-[21%] z-0 h-[12px] w-[12px] lg:h-[14px] lg:w-[14px]"
-            />
-          )}
         </>
       )}
 
-      {/* A stepped grey skyline brings back the depth from the approved board. */}
       {isHome && (
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-[8%] bottom-[74px] z-[1] hidden h-[108px] opacity-55 lg:block">
-          <span className="absolute bottom-0 left-[0%] h-[34px] w-[8%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[7%] h-[54px] w-[9%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[15%] h-[72px] w-[10%] bg-[#dedbd5]" />
-          <span className="absolute bottom-0 left-[24%] h-[46px] w-[8%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[31%] h-[84px] w-[12%] bg-[#dedbd5]" />
-          <span className="absolute bottom-0 left-[42%] h-[58px] w-[10%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[51%] h-[92px] w-[12%] bg-[#dedbd5]" />
-          <span className="absolute bottom-0 left-[62%] h-[64px] w-[9%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[70%] h-[48px] w-[9%] bg-[#dedbd5]" />
-          <span className="absolute bottom-0 left-[78%] h-[76px] w-[11%] bg-[#e7e4de]" />
-          <span className="absolute bottom-0 left-[88%] h-[38px] w-[8%] bg-[#dedbd5]" />
-        </div>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-[5%] bottom-[22%] z-[1] hidden h-[94px] bg-[#dedbd5] opacity-55 lg:block"
+          style={{
+            clipPath:
+              "polygon(0 100%,0 76%,7% 76%,7% 64%,13% 64%,13% 48%,20% 48%,20% 70%,27% 70%,27% 57%,34% 57%,34% 36%,42% 36%,42% 62%,49% 62%,49% 45%,57% 45%,57% 28%,65% 28%,65% 58%,73% 58%,73% 43%,81% 43%,81% 66%,89% 66%,89% 52%,96% 52%,96% 74%,100% 74%,100% 100%)",
+          }}
+        />
       )}
 
-      {/* COPY LAYER */}
       {isHome && bubbleText && (
-        <div className="absolute left-1 top-2 z-40 max-w-[205px] lg:left-[7%] lg:top-5 lg:max-w-[245px]">
+        <div className="absolute left-[5%] top-2 z-40 max-w-[205px] lg:left-[8%] lg:top-5 lg:max-w-[245px]">
           <SpeechBubble speaker="HELLO!">
             <span className="whitespace-pre-line">{bubbleText}</span>
           </SpeechBubble>
         </div>
       )}
 
-      {/* WORLD / CHARACTER LAYER */}
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0",
-          compact ? "h-[176px] lg:h-[214px]" : "h-[224px] lg:h-[304px]"
-        )}
-      >
+      {/* SHARED GROUND STAGE — all foreground objects use top: 68% as one ground line. */}
+      <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
         <PixelIcon
           assetId="world.grassLong"
           decorative
           priority={isHome}
-          width={560}
-          height={280}
+          width={1040}
+          height={520}
           className={cn(
-            "absolute left-1/2 z-10 -translate-x-1/2",
+            "absolute left-1/2 top-[68%] h-auto max-w-none",
             compact
-              ? "bottom-[2px] w-[78%] h-auto lg:w-[66%]"
+              ? "w-[430px] lg:w-[500px]"
               : isPlayer
-                ? "bottom-[2px] w-[82%] h-auto lg:w-[72%]"
-                : "bottom-[2px] w-[92%] h-auto lg:w-[87%]"
+                ? "w-[540px] lg:w-[650px]"
+                : "w-[560px] lg:w-[1040px]"
           )}
+          style={{ transform: "translate(-50%, -46.2%)" }}
         />
 
         {isJournal && (
@@ -167,14 +170,16 @@ export function CharacterScene({
               decorative
               width={30}
               height={30}
-              className="absolute bottom-[34px] left-[24%] z-20 lg:left-[28%]"
+              className="absolute left-[35%] top-[68%] z-20 w-[26px] lg:w-[30px]"
+              style={{ transform: "translate(-50%, -73.6%)" }}
             />
             <PixelIcon
               assetId="world.flower"
               decorative
               width={28}
               height={28}
-              className="absolute bottom-[34px] right-[23%] z-20 lg:right-[27%]"
+              className="absolute left-[69%] top-[68%] z-20 w-[24px] lg:w-[28px]"
+              style={{ transform: "translate(-50%, -73.6%)" }}
             />
           </>
         )}
@@ -182,41 +187,44 @@ export function CharacterScene({
         <PixelIcon
           assetId="cat.sit"
           decorative
-          width={86}
-          height={86}
+          width={120}
+          height={120}
           className={cn(
-            "absolute z-30",
+            "absolute top-[68%] z-30 h-auto max-w-none",
             compact
-              ? "bottom-[30px] left-[22%] h-[60px] w-[60px] lg:left-[28%] lg:h-[68px] lg:w-[68px]"
+              ? "left-[38%] w-[72px] lg:left-[39%] lg:w-[82px]"
               : isPlayer
-                ? "bottom-[35px] left-[20%] h-[68px] w-[68px] lg:left-[27%] lg:h-[80px] lg:w-[80px]"
-                : "bottom-[38px] left-[19%] h-[72px] w-[72px] lg:left-[27%] lg:h-[92px] lg:w-[92px]"
+                ? "left-[34%] w-[84px] lg:left-[36%] lg:w-[100px]"
+                : "left-[37%] w-[96px] lg:left-[38%] lg:w-[120px]"
           )}
+          style={{ transform: "translate(-50%, -79.9%)" }}
         />
 
         <PixelIcon
           assetId={characterId}
           alt="Yexinmei Luo pixel character"
-          width={200}
-          height={268}
+          width={230}
+          height={307}
           priority={isHome}
           className={cn(
-            "absolute left-1/2 z-30 -translate-x-1/2",
+            "absolute top-[68%] z-30 h-auto max-w-none",
             compact
-              ? "bottom-[19px] h-[134px] w-[100px] lg:h-[160px] lg:w-[120px]"
+              ? "left-[58%] w-[118px] lg:left-[58%] lg:w-[138px]"
               : isPlayer
-                ? "bottom-[19px] h-[184px] w-[138px] lg:h-[226px] lg:w-[170px]"
-                : "bottom-[18px] h-[198px] w-[148px] lg:h-[276px] lg:w-[206px]"
+                ? "left-[54%] w-[160px] lg:left-[55%] lg:w-[190px]"
+                : "left-[54%] w-[190px] lg:left-[55%] lg:w-[230px]"
           )}
+          style={{ transform: characterTransform }}
         />
 
         {isHome && (
           <PixelIcon
             assetId="world.woodenSign"
             decorative
-            width={96}
-            height={124}
-            className="absolute bottom-[25px] right-[4%] z-20 h-[92px] w-[70px] lg:right-[13%] lg:h-[116px] lg:w-[90px]"
+            width={210}
+            height={280}
+            className="absolute left-[80%] top-[68%] z-20 h-auto w-[160px] max-w-none lg:left-[81%] lg:w-[210px]"
+            style={{ transform: "translate(-50%, -77.7%)" }}
           />
         )}
       </div>
