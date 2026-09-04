@@ -3,8 +3,8 @@
   "version": "0.5.0-director-polish",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/install-player-assets.mjs && next dev",
+    "build": "node scripts/install-player-assets.mjs && next build",
     "start": "next start",
     "assets:verify": "node scripts/verify-assets.mjs",
     "assets:install": "node scripts/install-assets.mjs"
