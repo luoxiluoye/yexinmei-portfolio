@@ -55,7 +55,7 @@ export default function PlayerPage() {
         </PixelPanel>
       </section>
 
-      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:gap-5 lg:pb-0">
+      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-start lg:gap-5 lg:pb-0">
         <PixelPanel eyebrow="STORY" title="CHARACTER STORY">
           <div className="space-y-4 text-[15px] leading-[26px] text-muted">
             {profile.introLong.map((paragraph) => (
@@ -64,48 +64,78 @@ export default function PlayerPage() {
           </div>
         </PixelPanel>
 
-        <PixelPanel eyebrow="WORLD MAP" title="JOURNEY">
-          <div className="relative hidden grid-cols-4 gap-2 lg:grid">
-            <PixelIcon assetId="world.tree" decorative width={34} height={45} className="absolute -right-1 -top-2 z-0 opacity-65" />
-            <PixelIcon assetId="world.castle" decorative width={40} height={40} className="absolute -bottom-1 left-1 z-0 opacity-55" />
-            {journey.map((item, index) => (
-              <div
-                key={item}
-                className={[
-                  "relative z-10 min-h-[78px] border border-divider px-3 py-3",
-                  item === "NOW" ? "bg-foreground text-white" : "bg-soft",
-                ].join(" ")}
-              >
-                <span className={[
-                  "font-pixel text-[10px]",
-                  item === "NOW" ? "text-white/60" : "text-accent",
-                ].join(" ")}>
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <p className="mt-2 text-[13px] leading-5">{item}</p>
-                {index < journey.length - 1 && (
-                  <PixelIcon
-                    assetId="ui.arrow"
-                    decorative
-                    width={14}
-                    height={14}
-                    className="absolute -right-2 top-1/2 z-20 -translate-y-1/2 bg-paper"
-                  />
-                )}
+        <PixelPanel
+          eyebrow="WORLD MAP"
+          title="JOURNEY"
+          windowChrome={false}
+          rightSlot={<span className="font-pixel text-[9px] text-muted">PATH 01—07</span>}
+        >
+          <div className="hidden lg:block">
+            <div className="relative overflow-hidden border border-divider bg-soft px-4 pb-4 pt-5">
+              <div aria-hidden="true" className="absolute left-[7%] right-[7%] top-[38px] h-[2px] bg-divider" />
+              <ol className="relative z-10 grid grid-cols-7 gap-1">
+                {journey.map((item, index) => {
+                  const isNow = item === "NOW";
+                  return (
+                    <li key={item} className="min-w-0 text-center">
+                      <span
+                        className={[
+                          "mx-auto flex h-8 w-8 items-center justify-center border-2 font-pixel text-[9px]",
+                          isNow
+                            ? "border-foreground bg-foreground text-white"
+                            : "border-border bg-paper text-accent",
+                        ].join(" ")}
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <p
+                        className={[
+                          "mx-auto mt-3 min-h-[42px] max-w-[64px] text-[12px] font-medium leading-[18px]",
+                          isNow ? "font-pixel text-[11px] text-foreground" : "text-foreground/90",
+                        ].join(" ")}
+                      >
+                        {item}
+                      </p>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              <div className="mt-3 grid grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-divider pt-3 font-pixel text-[9px] text-muted">
+                <span>START</span>
+                <span className="text-center">MEDIA · CONTENT · COMMUNITY</span>
+                <span className="text-foreground">CURRENT POSITION</span>
               </div>
-            ))}
+            </div>
           </div>
 
           <div className="lg:hidden">
-            {journey.map((item, index) => (
-              <div key={item} className="grid grid-cols-[28px_1fr] gap-3">
-                <div className="flex flex-col items-center">
-                  <span className="mt-1 h-3 w-3 border border-border bg-accent" />
-                  {index < journey.length - 1 && <span className="h-10 w-[2px] bg-divider" />}
+            {journey.map((item, index) => {
+              const isNow = item === "NOW";
+              return (
+                <div key={item} className="grid grid-cols-[32px_1fr] gap-3">
+                  <div className="flex flex-col items-center">
+                    <span
+                      className={[
+                        "mt-1 flex h-5 w-5 items-center justify-center border-2 font-pixel text-[7px]",
+                        isNow
+                          ? "border-foreground bg-foreground text-white"
+                          : "border-border bg-paper text-accent",
+                      ].join(" ")}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    {index < journey.length - 1 && <span className="h-9 w-[2px] bg-divider" />}
+                  </div>
+                  <div className={[
+                    "pb-4 text-[14px] leading-6",
+                    isNow ? "font-pixel text-[12px]" : "",
+                  ].join(" ")}>
+                    {item}
+                  </div>
                 </div>
-                <div className="pb-4 text-[14px]">{item}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </PixelPanel>
 
