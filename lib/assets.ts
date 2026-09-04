@@ -4,6 +4,7 @@ export const ASSET_DIRECTORIES = {
   world: "/assets/world",
   ui: "/assets/ui",
   items: "/assets/items",
+  player: "/assets/player",
   projects: "/assets/projects",
 } as const;
 
@@ -61,6 +62,26 @@ export const ASSET_REGISTRY = {
   "items.potion": `${ASSET_DIRECTORIES.items}/potion.png`,
   "items.chest": `${ASSET_DIRECTORIES.items}/chest.png`,
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
+
+  // PLAYER interaction pack
+  "player.achievementBadge": `${ASSET_DIRECTORIES.player}/achievement-badge.png`,
+  "player.factCameraKit": `${ASSET_DIRECTORIES.player}/fact-camera-kit.png`,
+  "player.factCatNpc": `${ASSET_DIRECTORIES.player}/fact-cat-npc.png`,
+  "player.factCcd": `${ASSET_DIRECTORIES.player}/fact-ccd.png`,
+  "player.factContentSpark": `${ASSET_DIRECTORIES.player}/fact-content-spark.png`,
+  "player.factNotes": `${ASSET_DIRECTORIES.player}/fact-notes.png`,
+  "player.inspectEye": `${ASSET_DIRECTORIES.player}/inspect-eye.png`,
+  "player.journeyCommunity": `${ASSET_DIRECTORIES.player}/journey-community.png`,
+  "player.journeyContent": `${ASSET_DIRECTORIES.player}/journey-content.png`,
+  "player.journeyFilm": `${ASSET_DIRECTORIES.player}/journey-film.png`,
+  "player.journeyGlobal": `${ASSET_DIRECTORIES.player}/journey-global.png`,
+  "player.journeyMedia": `${ASSET_DIRECTORIES.player}/journey-media.png`,
+  "player.journeyNow": `${ASSET_DIRECTORIES.player}/journey-now.png`,
+  "player.journeySidequest": `${ASSET_DIRECTORIES.player}/journey-sidequest.png`,
+  "player.memoryArchive": `${ASSET_DIRECTORIES.player}/memory-archive.png`,
+  "player.memoryArrowLeft": `${ASSET_DIRECTORIES.player}/memory-arrow-left.png`,
+  "player.memoryArrowRight": `${ASSET_DIRECTORIES.player}/memory-arrow-right.png`,
+  "player.memoryLocked": `${ASSET_DIRECTORIES.player}/memory-locked.png`,
 } as const;
 
 export type AssetId = keyof typeof ASSET_REGISTRY;
