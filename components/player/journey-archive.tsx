@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { memories } from "@/components/player/journey-data";
-import { JourneyEndingScene } from "@/components/player/journey-ending-scene";
 import { JourneyMemoryModal } from "@/components/player/journey-memory-modal";
 
 export function JourneyArchive() {
@@ -103,8 +102,6 @@ export function JourneyArchive() {
             <span className="text-foreground">07 · NOW</span>
           </div>
         </div>
-
-        <JourneyEndingScene />
       </div>
 
       {active && activeIndex !== null ? (
