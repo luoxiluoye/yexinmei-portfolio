@@ -23,8 +23,8 @@ export const homeStats = homeContent.stats;
 
 const homeQuestSlugs = [
   "zhihu-auto-consumer-tech",
-  "global-content",
-  "tech-you-houhua",
+  "ccd-business",
+  "inspiration-studio",
 ] as const;
 
 export const homeQuests = homeQuestSlugs
