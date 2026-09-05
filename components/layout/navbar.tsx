@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/cn";
+import { profile } from "@/data/profile";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { XPBar } from "@/components/ui/xp-bar";
 
@@ -62,7 +63,13 @@ export function Navbar() {
 
           <div className="flex shrink-0 items-center gap-2 border-l border-divider pl-4">
             <PixelIcon assetId="items.potion" decorative width={20} height={20} />
-            <XPBar compact level={28} current={7888} max={10000} label="XP" />
+            <XPBar
+              compact
+              level={profile.xp.level}
+              current={profile.xp.current}
+              max={profile.xp.max}
+              label="XP"
+            />
           </div>
         </div>
       </div>
