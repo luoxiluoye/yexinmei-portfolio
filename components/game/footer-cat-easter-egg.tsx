@@ -16,7 +16,7 @@ export function FooterCatEasterEgg() {
   };
 
   return (
-    <div className="relative h-full w-[260px]">
+    <div className="relative h-full w-[260px] overflow-visible">
       {unlocked && (
         <div className="rpg-achievement-toast absolute bottom-[58px] right-1 z-30 w-[220px] border-2 border-border bg-paper px-3 py-2 text-center shadow-[3px_3px_0_rgba(17,17,17,.10)]">
           <p className="font-pixel text-[9px] text-accent">HIDDEN MESSAGE ♥</p>
@@ -28,18 +28,18 @@ export function FooterCatEasterEgg() {
         type="button"
         onClick={handleClick}
         aria-label="点击页脚猫咪发现隐藏彩蛋"
-        className="group absolute bottom-[5px] right-[102px] z-10 border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="group absolute bottom-[8px] right-[104px] z-10 flex h-[58px] w-[58px] cursor-pointer items-center justify-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <PixelIcon
           assetId={CAT_STATES[index]}
           decorative
-          width={70}
-          height={70}
-          className="h-auto w-[70px] transition-transform duration-100 group-hover:-translate-y-1"
+          width={58}
+          height={58}
+          className="h-[58px] w-[58px] object-contain transition-transform duration-100 group-hover:-translate-y-px"
         />
       </button>
 
-      <div className="absolute bottom-[24px] right-3 flex gap-1.5">
+      <div className="absolute bottom-[25px] right-3 flex items-center gap-1.5">
         {[0, 1, 2].map((heartIndex) => (
           <PixelIcon
             key={heartIndex}
