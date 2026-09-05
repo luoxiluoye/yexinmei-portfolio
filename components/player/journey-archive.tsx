@@ -47,7 +47,7 @@ export function JourneyArchive() {
       <div className="relative flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col border border-divider bg-soft px-3 py-4 lg:px-4 lg:py-5">
         <div className="flex min-h-0 flex-1 items-center">
           <div className="w-full min-w-0">
-            <div className="no-scrollbar w-full min-w-0 max-w-full overflow-x-auto pb-1">
+            <div className="no-scrollbar w-full min-w-0 max-w-full overflow-x-auto pb-1 snap-x snap-mandatory lg:snap-none">
               <div className="relative min-w-[620px] lg:min-w-0">
                 <div
                   aria-hidden="true"
@@ -57,7 +57,7 @@ export function JourneyArchive() {
                   {memories.map((memory, index) => {
                     const isNow = memory.current;
                     return (
-                      <li key={memory.title} className="min-w-0 text-center">
+                      <li key={memory.title} className="min-w-0 snap-center text-center lg:snap-align-none">
                         <button
                           type="button"
                           onClick={(event) => openMemory(index, event.currentTarget)}
@@ -98,19 +98,20 @@ export function JourneyArchive() {
               <PixelIcon
                 assetId="player.journeySwipeLeft"
                 decorative
-                width={18}
-                height={18}
-                className="h-[18px] w-[18px]"
+                width={16}
+                height={16}
+                className="h-4 w-4"
               />
               <p className="text-center font-pixel text-[8px] tracking-[0.03em] text-muted">
                 SWIPE TO EXPLORE · TAP TO OPEN
               </p>
               <PixelIcon
-                assetId="player.journeySwipeRight"
+                assetId="player.journeySwipeLeft"
                 decorative
-                width={18}
-                height={18}
-                className="h-[18px] w-[18px]"
+                width={16}
+                height={16}
+                className="h-4 w-4"
+                style={{ transform: "scaleX(-1)" }}
               />
             </div>
           </div>
