@@ -1,0 +1,90 @@
+name: Vendor PLAYER assets
+
+on:
+  push:
+    branches:
+      - player-journey-modal-fix
+    paths:
+      - .github/workflows/vendor-player-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: player-journey-modal-fix
+          fetch-depth: 0
+
+      - name: Download canonical PLAYER assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/assets/player
+          base="https://yexinmei-portfolio.vercel.app/assets/player"
+          files=(
+            achievement-badge.png
+            fact-camera-kit.png
+            fact-cat-npc.png
+            fact-ccd.png
+            fact-content-spark.png
+            fact-notes.png
+            inspect-eye.png
+            journey-community.png
+            journey-content.png
+            journey-film.png
+            journey-global.png
+            journey-media.png
+            journey-now.png
+            journey-sidequest.png
+            memory-archive.png
+            memory-arrow-left.png
+            memory-arrow-right.png
+            memory-locked.png
+          )
+          for file in "${files[@]}"; do
+            curl --fail --silent --show-error --location --retry 3 --retry-delay 2 \
+              "$base/$file" -o "public/assets/player/$file"
+          done
+
+      - name: Verify PNG files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          expected = [
+              "achievement-badge.png", "fact-camera-kit.png", "fact-cat-npc.png", "fact-ccd.png",
+              "fact-content-spark.png", "fact-notes.png", "inspect-eye.png", "journey-community.png",
+              "journey-content.png", "journey-film.png", "journey-global.png", "journey-media.png",
+              "journey-now.png", "journey-sidequest.png", "memory-archive.png", "memory-arrow-left.png",
+              "memory-arrow-right.png", "memory-locked.png",
+          ]
+          signature = b"\x89PNG\r\n\x1a\n"
+          root = Path("public/assets/player")
+          bad = []
+          for name in expected:
+              path = root / name
+              if not path.exists() or path.read_bytes()[:8] != signature:
+                  bad.append(name)
+          if bad:
+              raise SystemExit(f"Invalid PLAYER assets: {', '.join(bad)}")
+          print(f"Verified {len(expected)}/{len(expected)} PLAYER PNG assets")
+          PY
+
+      - name: Commit vendored assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/player
+          if git diff --cached --quiet; then
+            echo "PLAYER assets already vendored; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Vendor PLAYER assets into repository"
+          git push origin HEAD:player-journey-modal-fix
