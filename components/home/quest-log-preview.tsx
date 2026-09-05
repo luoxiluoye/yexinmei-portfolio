@@ -15,9 +15,9 @@ function getStatusVariant(status: QuestStatus) {
 }
 
 const questIconBySlug: Record<string, AssetId> = {
-  "zhihu-auto-consumer-tech": "items.notebook",
-  "global-content": "world.castle",
-  "tech-you-houhua": "items.laptop",
+  "zhihu-auto-consumer-tech": "ui.speechBubble",
+  "ccd-business": "items.key",
+  "inspiration-studio": "ui.sparkle",
 };
 
 export function QuestLogPreview() {
