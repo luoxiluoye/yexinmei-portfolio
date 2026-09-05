@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { ExperienceTimeline } from "@/components/player/experience-timeline";
-import { FunFactsInspect, JourneyArchive } from "@/components/player/player-interactions";
+import { JourneyArchive } from "@/components/player/journey-archive";
+import { FunFactsInspect } from "@/components/player/player-interactions";
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
@@ -50,10 +50,6 @@ export default function PlayerPage() {
         </PixelPanel>
       </section>
 
-      <section className="mt-5 lg:mt-8">
-        <ExperienceTimeline />
-      </section>
-
       <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-stretch lg:gap-5 lg:pb-0">
         <PixelPanel
           eyebrow="STORY"
@@ -74,7 +70,8 @@ export default function PlayerPage() {
           windowChrome={false}
           rightSlot={<span className="font-pixel text-[9px] text-muted">PATH 01—07</span>}
           className="h-full"
-          surfaceClassName="h-full"
+          surfaceClassName="flex h-full flex-col"
+          contentClassName="flex min-h-0 flex-1 flex-col"
         >
           <JourneyArchive />
         </PixelPanel>
