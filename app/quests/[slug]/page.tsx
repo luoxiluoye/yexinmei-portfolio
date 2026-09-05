@@ -44,12 +44,15 @@ export default async function QuestPage({ params }: QuestPageProps) {
     <main className="site-container py-4 lg:py-8">
       <QuestVisitAchievement slug={slug} />
 
-      <Link
-        href="/quests"
-        className="inline-flex min-h-11 items-center text-[13px] hover:text-accent"
-      >
-        ← 返回项目列表
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="font-pixel text-[11px] text-muted">04. QUEST DETAIL</p>
+        <Link
+          href="/quests"
+          className="inline-flex min-h-11 items-center text-[13px] hover:text-accent"
+        >
+          ← 返回项目列表
+        </Link>
+      </div>
 
       <div className="mt-3">
         <QuestHero quest={quest} />
