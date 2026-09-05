@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { ExperienceTimeline } from "@/components/player/experience-timeline";
 import { FunFactsInspect, JourneyArchive } from "@/components/player/player-interactions";
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
@@ -47,6 +48,10 @@ export default function PlayerPage() {
             </div>
           </div>
         </PixelPanel>
+      </section>
+
+      <section className="mt-5 lg:mt-8">
+        <ExperienceTimeline />
       </section>
 
       <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-stretch lg:gap-5 lg:pb-0">
