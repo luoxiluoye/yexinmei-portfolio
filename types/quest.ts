@@ -14,6 +14,12 @@ export type QuestGalleryItem = {
   height?: number;
 };
 
+export type QuestRealCase = {
+  title: string;
+  summary: string;
+  steps?: string[];
+};
+
 export type Quest = {
   slug: string;
   code: string;
@@ -22,11 +28,13 @@ export type Quest = {
   status: QuestStatus;
   role: string;
   period: string;
+  platform: string;
   categories: string[];
   summary: string;
   objective: string;
   challenge: string;
   actions: string[];
+  realCase?: QuestRealCase;
   outcomes: string[];
   outcomeMetrics?: QuestMetric[];
   tools: string[];
