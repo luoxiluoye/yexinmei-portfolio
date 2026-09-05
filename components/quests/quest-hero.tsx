@@ -1,4 +1,5 @@
 import type { Quest } from "@/types/quest";
+import type { AssetId } from "@/lib/assets";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelTag } from "@/components/ui/pixel-tag";
 
@@ -7,6 +8,15 @@ function getStatusVariant(status: Quest["status"]) {
   if (status === "COMPLETED") return "completed" as const;
   return "ongoing" as const;
 }
+
+const questIconBySlug: Record<string, AssetId> = {
+  "zhihu-auto-consumer-tech": "ui.speechBubble",
+  "global-content": "items.mail",
+  "tech-you-houhua": "items.laptop",
+  "ccd-business": "items.key",
+  "visual-storytelling": "items.camera",
+  "inspiration-studio": "ui.sparkle",
+};
 
 export function QuestHero({ quest }: { quest: Quest }) {
   return (
@@ -30,13 +40,14 @@ export function QuestHero({ quest }: { quest: Quest }) {
           </p>
         </div>
 
-        <PixelIcon
-          assetId="items.notebook"
-          decorative
-          width={58}
-          height={58}
-          className="hidden lg:block"
-        />
+        <div className="hidden h-[72px] w-[72px] shrink-0 items-center justify-center border-2 border-border bg-soft lg:flex">
+          <PixelIcon
+            assetId={questIconBySlug[quest.slug] ?? "items.notebook"}
+            decorative
+            width={52}
+            height={52}
+          />
+        </div>
       </div>
     </header>
   );
