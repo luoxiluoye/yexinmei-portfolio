@@ -9,15 +9,15 @@ import { PixelTag } from "@/components/ui/pixel-tag";
 import { StatusBar } from "@/components/ui/status-bar";
 
 const toolIcons: AssetId[] = [
+  "ui.star",
   "items.laptop",
   "items.notebook",
+  "ui.sparkle",
   "items.camera",
-  "items.key",
-  "items.chest",
-  "items.mail",
+  "ui.arrow",
 ];
 
-const toolIconSizes = [40, 40, 38, 28, 38, 36] as const;
+const toolIconSizes = [38, 42, 38, 38, 44, 36] as const;
 
 const skillIcons: AssetId[] = [
   "items.sword",
@@ -76,7 +76,7 @@ export default function InventoryPage() {
                   assetId={skillIcons[index]}
                   index={index}
                   label={skill}
-                  iconSize={34}
+                  iconSize={36}
                 />
               ))}
             </div>
