@@ -91,12 +91,24 @@ const FOCUSABLE_SELECTOR =
 
 export function FunFactsInspect() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const restoreFocusRef = useRef(false);
 
   const close = useCallback(() => {
+    restoreFocusRef.current = true;
     setActiveIndex(null);
-    window.requestAnimationFrame(() => triggerRef.current?.focus({ preventScroll: true }));
   }, []);
+
+  useEffect(() => {
+    if (activeIndex !== null || !restoreFocusRef.current) return;
+
+    restoreFocusRef.current = false;
+    const frame = window.requestAnimationFrame(() => {
+      lastTriggerRef.current?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeIndex]);
 
   return (
     <>
@@ -104,10 +116,10 @@ export function FunFactsInspect() {
         {facts.map((fact, index) => (
           <button
             key={fact.title}
-            ref={index === activeIndex ? triggerRef : undefined}
             type="button"
             onClick={(event) => {
-              triggerRef.current = event.currentTarget;
+              restoreFocusRef.current = false;
+              lastTriggerRef.current = event.currentTarget;
               setActiveIndex(index);
             }}
             className="group flex min-h-[82px] w-full cursor-pointer items-center gap-3 border border-divider bg-soft px-3 py-3 text-left transition-[transform,border-color,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-px hover:border-accent hover:shadow-[2px_2px_0_rgba(17,17,17,.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -197,7 +209,7 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/40 px-3 py-[calc(12px+env(safe-area-inset-top))] lg:p-10"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/40 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-[calc(12px+env(safe-area-inset-top))] lg:p-10"
       onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -211,7 +223,7 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
         className="pixel-cut-frame w-[calc(100vw-24px)] max-w-[760px] focus:outline-none lg:w-[min(760px,calc(100vw-64px))]"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="pixel-cut-surface flex max-h-[calc(100dvh-var(--rpg-mobile-header-height)-var(--rpg-mobile-level-height)-var(--rpg-bottom-tab-height)-env(safe-area-inset-bottom)-24px)] min-h-0 flex-col overflow-hidden bg-paper lg:max-h-[min(680px,calc(100vh-80px))]">
+        <div className="pixel-cut-surface flex max-h-[calc(100dvh-24px-env(safe-area-inset-top)-env(safe-area-inset-bottom))] min-h-0 flex-col overflow-hidden bg-paper lg:max-h-[min(680px,calc(100vh-80px))]">
           <header className="flex shrink-0 items-start justify-between gap-4 border-b border-divider px-4 py-3 lg:px-5">
             <div className="min-w-0">
               <p className="font-pixel text-[9px] text-accent">ITEM FOUND</p>
