@@ -63,12 +63,12 @@ export default async function QuestPage({ params }: QuestPageProps) {
           <QuestMeta quest={quest} />
 
           <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
-            <QuestSection index={1} label="INTRO" title="项目简介" content={quest.summary} />
-            <QuestSection index={2} label="OBJECTIVE" title="项目目标" content={quest.objective} />
-            <QuestSection index={3} label="CHALLENGE" title="主要难点" content={quest.challenge} />
-            <QuestSection index={4} label="ACTIONS" title="我做了什么" bullets={quest.actions} />
+            <QuestSection id="intro" index={1} label="INTRO" title="项目简介" content={quest.summary} />
+            <QuestSection id="objective" index={2} label="OBJECTIVE" title="项目目标" content={quest.objective} />
+            <QuestSection id="challenge" index={3} label="CHALLENGE" title="主要难点" content={quest.challenge} />
+            <QuestSection id="actions" index={4} label="ACTIONS" title="我做了什么" bullets={quest.actions} />
             <QuestOutcomes index={5} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
-            <QuestSection index={6} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
+            <QuestSection id="learnings" index={6} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
             <QuestGallery gallery={quest.gallery} />
           </div>
 
