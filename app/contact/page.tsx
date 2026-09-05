@@ -23,19 +23,52 @@ const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   wechat: "点击按钮复制微信号",
 };
 
+async function copyText(value: string) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      // Fall through to the legacy clipboard path below.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  textarea.style.top = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  try {
+    return document.execCommand("copy");
+  } finally {
+    textarea.remove();
+  }
+}
+
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
+  const [copyError, setCopyError] = useState(false);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
 
   async function copyWechat() {
-    try {
-      await navigator.clipboard.writeText(wechat);
+    setCopyError(false);
+    const success = await copyText(wechat);
+
+    if (success) {
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
+      return;
     }
+
+    setCopied(false);
+    setCopyError(true);
+    window.setTimeout(() => setCopyError(false), 2600);
   }
 
   return (
@@ -92,7 +125,7 @@ export default function ContactPage() {
               title={item.label}
               accent={index === 0}
               className="h-full"
-              contentClassName="flex h-[190px] flex-col p-4 lg:p-5"
+              contentClassName="flex min-h-[190px] flex-col p-4 lg:p-5"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-divider bg-soft">
@@ -101,7 +134,7 @@ export default function ContactPage() {
                     decorative
                     width={48}
                     height={48}
-                    className="h-[46px] w-[46px]"
+                    className="h-12 w-12"
                   />
                 </div>
                 <div className="min-w-0">
@@ -133,6 +166,12 @@ export default function ContactPage() {
       {copied && (
         <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
           WECHAT COPIED · 微信号已复制
+        </div>
+      )}
+
+      {copyError && (
+        <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] w-[calc(100vw-32px)] max-w-[420px] -translate-x-1/2 border-2 border-border bg-paper px-4 py-3 text-center text-[12px] leading-5 text-foreground shadow-[3px_3px_0_rgba(17,17,17,.12)] lg:bottom-6">
+          复制失败，请手动复制微信号：<span className="select-all font-semibold">{wechat}</span>
         </div>
       )}
     </main>
