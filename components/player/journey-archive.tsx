@@ -50,7 +50,7 @@ export function JourneyArchive() {
               <div className="relative min-w-[620px] lg:min-w-0">
                 <div
                   aria-hidden="true"
-                  className="absolute left-[6%] right-[6%] top-[22px] h-[2px] bg-divider"
+                  className="absolute left-[6%] right-[6%] top-[22px] h-[2px] bg-divider lg:top-[46px]"
                 />
                 <ol className="relative z-10 grid grid-cols-7 gap-2">
                   {memories.map((memory, index) => {
@@ -60,11 +60,11 @@ export function JourneyArchive() {
                         <button
                           type="button"
                           onClick={(event) => openMemory(index, event.currentTarget)}
-                          className="group relative mx-auto flex min-h-[86px] w-full cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-soft"
+                          className="group relative mx-auto flex min-h-[86px] w-full cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-soft lg:min-h-[110px] lg:pt-6"
                           aria-haspopup="dialog"
                           aria-label={`打开 ${memory.title} 的记忆档案`}
                         >
-                          <span className="pointer-events-none absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap border-2 border-border bg-paper px-2 py-1 font-pixel text-[9px] shadow-[2px_2px_0_rgba(17,17,17,.12)] group-hover:block">
+                          <span className="pointer-events-none absolute inset-x-0 top-0 hidden h-5 items-center justify-center whitespace-nowrap font-pixel text-[8px] leading-5 text-accent opacity-0 transition-opacity duration-100 group-hover:opacity-100 group-focus-visible:opacity-100 lg:flex">
                             OPEN MEMORY
                           </span>
                           <span
