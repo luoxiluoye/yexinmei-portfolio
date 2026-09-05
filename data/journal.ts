@@ -13,8 +13,8 @@ export const journalSeed = [
   },
   {
     category: "SIDE PROJECT LOG",
-    title: "个人项目日志",
-    summary: "CCD、AI Workflow、个人网站，以及工作之外那些真正动手做起来的项目。",
+    title: "AI Workflow / 灵感编辑室",
+    summary: "为了让内容工作更顺手搭起来的个人工作流：选题、素材、发布、数据回收与复盘。",
     href: "/quests/inspiration-studio",
   },
 ] as const;
