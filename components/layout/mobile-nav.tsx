@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { profile } from "@/data/profile";
 import { PixelIcon } from "@/components/ui/pixel-icon";
@@ -24,11 +24,34 @@ const moreItems = [
 export function MobileNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const moreButtonRef = useRef<HTMLButtonElement | null>(null);
   const moreActive = moreItems.some((item) => pathname.startsWith(item.href));
+
+  const closeMore = useCallback((restoreFocus = false) => {
+    setMoreOpen(false);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => {
+        moreButtonRef.current?.focus({ preventScroll: true });
+      });
+    }
+  }, []);
 
   useEffect(() => {
     setMoreOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      closeMore(true);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [closeMore, moreOpen]);
 
   return (
     <>
@@ -57,49 +80,56 @@ export function MobileNav() {
       </header>
 
       {moreOpen && (
-        <div className="fixed inset-x-4 bottom-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom)+12px)] z-[60] lg:hidden">
-          <div className="pixel-cut-frame shadow-[4px_4px_0_rgba(17,17,17,.14)]">
-            <div className="pixel-cut-surface p-3">
-              <div className="mb-2 flex items-center justify-between border-b border-divider pb-2">
-                <span className="font-pixel text-[10px] text-accent">MORE MENU</span>
-                <button
-                  type="button"
-                  onClick={() => setMoreOpen(false)}
-                  className="min-h-8 min-w-8 border border-divider bg-soft font-pixel text-[12px]"
-                  aria-label="关闭更多菜单"
-                >
-                  ×
-                </button>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {moreItems.map((item) => {
-                  const active = pathname.startsWith(item.href);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={cn(
-                        "flex min-h-14 items-center gap-2 border-2 px-3 font-pixel text-[11px]",
-                        active
-                          ? "border-border bg-foreground text-white"
-                          : "border-divider bg-soft text-foreground"
-                      )}
-                    >
-                      <PixelIcon
-                        assetId={item.assetId}
-                        decorative
-                        width={22}
-                        height={22}
-                        className={cn(active && "brightness-0 invert")}
-                      />
-                      {item.label}
-                    </Link>
-                  );
-                })}
+        <>
+          <div
+            aria-hidden="true"
+            className="fixed inset-0 z-[55] bg-black/20 lg:hidden"
+            onMouseDown={() => closeMore(true)}
+          />
+          <div className="fixed inset-x-4 bottom-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom)+12px)] z-[60] lg:hidden">
+            <div className="pixel-cut-frame shadow-[4px_4px_0_rgba(17,17,17,.14)]">
+              <div className="pixel-cut-surface p-3">
+                <div className="mb-2 flex items-center justify-between border-b border-divider pb-2">
+                  <span className="font-pixel text-[10px] text-accent">MORE MENU</span>
+                  <button
+                    type="button"
+                    onClick={() => closeMore(true)}
+                    className="min-h-11 min-w-11 border border-divider bg-soft font-pixel text-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    aria-label="关闭更多菜单"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  {moreItems.map((item) => {
+                    const active = pathname.startsWith(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={cn(
+                          "flex min-h-14 items-center gap-2 border-2 px-3 font-pixel text-[11px]",
+                          active
+                            ? "border-border bg-foreground text-white"
+                            : "border-divider bg-soft text-foreground"
+                        )}
+                      >
+                        <PixelIcon
+                          assetId={item.assetId}
+                          decorative
+                          width={22}
+                          height={22}
+                          className={cn(active && "brightness-0 invert")}
+                        />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
 
       <nav
@@ -142,6 +172,7 @@ export function MobileNav() {
 
           <li>
             <button
+              ref={moreButtonRef}
               type="button"
               aria-expanded={moreOpen}
               aria-current={moreActive ? "page" : undefined}
