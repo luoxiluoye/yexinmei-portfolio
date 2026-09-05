@@ -1,0 +1,53 @@
+name: PLAYER Journey QA
+
+on:
+  push:
+    branches:
+      - player-journey-qa
+  workflow_dispatch:
+
+jobs:
+  player-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PLAYER_URL: https://yexinmei-portfolio-git-player-j-af5caf-luoyes-projects-a7639a71.vercel.app/player
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify formal pixel assets
+        run: pnpm run assets:verify
+
+      - name: Production build
+        run: pnpm run build
+
+      - name: Install Playwright for QA
+        run: |
+          pnpm add --save-dev --ignore-workspace-root-check playwright@1.55.0
+          pnpm exec playwright install --with-deps chromium
+
+      - name: Run PLAYER responsive and modal QA
+        run: node qa/player-e2e.mjs
+
+      - name: Upload QA screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: player-journey-qa
+          path: |
+            qa/screenshots
+            qa/qa-results.json
+          if-no-files-found: warn
+          retention-days: 7
