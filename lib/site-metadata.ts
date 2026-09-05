@@ -19,7 +19,7 @@ export function buildPageMetadata({
   const fullTitle = `${title} | 罗叶馨梅`;
 
   return {
-    title,
+    title: { absolute: fullTitle },
     description,
     alternates: {
       canonical: normalizedPath,
