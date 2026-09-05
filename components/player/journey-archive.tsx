@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { memories } from "@/components/player/journey-data";
 import { JourneyMemoryModal } from "@/components/player/journey-memory-modal";
+import { PixelIcon } from "@/components/ui/pixel-icon";
 
 export function JourneyArchive() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -93,9 +94,25 @@ export function JourneyArchive() {
               </div>
             </div>
 
-            <p className="mt-2 text-center font-pixel text-[8px] tracking-[0.03em] text-muted lg:hidden">
-              ← SWIPE · TAP A STAGE TO OPEN MEMORY →
-            </p>
+            <div className="mt-2 flex items-center justify-center gap-2 lg:hidden">
+              <PixelIcon
+                assetId="player.journeySwipeLeft"
+                decorative
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+              />
+              <p className="text-center font-pixel text-[8px] tracking-[0.03em] text-muted">
+                SWIPE TO EXPLORE · TAP TO OPEN
+              </p>
+              <PixelIcon
+                assetId="player.journeySwipeRight"
+                decorative
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+              />
+            </div>
           </div>
         </div>
 
