@@ -19,7 +19,7 @@ export function QuestOutcomes({
         : "sm:grid-cols-2";
 
   return (
-    <section id="outcomes" className="grid gap-3 border-t border-divider py-6 lg:grid-cols-[150px_1fr] lg:gap-6">
+    <section id="outcomes" className="scroll-mt-24 grid gap-3 border-t border-divider py-6 lg:grid-cols-[150px_1fr] lg:gap-6">
       <div>
         <p className="font-pixel text-[11px] text-accent">
           {String(index).padStart(2, "0")} · OUTCOMES
