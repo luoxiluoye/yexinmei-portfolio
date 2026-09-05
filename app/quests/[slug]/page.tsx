@@ -44,11 +44,24 @@ export default async function QuestPage({ params }: QuestPageProps) {
     <main className="site-container py-4 lg:py-8">
       <QuestVisitAchievement slug={slug} />
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="font-pixel text-[11px] text-muted">04. QUEST DETAIL</p>
-        <Link href="/quests" className="inline-flex min-h-11 items-center text-[13px] hover:text-accent">
-          ← 返回项目列表
+      <div className="sticky top-[calc(var(--rpg-mobile-header-height)+var(--rpg-mobile-level-height))] z-30 -mx-4 mb-3 border-b border-divider bg-background px-4 lg:static lg:mx-0 lg:mb-0 lg:border-0 lg:bg-transparent lg:px-0">
+        <Link
+          href="/quests"
+          className="inline-flex min-h-11 items-center font-pixel text-[10px] text-foreground transition-[transform,color] hover:-translate-x-px hover:-translate-y-px hover:text-accent lg:hidden"
+        >
+          ← 返回项目
         </Link>
+      </div>
+
+      <div className="hidden lg:block">
+        <p className="font-pixel text-[11px] text-muted">04. QUEST DETAIL</p>
+        <PixelButton href="/quests" variant="secondary" size="sm" className="mt-3">
+          ← 返回全部项目
+        </PixelButton>
+      </div>
+
+      <div className="lg:hidden">
+        <p className="font-pixel text-[10px] text-muted">04. QUEST DETAIL</p>
       </div>
 
       <div className="mt-3">
