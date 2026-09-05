@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { JourneyArchive } from "@/components/player/journey-archive";
-import { FunFactsInspect } from "@/components/player/player-interactions";
+import { FunFactsInspect } from "@/components/player/fun-facts-inspect";
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
@@ -79,8 +79,9 @@ export default function PlayerPage() {
         <PixelPanel
           eyebrow="INTERESTS"
           title="FUN FACTS"
-          className="h-full"
-          surfaceClassName="h-full"
+          className="h-full min-w-0"
+          surfaceClassName="h-full min-w-0"
+          contentClassName="min-w-0"
         >
           <FunFactsInspect />
         </PixelPanel>
