@@ -16,6 +16,7 @@ const expected = [
 ];
 
 const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const localZipSignature = Buffer.from([0x50, 0x4b, 0x03, 0x04]);
 
 function validPng(filePath) {
   if (!fs.existsSync(filePath)) return false;
@@ -47,37 +48,48 @@ function decodeZipEntry(method, compressed, uncompressedSize, fileName) {
 function readZipEntriesFromLocalHeaders(archive) {
   const entries = new Map();
   let offset = 0;
-  let index = 0;
 
   while (offset + 30 <= archive.length) {
-    const signature = archive.readUInt32LE(offset);
-    if (signature === 0x02014b50 || signature === 0x06054b50) break;
-    if (signature !== 0x04034b50) throw new Error(`local header scan stopped at offset ${offset}`);
+    const headerOffset = archive.indexOf(localZipSignature, offset);
+    if (headerOffset < 0 || headerOffset + 30 > archive.length) break;
 
-    const flags = archive.readUInt16LE(offset + 6);
-    if (flags & 0x0008) throw new Error(`data descriptor ZIP entry unsupported at entry ${index + 1}`);
+    const flags = archive.readUInt16LE(headerOffset + 6);
+    const method = archive.readUInt16LE(headerOffset + 8);
+    const compressedSize = archive.readUInt32LE(headerOffset + 18);
+    const uncompressedSize = archive.readUInt32LE(headerOffset + 22);
+    const fileNameLength = archive.readUInt16LE(headerOffset + 26);
+    const extraLength = archive.readUInt16LE(headerOffset + 28);
 
-    const method = archive.readUInt16LE(offset + 8);
-    const compressedSize = archive.readUInt32LE(offset + 18);
-    const uncompressedSize = archive.readUInt32LE(offset + 22);
-    const fileNameLength = archive.readUInt16LE(offset + 26);
-    const extraLength = archive.readUInt16LE(offset + 28);
-    const nameStart = offset + 30;
+    if ((flags & 0x0008) || fileNameLength === 0 || fileNameLength > 512 || extraLength > 4096) {
+      offset = headerOffset + 4;
+      continue;
+    }
+
+    const nameStart = headerOffset + 30;
     const dataStart = nameStart + fileNameLength + extraLength;
     const dataEnd = dataStart + compressedSize;
-    if (dataEnd > archive.length) throw new Error(`truncated local ZIP entry at entry ${index + 1}`);
+    if (dataStart > archive.length || dataEnd > archive.length) {
+      offset = headerOffset + 4;
+      continue;
+    }
 
     const fileName = archive.subarray(nameStart, nameStart + fileNameLength).toString("utf8");
-    const compressed = archive.subarray(dataStart, dataEnd);
-    if (!fileName.endsWith("/")) {
-      entries.set(path.basename(fileName), decodeZipEntry(method, compressed, uncompressedSize, fileName));
+    const baseName = path.basename(fileName);
+
+    if (expected.includes(baseName)) {
+      try {
+        const compressed = archive.subarray(dataStart, dataEnd);
+        entries.set(baseName, decodeZipEntry(method, compressed, uncompressedSize, fileName));
+      } catch {
+        // Keep scanning; another intact copy may exist later in the concatenated bundle.
+      }
     }
-    offset = dataEnd;
-    index += 1;
+
+    offset = Math.max(dataEnd, headerOffset + 4);
   }
 
   if (entries.size === 0) throw new Error("no recoverable local ZIP entries found");
-  console.warn(`PLAYER ZIP central directory unavailable; recovered ${entries.size} entries from local headers.`);
+  console.warn(`PLAYER ZIP central directory unavailable; recovered ${entries.size} expected entries from local headers.`);
   return entries;
 }
 
