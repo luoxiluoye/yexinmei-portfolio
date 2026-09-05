@@ -36,7 +36,12 @@ export default function PlayerPage() {
             <div className="border-t border-divider pt-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
               <PixelTag variant="active" dot>ACTIVE</PixelTag>
               <div className="mt-5">
-                <XPBar level={28} current={7888} max={10000} label="XP" />
+                <XPBar
+                  level={profile.xp.level}
+                  current={profile.xp.current}
+                  max={profile.xp.max}
+                  label="XP"
+                />
               </div>
               <p className="mt-5 text-[13px] leading-6 text-muted">{profile.status}</p>
             </div>
