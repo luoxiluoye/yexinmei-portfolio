@@ -13,7 +13,7 @@ import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
   email: "items.mail",
-  phone: "items.laptop",
+  phone: "ui.contactPhone",
   wechat: "ui.heart",
 };
 
