@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { quests } from "@/data/quests";
 import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { QuestExplorer } from "@/components/quests/quest-explorer";
-import { QuestStatusSidebar } from "@/components/quests/quest-status-sidebar";
 
 export const metadata: Metadata = {
   title: "项目经历与作品",
@@ -24,17 +23,8 @@ export default function QuestsPage() {
         <MiniWorldScene kind="cat" className="min-h-[104px] lg:min-h-[118px]" />
       </header>
 
-      <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
-        <div className="min-w-0">
-          <div className="mb-4 lg:hidden">
-            <QuestStatusSidebar />
-          </div>
-          <QuestExplorer quests={quests} />
-        </div>
-
-        <aside className="hidden lg:block">
-          <QuestStatusSidebar />
-        </aside>
+      <section className="mt-4 pb-8 lg:mt-8 lg:pb-0">
+        <QuestExplorer quests={quests} />
       </section>
     </main>
   );
