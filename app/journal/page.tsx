@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
+
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { JournalExplorer } from "@/components/journal/journal-explorer";
 import { PixelPanel } from "@/components/ui/pixel-panel";
+
+export const metadata: Metadata = {
+  title: "写作与观察",
+  description: "罗叶馨梅的写作、摄影、内容观察与 AI 工作流记录。",
+};
 
 export default function JournalPage() {
   return (
