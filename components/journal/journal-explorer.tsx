@@ -44,7 +44,7 @@ export function JournalExplorer() {
               </h2>
               <p className="mt-2 text-[13px] leading-6 text-muted">{entry.summary}</p>
               <div className="mt-3 flex items-center justify-end border-t border-divider pt-3 font-pixel text-[10px] text-foreground group-hover:text-accent">
-                OPEN ENTRY →
+                VIEW RELATED QUEST →
               </div>
             </div>
           </Link>
