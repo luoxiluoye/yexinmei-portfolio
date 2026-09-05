@@ -154,13 +154,26 @@ try {
     await inspectDialog.waitFor({ state: "visible", timeout: 5_000 });
     await page.keyboard.press("Escape");
     await inspectDialog.waitFor({ state: "detached", timeout: 5_000 });
+    await page.waitForTimeout(32);
 
-    const scrollResult = await page.evaluate(() => {
-      const before = window.scrollY;
+    const scrollResult = await page.evaluate(async () => {
+      const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo(0, 0);
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const top = window.scrollY;
       window.scrollTo(0, document.documentElement.scrollHeight);
-      return new Promise((resolve) => requestAnimationFrame(() => resolve({ before, after: window.scrollY })));
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      return {
+        maxScroll,
+        top,
+        after: window.scrollY,
+        bodyOverflow: document.body.style.overflow,
+      };
     });
-    assert(scrollResult.after > scrollResult.before || scrollResult.after > 0, `${viewport.name}: page could not scroll after modal close`);
+    assert(scrollResult.bodyOverflow !== "hidden", `${viewport.name}: body remained locked after Fun Facts close`);
+    if (scrollResult.maxScroll > 1) {
+      assert(scrollResult.after > scrollResult.top, `${viewport.name}: page could not scroll after modal close ${JSON.stringify(scrollResult)}`);
+    }
 
     await page.evaluate(() => window.scrollTo(0, 0));
     await journeyButtons.nth(0).click();
