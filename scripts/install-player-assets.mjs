@@ -4,6 +4,8 @@ import { inflateRawSync } from "node:zlib";
 
 const outRoot = path.resolve("public/assets/player");
 const archivePath = path.resolve("asset-delivery/player-page-pixel-assets-18.zip");
+const base64Dir = path.resolve("asset-delivery/player-b64");
+const remoteBaseUrl = (process.env.PLAYER_ASSET_BASE_URL || "https://yexinmei-portfolio.vercel.app/assets/player").replace(/\/$/, "");
 
 const expected = [
   "achievement-badge.png",
@@ -41,6 +43,8 @@ function validPng(filePath) {
 }
 
 function findEocd(buffer) {
+  if (buffer.length < 22) return -1;
+
   const signature = 0x06054b50;
   const minOffset = Math.max(0, buffer.length - 65557);
 
@@ -48,23 +52,20 @@ function findEocd(buffer) {
     if (buffer.readUInt32LE(offset) === signature) return offset;
   }
 
-  throw new Error("PLAYER asset archive is not a valid ZIP: EOCD not found");
+  return -1;
 }
 
-function readZipEntries(zipPath) {
-  if (!fs.existsSync(zipPath)) {
-    throw new Error(`PLAYER asset archive is missing: ${zipPath}`);
-  }
-
-  const archive = fs.readFileSync(zipPath);
+function readZipEntriesFromBuffer(archive) {
   const eocd = findEocd(archive);
+  if (eocd < 0) throw new Error("EOCD not found");
+
   const entryCount = archive.readUInt16LE(eocd + 10);
   let offset = archive.readUInt32LE(eocd + 16);
   const entries = new Map();
 
   for (let index = 0; index < entryCount; index += 1) {
     if (archive.readUInt32LE(offset) !== 0x02014b50) {
-      throw new Error(`PLAYER asset archive central directory is invalid at entry ${index + 1}`);
+      throw new Error(`central directory invalid at entry ${index + 1}`);
     }
 
     const method = archive.readUInt16LE(offset + 10);
@@ -82,7 +83,7 @@ function readZipEntries(zipPath) {
 
     if (fileName.endsWith("/")) continue;
     if (archive.readUInt32LE(localHeaderOffset) !== 0x04034b50) {
-      throw new Error(`PLAYER asset archive local header is invalid: ${fileName}`);
+      throw new Error(`local header invalid: ${fileName}`);
     }
 
     const localNameLength = archive.readUInt16LE(localHeaderOffset + 26);
@@ -96,11 +97,11 @@ function readZipEntries(zipPath) {
     } else if (method === 8) {
       data = inflateRawSync(compressed);
     } else {
-      throw new Error(`Unsupported ZIP compression method ${method}: ${fileName}`);
+      throw new Error(`unsupported compression method ${method}: ${fileName}`);
     }
 
     if (data.length !== uncompressedSize) {
-      throw new Error(`PLAYER asset archive size mismatch: ${fileName}`);
+      throw new Error(`size mismatch: ${fileName}`);
     }
 
     entries.set(path.basename(fileName), data);
@@ -109,7 +110,65 @@ function readZipEntries(zipPath) {
   return entries;
 }
 
-function install() {
+function tryRepositoryEntries() {
+  const candidates = [];
+
+  if (fs.existsSync(archivePath)) {
+    candidates.push({ label: "repository ZIP", buffer: fs.readFileSync(archivePath) });
+  }
+
+  if (fs.existsSync(base64Dir)) {
+    const parts = fs
+      .readdirSync(base64Dir)
+      .filter((name) => name.startsWith("player-assets.b64."))
+      .sort();
+
+    if (parts.length > 0) {
+      const encoded = parts
+        .map((name) => fs.readFileSync(path.join(base64Dir, name), "utf8"))
+        .join("")
+        .replace(/\s+/g, "");
+      const decoded = Buffer.from(encoded, "base64");
+      candidates.push({ label: `repository base64 bundle (${parts.length} parts)`, buffer: decoded });
+    }
+  }
+
+  for (const candidate of candidates) {
+    try {
+      const entries = readZipEntriesFromBuffer(candidate.buffer);
+      const missing = expected.filter((file) => !entries.has(file));
+      if (missing.length > 0) {
+        throw new Error(`missing ${missing.length} expected files`);
+      }
+      console.log(`PLAYER asset source: ${candidate.label}`);
+      return entries;
+    } catch (error) {
+      console.warn(`PLAYER asset source skipped (${candidate.label}): ${error.message}`);
+    }
+  }
+
+  return null;
+}
+
+async function restoreFromRemote(files) {
+  console.warn("PLAYER repository bundle unavailable; using production asset fallback.");
+
+  for (const file of files) {
+    const response = await fetch(`${remoteBaseUrl}/${file}`);
+    if (!response.ok) {
+      throw new Error(`Failed to restore PLAYER asset ${file}: HTTP ${response.status}`);
+    }
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.length < 8 || !buffer.subarray(0, 8).equals(pngSignature)) {
+      throw new Error(`Restored PLAYER asset is not a valid PNG: ${file}`);
+    }
+
+    fs.writeFileSync(path.join(outRoot, file), buffer);
+  }
+}
+
+async function install() {
   fs.mkdirSync(outRoot, { recursive: true });
 
   const missing = expected.filter((file) => !validPng(path.join(outRoot, file)));
@@ -118,19 +177,19 @@ function install() {
     return;
   }
 
-  console.log(`PLAYER assets missing locally: ${missing.length}. Restoring from repository archive.`);
-  const entries = readZipEntries(archivePath);
+  console.log(`PLAYER assets missing locally: ${missing.length}.`);
+  const entries = tryRepositoryEntries();
 
-  for (const file of missing) {
-    const buffer = entries.get(file);
-    if (!buffer) {
-      throw new Error(`PLAYER asset is missing from repository archive: ${file}`);
+  if (entries) {
+    for (const file of missing) {
+      const buffer = entries.get(file);
+      if (!buffer || buffer.length < 8 || !buffer.subarray(0, 8).equals(pngSignature)) {
+        throw new Error(`PLAYER asset in repository bundle is not a valid PNG: ${file}`);
+      }
+      fs.writeFileSync(path.join(outRoot, file), buffer);
     }
-    if (buffer.length < 8 || !buffer.subarray(0, 8).equals(pngSignature)) {
-      throw new Error(`PLAYER asset in repository archive is not a valid PNG: ${file}`);
-    }
-
-    fs.writeFileSync(path.join(outRoot, file), buffer);
+  } else {
+    await restoreFromRemote(missing);
   }
 
   const invalid = expected.filter((file) => !validPng(path.join(outRoot, file)));
@@ -138,7 +197,7 @@ function install() {
     throw new Error(`PLAYER asset verification failed: ${invalid.join(", ")}`);
   }
 
-  console.log(`PLAYER assets restored from repository archive: ${expected.length}/${expected.length}`);
+  console.log(`PLAYER assets restored: ${expected.length}/${expected.length}`);
 }
 
-install();
+await install();
