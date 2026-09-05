@@ -12,16 +12,14 @@ import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
   email: "items.mail",
-  phone: "ui.speechBubble",
   wechat: "ui.heart",
   resume: "items.notebook",
 };
 
 const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   email: "求职 / 合作 / 内容交流",
-  phone: "需要时可以直接联系",
   wechat: "点击按钮复制微信号",
-  resume: "如需 PDF 简历，欢迎邮件联系我",
+  resume: "PDF 简历整理中，如需可先邮件联系我",
 };
 
 export default function ContactPage() {
@@ -56,19 +54,17 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
+      <section className="mx-auto mt-5 grid max-w-[980px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3 lg:pb-0">
         {contact.items.map((item, index) => {
           const resumePending = item.type === "resume" && item.value === "TODO";
-          const displayValue = resumePending ? "邮件可索取" : item.value;
+          const displayValue = resumePending ? "PDF 简历待补" : item.value;
           const isWechat = item.type === "wechat";
           const href =
             item.type === "email"
               ? `mailto:${item.value}`
-              : item.type === "phone"
-                ? `tel:${item.value}`
-                : item.type === "resume"
-                  ? resumeHref
-                  : undefined;
+              : item.type === "resume"
+                ? resumeHref
+                : undefined;
 
           return (
             <PixelPanel
@@ -110,11 +106,7 @@ export default function ContactPage() {
                     variant={index === 0 ? "primary" : "secondary"}
                     className="w-full"
                   >
-                    {item.type === "email"
-                      ? "发送邮件"
-                      : item.type === "phone"
-                        ? "拨打电话"
-                        : "邮件索取简历"}
+                    {item.type === "email" ? "发送邮件" : "邮件索取简历"}
                   </PixelButton>
                 )}
               </div>
