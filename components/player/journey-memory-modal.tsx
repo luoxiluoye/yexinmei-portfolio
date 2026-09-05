@@ -106,7 +106,7 @@ export function JourneyMemoryModal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 px-3 py-[calc(12px+env(safe-area-inset-top))] lg:p-10"
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40 px-3 pb-[calc(12px+env(safe-area-inset-bottom))] pt-[calc(12px+env(safe-area-inset-top))] lg:p-10"
       onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -120,7 +120,7 @@ export function JourneyMemoryModal({
         className="pixel-cut-frame w-[calc(100vw-24px)] max-w-[860px] focus:outline-none lg:w-[min(860px,calc(100vw-64px))]"
         onMouseDown={(event: ReactMouseEvent<HTMLDivElement>) => event.stopPropagation()}
       >
-        <div className="pixel-cut-surface flex max-h-[calc(100dvh-var(--rpg-mobile-header-height)-var(--rpg-mobile-level-height)-var(--rpg-bottom-tab-height)-env(safe-area-inset-bottom)-24px)] min-h-0 flex-col bg-paper lg:max-h-[min(760px,calc(100vh-80px))]">
+        <div className="pixel-cut-surface flex max-h-[calc(100dvh_-_24px_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))] min-h-0 flex-col bg-paper lg:max-h-[min(760px,calc(100vh-80px))]">
           <div className="flex shrink-0 items-start justify-between gap-4 border-b border-divider px-4 py-3 lg:px-5">
             <div className="min-w-0">
               <p className="font-pixel text-[9px] text-accent">
