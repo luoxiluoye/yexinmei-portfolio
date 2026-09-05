@@ -50,11 +50,11 @@ export default function PlayerPage() {
         </PixelPanel>
       </section>
 
-      <section className="mt-5 grid min-w-0 gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-stretch lg:gap-5 lg:pb-0">
+      <section className="mt-5 grid min-w-0 gap-4 pb-8 lg:mt-8 lg:grid-cols-2 lg:gap-5 lg:pb-0 xl:grid-cols-[28fr_42fr_30fr] xl:items-stretch">
         <PixelPanel
           eyebrow="STORY"
           title="CHARACTER STORY"
-          className="h-full"
+          className="h-full lg:order-2 xl:order-1"
           surfaceClassName="h-full"
         >
           <div className="space-y-4 text-[15px] leading-[26px] text-muted">
@@ -69,7 +69,7 @@ export default function PlayerPage() {
           title="JOURNEY"
           windowChrome={false}
           rightSlot={<span className="font-pixel text-[9px] text-muted">PATH 01—07</span>}
-          className="h-full min-w-0"
+          className="h-full min-w-0 lg:order-1 lg:col-span-2 xl:order-2 xl:col-span-1"
           surfaceClassName="flex h-full min-w-0 flex-col"
           contentClassName="flex min-h-0 min-w-0 flex-1 flex-col"
         >
@@ -79,7 +79,7 @@ export default function PlayerPage() {
         <PixelPanel
           eyebrow="INTERESTS"
           title="FUN FACTS"
-          className="h-full min-w-0"
+          className="h-full min-w-0 lg:order-3 xl:order-3"
           surfaceClassName="h-full min-w-0"
           contentClassName="min-w-0"
         >
