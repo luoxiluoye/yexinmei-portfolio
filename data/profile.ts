@@ -2,7 +2,7 @@ export const profile = {
   nameZh: "罗叶馨梅",
   nameEn: "Yexinmei Luo",
   base: "成都",
-  education: "电子科技大学 · 新闻与传播",
+  education: "电子科技大学 · 新闻与传播硕士 / 成都理工大学 · 广播电视编导本科",
   className: ["内容运营", "新媒体创作者"],
   keywords: ["新媒体", "内容运营", "社区", "传播"],
   introShort: "做内容、追热点、研究用户，也喜欢拍照片、写东西和折腾一些能让内容工作更顺手的小工具。",
