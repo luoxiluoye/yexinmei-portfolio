@@ -24,17 +24,19 @@ const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   resume: "添加微信 luoxiluoye，备注「简历」即可",
 };
 
+type CopyTarget = "wechat" | "resume";
+
 export default function ContactPage() {
-  const [copied, setCopied] = useState(false);
+  const [copiedTarget, setCopiedTarget] = useState<CopyTarget | null>(null);
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
 
-  async function copyWechat(value: string) {
+  async function copyWechat(value: string, target: CopyTarget) {
     try {
       await navigator.clipboard.writeText(value);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
+      setCopiedTarget(target);
+      window.setTimeout(() => setCopiedTarget(null), 1600);
     } catch {
-      setCopied(false);
+      setCopiedTarget(null);
     }
   }
 
@@ -94,17 +96,21 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-auto pt-4">
-                {isWechat || isResume ? (
+                {isWechat ? (
                   <PixelButton
                     variant="secondary"
                     className="w-full"
-                    onClick={() => copyWechat(isWechat ? item.value : wechat)}
+                    onClick={() => copyWechat(item.value, "wechat")}
                   >
-                    {copied
-                      ? "已复制微信号 ✓"
-                      : isResume
-                        ? "加微信索取简历"
-                        : "复制微信号"}
+                    {copiedTarget === "wechat" ? "已复制微信号 ✓" : "复制微信号"}
+                  </PixelButton>
+                ) : isResume ? (
+                  <PixelButton
+                    variant="secondary"
+                    className="w-full"
+                    onClick={() => copyWechat(wechat, "resume")}
+                  >
+                    {copiedTarget === "resume" ? "已复制微信号 ✓" : "加微信索取简历"}
                   </PixelButton>
                 ) : (
                   <PixelButton
@@ -121,7 +127,7 @@ export default function ContactPage() {
         })}
       </section>
 
-      {copied && (
+      {copiedTarget && (
         <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
           WECHAT COPIED · 微信号已复制
         </div>
