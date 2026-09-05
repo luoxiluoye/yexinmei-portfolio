@@ -83,7 +83,7 @@ const memories: Memory[] = [
   },
   {
     title: "社区与新品",
-    time: "2026 — NOW",
+    time: "2026.06 — NOW",
     icon: "player.journeyCommunity",
     summary: [
       "在知乎负责汽车与消费电子领域的社区内容运营。",
@@ -365,10 +365,13 @@ function MemoryDialog({
             )}
 
             <div className="mt-4 grid gap-5 lg:grid-cols-[44fr_56fr]">
-              <div className="flex min-h-[210px] flex-col items-center justify-center border-2 border-border bg-soft px-5 py-6 text-center lg:min-h-[240px]">
-                <PixelIcon assetId="player.memoryLocked" decorative width={112} height={84} />
-                <p className="mt-4 font-pixel text-[11px] leading-5">MEMORY IMAGE<br />NOT LOADED YET</p>
-                <p className="mt-2 text-[11px] text-muted">以后补真实照片，这里会自动替换。</p>
+              <div className="relative flex min-h-[210px] flex-col items-center justify-center overflow-hidden border-2 border-border bg-soft px-5 py-6 text-center lg:min-h-[240px]">
+                <div aria-hidden="true" className="absolute inset-4 border border-dashed border-divider" />
+                <span className="relative z-[1] mb-3 border border-border bg-paper px-2 py-1 font-pixel text-[9px] text-accent">
+                  STAGE {String(index + 1).padStart(2, "0")}
+                </span>
+                <PixelIcon assetId={memory.icon} decorative width={124} height={124} className="relative z-[1]" />
+                <p className="relative z-[1] mt-3 font-pixel text-[10px] text-muted">ARCHIVE ILLUSTRATION</p>
               </div>
               <div className="space-y-4 text-[14px] leading-7 text-muted lg:text-[15px]">
                 {memory.summary.map((paragraph) => (
@@ -437,6 +440,9 @@ export function FunFactsInspect() {
               <PixelIcon assetId={fact.icon} decorative width={48} height={48} className="rpg-item-icon transition-transform group-hover:-translate-y-1" />
             </div>
             <span className="min-w-0 flex-1 text-[14px] leading-6">{fact.title}</span>
+            <span className="flex shrink-0 items-center gap-1 font-pixel text-[9px] text-accent sm:hidden">
+              VIEW →
+            </span>
             <span className="hidden shrink-0 items-center gap-1 font-pixel text-[9px] text-muted transition-colors group-hover:text-accent xl:flex">
               <PixelIcon assetId="player.inspectEye" decorative width={22} height={22} />
               INSPECT →
@@ -445,9 +451,7 @@ export function FunFactsInspect() {
         ))}
       </div>
 
-      {active && (
-        <InspectDialog fact={active} onClose={close} />
-      )}
+      {active && <InspectDialog fact={active} onClose={close} />}
     </>
   );
 }
@@ -487,9 +491,10 @@ function InspectDialog({ fact, onClose }: { fact: Fact; onClose: () => void }) {
 
           <div className="p-4 lg:p-5">
             <div className="grid gap-5 lg:grid-cols-[180px_1fr]">
-              <div className="flex min-h-[200px] flex-col items-center justify-center border-2 border-border bg-soft p-4 text-center">
-                <PixelIcon assetId={fact.icon} decorative width={96} height={96} />
-                <p className="mt-4 font-pixel text-[9px] leading-5 text-muted">ITEM IMAGE<br />NOT LOADED YET</p>
+              <div className="relative flex min-h-[200px] flex-col items-center justify-center overflow-hidden border-2 border-border bg-soft p-4 text-center">
+                <div aria-hidden="true" className="absolute inset-3 border border-dashed border-divider" />
+                <PixelIcon assetId={fact.icon} decorative width={112} height={112} className="relative z-[1]" />
+                <p className="relative z-[1] mt-3 font-pixel text-[9px] text-muted">ITEM ILLUSTRATION</p>
               </div>
               <div>
                 <h4 className="font-pixel text-[16px]">{fact.itemTitle}</h4>
