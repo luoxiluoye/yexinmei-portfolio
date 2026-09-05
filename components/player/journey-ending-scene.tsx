@@ -2,7 +2,7 @@ import { PixelIcon } from "@/components/ui/pixel-icon";
 
 export function JourneyEndingScene() {
   return (
-    <div className="mt-3 flex min-h-[230px] flex-1 flex-col border border-divider bg-background p-3 lg:min-h-[250px]">
+    <div className="mt-3 flex min-h-[250px] flex-1 flex-col border border-divider bg-background p-3 lg:min-h-[280px]">
       <div className="flex items-center justify-between gap-3 border-b border-divider pb-2">
         <div>
           <p className="font-pixel text-[8px] text-muted">CURRENT POSITION</p>
@@ -14,45 +14,55 @@ export function JourneyEndingScene() {
         </div>
       </div>
 
-      <div className="relative min-h-[150px] flex-1 overflow-hidden">
-        <p className="absolute left-1/2 top-3 z-30 -translate-x-1/2 whitespace-nowrap border border-divider bg-paper px-2 py-1 font-pixel text-[8px] text-muted">
-          NEXT QUEST · ?
-        </p>
-
+      <div className="relative min-h-[175px] flex-1 overflow-hidden lg:min-h-[195px]">
+        <PixelIcon
+          assetId="world.bush"
+          decorative
+          width={84}
+          height={54}
+          className="absolute bottom-[70px] left-[9%] z-0 h-auto w-[68px] opacity-90 lg:bottom-[78px] lg:w-[84px]"
+        />
+        <PixelIcon
+          assetId="world.bush"
+          decorative
+          width={72}
+          height={46}
+          className="absolute bottom-[70px] right-[12%] z-0 h-auto w-[58px] opacity-90 lg:bottom-[78px] lg:w-[72px]"
+        />
         <PixelIcon
           assetId="world.grassLong"
           decorative
-          width={430}
-          height={215}
-          className="absolute bottom-[-36px] left-1/2 z-10 h-auto w-[112%] max-w-none -translate-x-1/2 lg:bottom-[-42px]"
+          width={520}
+          height={180}
+          className="absolute bottom-[-24px] left-1/2 z-10 h-auto w-[92%] max-w-[720px] -translate-x-1/2 lg:bottom-[-30px] lg:w-[94%]"
         />
         <PixelIcon
           assetId="world.flower"
           decorative
           width={30}
           height={30}
-          className="absolute bottom-[28px] left-[16%] z-20 h-auto w-[28px]"
+          className="absolute bottom-[42px] left-[9%] z-20 h-auto w-[24px] lg:bottom-[48px] lg:w-[28px]"
         />
         <PixelIcon
           assetId="character.fullBody"
           decorative
-          width={92}
-          height={118}
-          className="absolute bottom-[25px] left-[43%] z-20 h-auto w-[82px] -translate-x-1/2 lg:w-[92px]"
+          width={108}
+          height={138}
+          className="absolute bottom-[39px] left-[35%] z-20 h-auto w-[92px] -translate-x-1/2 lg:bottom-[45px] lg:w-[108px]"
         />
         <PixelIcon
           assetId="cat.sit"
           decorative
-          width={62}
-          height={62}
-          className="absolute bottom-[27px] left-[58%] z-20 h-auto w-[56px] -translate-x-1/2 lg:w-[62px]"
+          width={72}
+          height={72}
+          className="absolute bottom-[40px] left-[57%] z-20 h-auto w-[62px] -translate-x-1/2 lg:bottom-[46px] lg:w-[72px]"
         />
         <PixelIcon
           assetId="world.woodenSign"
           decorative
-          width={78}
-          height={104}
-          className="absolute bottom-[24px] right-[8%] z-20 h-auto w-[70px] lg:w-[78px]"
+          width={90}
+          height={120}
+          className="absolute bottom-[38px] right-[5%] z-20 h-auto w-[76px] lg:bottom-[44px] lg:right-[6%] lg:w-[90px]"
         />
       </div>
 
