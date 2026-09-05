@@ -13,7 +13,7 @@ export function MiniPlayerCard() {
       name={profile.nameZh}
       subtitle={`${profile.nameEn} · ${profile.keywords.join(" / ")}`}
       info={playerInfo}
-      xp={{ label: "XP", current: 7888, max: 10000, level: 28 }}
+      xp={{ label: "XP", ...profile.xp }}
       href="/player"
       actionLabel="更多关于我 →"
       className="h-full"
