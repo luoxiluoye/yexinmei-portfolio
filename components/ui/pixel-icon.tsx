@@ -46,6 +46,24 @@ export function PixelIcon({
     ) : null;
   }
 
+  if (src.startsWith("data:image/")) {
+    return (
+      // Embedded UI assets are tiny hand-cleaned pixel PNGs; keeping them native avoids optimizer rewriting.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt={isDecorative ? "" : alt}
+        aria-hidden={isDecorative || undefined}
+        width={resolvedWidth}
+        height={resolvedHeight}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        className={cn("pixelated shrink-0 object-contain", className)}
+        style={style}
+      />
+    );
+  }
+
   return (
     <Image
       src={src}
