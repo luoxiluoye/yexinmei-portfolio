@@ -16,14 +16,12 @@ export function FooterCatEasterEgg() {
   };
 
   return (
-    <div className="relative h-full w-[300px] shrink-0 overflow-hidden">
+    <div className="grid h-full w-[300px] shrink-0 grid-cols-[74px_1fr] items-center gap-2 overflow-hidden px-2">
       <button
         type="button"
         onClick={handleClick}
         aria-label="点击页脚猫咪发现隐藏彩蛋"
-        className={`group absolute bottom-[8px] z-10 flex h-[58px] w-[58px] cursor-pointer items-center justify-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-          unlocked ? "left-[16px]" : "left-[64px]"
-        }`}
+        className="group flex h-[62px] w-[62px] cursor-pointer items-center justify-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <PixelIcon
           assetId={CAT_STATES[index]}
@@ -35,12 +33,12 @@ export function FooterCatEasterEgg() {
       </button>
 
       {unlocked ? (
-        <div className="absolute bottom-[12px] right-[8px] z-20 w-[204px] border-2 border-border bg-paper px-3 py-2 shadow-[3px_3px_0_rgba(17,17,17,.10)]">
-          <p className="font-pixel text-[9px] leading-4 text-accent">HIDDEN MESSAGE ♥</p>
-          <p className="font-pixel-zh mt-0.5 whitespace-nowrap text-[12px] leading-5">今天也要继续升级呀</p>
+        <div className="min-w-0 border-2 border-border bg-paper px-2.5 py-2 shadow-[3px_3px_0_rgba(17,17,17,.10)]">
+          <p className="font-pixel text-[8px] leading-3 text-accent">HIDDEN MESSAGE ♥</p>
+          <p className="font-pixel-zh mt-0.5 whitespace-nowrap text-[11px] leading-4">今天也要继续升级呀</p>
         </div>
       ) : (
-        <div className="absolute bottom-[25px] right-[18px] flex items-center gap-1.5">
+        <div className="flex min-w-0 items-center justify-center gap-2">
           {[0, 1, 2].map((heartIndex) => (
             <PixelIcon
               key={heartIndex}
