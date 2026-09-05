@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import type { AssetId } from "@/lib/assets";
 import { skills } from "@/data/skills";
 
@@ -7,6 +8,11 @@ import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
 import { StatusBar } from "@/components/ui/status-bar";
+
+export const metadata: Metadata = {
+  title: "技能与工具",
+  description: "罗叶馨梅的内容运营、新媒体、社区运营、摄影、数据分析与 AI 辅助工作流能力。",
+};
 
 const toolIcons: AssetId[] = [
   "ui.star",
