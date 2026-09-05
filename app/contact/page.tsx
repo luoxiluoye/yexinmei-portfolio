@@ -12,20 +12,21 @@ import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
   email: "items.mail",
+  phone: "items.laptop",
   wechat: "ui.heart",
   resume: "items.notebook",
 };
 
 const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   email: "求职 / 合作 / 内容交流",
+  phone: "求职沟通可直接电话联系",
   wechat: "点击按钮复制微信号",
-  resume: "PDF 简历整理中，如需可先邮件联系我",
+  resume: "添加微信 luoxiluoye，备注「简历」即可",
 };
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
-  const email = contact.items.find((item) => item.type === "email")?.value ?? "";
-  const resumeHref = `mailto:${email}?subject=${encodeURIComponent("简历索取｜罗叶馨梅")}`;
+  const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
 
   async function copyWechat(value: string) {
     try {
@@ -54,16 +55,17 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[980px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3 lg:pb-0">
+      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
         {contact.items.map((item, index) => {
           const resumePending = item.type === "resume" && item.value === "TODO";
-          const displayValue = resumePending ? "PDF 简历待补" : item.value;
+          const displayValue = resumePending ? "微信索取简历" : item.value;
           const isWechat = item.type === "wechat";
+          const isResume = item.type === "resume";
           const href =
             item.type === "email"
               ? `mailto:${item.value}`
-              : item.type === "resume"
-                ? resumeHref
+              : item.type === "phone"
+                ? `tel:${item.value}`
                 : undefined;
 
           return (
@@ -92,13 +94,17 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-auto pt-4">
-                {isWechat ? (
+                {isWechat || isResume ? (
                   <PixelButton
                     variant="secondary"
                     className="w-full"
-                    onClick={() => copyWechat(item.value)}
+                    onClick={() => copyWechat(isWechat ? item.value : wechat)}
                   >
-                    {copied ? "已复制 ✓" : "复制微信号"}
+                    {copied
+                      ? "已复制微信号 ✓"
+                      : isResume
+                        ? "加微信索取简历"
+                        : "复制微信号"}
                   </PixelButton>
                 ) : (
                   <PixelButton
@@ -106,7 +112,7 @@ export default function ContactPage() {
                     variant={index === 0 ? "primary" : "secondary"}
                     className="w-full"
                   >
-                    {item.type === "email" ? "发送邮件" : "邮件索取简历"}
+                    {item.type === "email" ? "发送邮件" : "拨打电话"}
                   </PixelButton>
                 )}
               </div>
