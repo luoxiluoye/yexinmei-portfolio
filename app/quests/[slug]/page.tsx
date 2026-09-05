@@ -4,11 +4,13 @@ import { notFound } from "next/navigation";
 
 import { QuestVisitAchievement } from "@/components/game/quest-visit-achievement";
 import { getQuestBySlug, getQuestSlugs } from "@/data/quests";
+import { QuestContext } from "@/components/quests/quest-context";
 import { QuestDetailSidebar } from "@/components/quests/quest-detail-sidebar";
 import { QuestGallery } from "@/components/quests/quest-gallery";
 import { QuestHero } from "@/components/quests/quest-hero";
 import { QuestMeta } from "@/components/quests/quest-meta";
 import { QuestOutcomes } from "@/components/quests/quest-outcomes";
+import { QuestRealCaseSection } from "@/components/quests/quest-real-case";
 import { QuestSection } from "@/components/quests/quest-section";
 import { PixelButton } from "@/components/ui/pixel-button";
 
@@ -20,9 +22,7 @@ export function generateStaticParams() {
   return getQuestSlugs();
 }
 
-export async function generateMetadata({
-  params,
-}: QuestPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: QuestPageProps): Promise<Metadata> {
   const { slug } = await params;
   const quest = getQuestBySlug(slug);
 
@@ -46,10 +46,7 @@ export default async function QuestPage({ params }: QuestPageProps) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="font-pixel text-[11px] text-muted">04. QUEST DETAIL</p>
-        <Link
-          href="/quests"
-          className="inline-flex min-h-11 items-center text-[13px] hover:text-accent"
-        >
+        <Link href="/quests" className="inline-flex min-h-11 items-center text-[13px] hover:text-accent">
           ← 返回项目列表
         </Link>
       </div>
@@ -63,12 +60,11 @@ export default async function QuestPage({ params }: QuestPageProps) {
           <QuestMeta quest={quest} />
 
           <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
-            <QuestSection id="intro" index={1} label="INTRO" title="项目简介" content={quest.summary} />
-            <QuestSection id="objective" index={2} label="OBJECTIVE" title="项目目标" content={quest.objective} />
-            <QuestSection id="challenge" index={3} label="CHALLENGE" title="主要难点" content={quest.challenge} />
-            <QuestSection id="actions" index={4} label="ACTIONS" title="我做了什么" bullets={quest.actions} />
-            <QuestOutcomes index={5} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
-            <QuestSection id="learnings" index={6} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
+            <QuestContext quest={quest} index={1} />
+            <QuestSection id="actions" index={2} label="WHAT I DID" title="我实际做了什么" bullets={quest.actions} />
+            {quest.realCase && <QuestRealCaseSection realCase={quest.realCase} index={3} />}
+            <QuestOutcomes index={4} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
+            <QuestSection id="learnings" index={5} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
             <QuestGallery gallery={quest.gallery} />
           </div>
 
