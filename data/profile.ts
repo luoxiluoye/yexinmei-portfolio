@@ -15,6 +15,7 @@ export const profile = {
   status: "探索 · 创作 · 连接 · 持续升级中",
   locationLabel: "成都",
   email: "2657351670@qq.com",
+  phone: "18080409809",
   wechat: "luoxiluoye",
   xiaohongshu: null,
   resumePath: null,
