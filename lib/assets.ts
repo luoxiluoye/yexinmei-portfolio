@@ -1,3 +1,5 @@
+import { EMBEDDED_UI_ASSETS } from "@/lib/embedded-ui-assets";
+
 export const ASSET_DIRECTORIES = {
   character: "/assets/character",
   cat: "/assets/cat",
@@ -51,6 +53,7 @@ export const ASSET_REGISTRY = {
   "ui.cursor": `${ASSET_DIRECTORIES.ui}/cursor.png`,
   "ui.exclamation": `${ASSET_DIRECTORIES.ui}/exclamation.png`,
   "ui.speechBubble": `${ASSET_DIRECTORIES.ui}/speech-bubble.png`,
+  "ui.contactPhone": EMBEDDED_UI_ASSETS.contactPhone,
 
   // Items
   "items.camera": `${ASSET_DIRECTORIES.items}/camera.png`,
@@ -82,6 +85,8 @@ export const ASSET_REGISTRY = {
   "player.memoryArrowLeft": `${ASSET_DIRECTORIES.player}/memory-arrow-left.png`,
   "player.memoryArrowRight": `${ASSET_DIRECTORIES.player}/memory-arrow-right.png`,
   "player.memoryLocked": `${ASSET_DIRECTORIES.player}/memory-locked.png`,
+  "player.journeySwipeLeft": EMBEDDED_UI_ASSETS.journeySwipeLeft,
+  "player.journeySwipeRight": EMBEDDED_UI_ASSETS.journeySwipeRight,
 } as const;
 
 export type AssetId = keyof typeof ASSET_REGISTRY;
