@@ -223,7 +223,7 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
         className="pixel-cut-frame w-[calc(100vw-24px)] max-w-[760px] focus:outline-none lg:w-[min(760px,calc(100vw-64px))]"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <div className="pixel-cut-surface flex max-h-[calc(100dvh-24px-env(safe-area-inset-top)-env(safe-area-inset-bottom))] min-h-0 flex-col overflow-hidden bg-paper lg:max-h-[min(680px,calc(100vh-80px))]">
+        <div className="pixel-cut-surface flex max-h-[calc(100dvh_-_24px_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom))] min-h-0 flex-col overflow-hidden bg-paper lg:max-h-[min(680px,calc(100vh-80px))]">
           <header className="flex shrink-0 items-start justify-between gap-4 border-b border-divider px-4 py-3 lg:px-5">
             <div className="min-w-0">
               <p className="font-pixel text-[9px] text-accent">ITEM FOUND</p>
