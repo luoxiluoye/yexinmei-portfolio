@@ -3,15 +3,30 @@
 import { useMemo, useState } from "react";
 
 import type { Quest } from "@/types/quest";
-import { questCategories } from "@/data/quests";
 import { QuestCard } from "@/components/ui/quest-card";
 
+const questFilters = ["ALL", "CONTENT", "COMMUNITY", "GROWTH", "CREATIVE"] as const;
+type QuestFilter = (typeof questFilters)[number];
+
+const filterSlugs: Record<Exclude<QuestFilter, "ALL">, string[]> = {
+  CONTENT: [
+    "zhihu-auto-consumer-tech",
+    "global-content",
+    "tech-you-houhua",
+    "inspiration-studio",
+  ],
+  COMMUNITY: ["zhihu-auto-consumer-tech"],
+  GROWTH: ["zhihu-auto-consumer-tech", "ccd-business"],
+  CREATIVE: ["tech-you-houhua", "visual-storytelling", "inspiration-studio"],
+};
+
 export function QuestExplorer({ quests }: { quests: Quest[] }) {
-  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [activeCategory, setActiveCategory] = useState<QuestFilter>("ALL");
 
   const filteredQuests = useMemo(() => {
     if (activeCategory === "ALL") return quests;
-    return quests.filter((quest) => quest.categories.includes(activeCategory));
+    const slugs = filterSlugs[activeCategory];
+    return quests.filter((quest) => slugs.includes(quest.slug));
   }, [activeCategory, quests]);
 
   return (
@@ -19,7 +34,7 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
       <div className="mb-4 border-y border-divider py-3">
         <div className="no-scrollbar -mx-4 overflow-x-auto px-4 lg:mx-0 lg:overflow-visible lg:px-0">
           <div className="flex min-w-max gap-2 lg:flex-wrap">
-            {questCategories.map((category) => {
+            {questFilters.map((category) => {
               const active = activeCategory === category;
 
               return (
@@ -53,12 +68,6 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
           <QuestCard key={quest.slug} quest={quest} />
         ))}
       </div>
-
-      {filteredQuests.length === 0 && (
-        <div className="border-2 border-border bg-paper p-10 text-center">
-          <p className="font-pixel text-[14px]">NO QUEST FOUND</p>
-        </div>
-      )}
     </>
   );
 }
