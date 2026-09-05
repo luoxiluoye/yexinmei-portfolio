@@ -12,13 +12,19 @@ function getStatusVariant(status: QuestStatus) {
 }
 
 function getQuestIcon(quest: Quest): AssetId {
-  if (quest.categories.includes("摄影") || quest.categories.includes("视频")) return "items.camera";
-  if (quest.categories.includes("AI 提效")) return "items.laptop";
-  if (quest.categories.includes("个人项目")) return "items.key";
-  return "items.notebook";
+  const iconBySlug: Record<string, AssetId> = {
+    "zhihu-auto-consumer-tech": "ui.speechBubble",
+    "global-content": "items.mail",
+    "tech-you-houhua": "items.laptop",
+    "ccd-business": "items.key",
+    "visual-storytelling": "items.camera",
+    "inspiration-studio": "ui.sparkle",
+  };
+
+  return iconBySlug[quest.slug] ?? "items.notebook";
 }
 
-export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
+export function QuestCard({ quest }: { quest: Quest }) {
   return (
     <Link
       href={`/quests/${quest.slug}`}
@@ -38,9 +44,7 @@ export function QuestCard({ quest, index }: { quest: Quest; index: number }) {
             </div>
 
             <div className="min-w-0">
-              <p className="font-pixel text-[10px] text-muted">
-                {quest.code} · {String(index + 1).padStart(2, "0")}
-              </p>
+              <p className="font-pixel text-[10px] text-muted">{quest.code}</p>
               <h2 className="mt-1 text-[17px] font-bold leading-6 transition-colors group-hover:text-accent lg:text-[18px]">
                 {quest.title}
               </h2>

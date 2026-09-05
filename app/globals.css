@@ -6,7 +6,7 @@
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url("https://raw.githubusercontent.com/fontsource/font-files/main/fonts/other/fusion-pixel-12px-proportional-sc/files/fusion-pixel-12px-proportional-sc-latin-400-normal.woff2") format("woff2");
+  src: url("https://cdn.jsdelivr.net/gh/iota9star/fonts@master/fonts/fusion-pixel/fusion-pixel-12px-proportional-zh_hans.ttf") format("truetype");
 }
 
 @theme inline {
@@ -204,14 +204,11 @@
 .rpg-twinkle { animation: rpg-twinkle 1.6s steps(2, end) infinite; }
 .rpg-achievement-toast { animation: rpg-toast-in .18s steps(2, end) both; }
 
-/*
- * Micro interactions intentionally stay tiny: old-game feedback rather than
- * modern SaaS motion. They only run on precise hover devices.
- */
+/* Only controls and cards that really perform an action get movement feedback. */
 .rpg-window-interactive,
 .rpg-stat-card,
-.rpg-item-slot,
-.rpg-note-card {
+.rpg-item-interactive,
+.rpg-note-interactive {
   transition: transform 120ms ease, filter 120ms ease;
 }
 
@@ -219,38 +216,26 @@
   transition: color 120ms ease, background-color 120ms ease, padding 120ms ease;
 }
 
-.rpg-window-controls {
-  transition: color 120ms ease, opacity 120ms ease;
-  opacity: .72;
-}
-
-.rpg-window-control {
-  display: inline-block;
-  min-width: 9px;
-  text-align: center;
-  transition: color 120ms ease, transform 120ms ease;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .rpg-window-interactive:hover,
   .rpg-stat-card:hover,
-  .rpg-item-slot:hover,
-  .rpg-note-card:hover {
+  .rpg-item-interactive:hover,
+  .rpg-note-interactive:hover {
     transform: translate(-2px, -2px);
     filter: drop-shadow(4px 4px 0 rgba(17,17,17,.12));
   }
 
   .rpg-window-interactive:active,
   .rpg-stat-card:active,
-  .rpg-item-slot:active,
-  .rpg-note-card:active {
+  .rpg-item-interactive:active,
+  .rpg-note-interactive:active {
     transform: translate(1px, 1px);
     filter: drop-shadow(1px 1px 0 rgba(17,17,17,.08));
   }
 
   .rpg-stat-card:hover .rpg-stat-icon,
-  .rpg-item-slot:hover .rpg-item-icon,
-  .rpg-note-card:hover .rpg-note-icon {
+  .rpg-item-interactive:hover .rpg-item-icon,
+  .rpg-note-interactive:hover .rpg-note-icon {
     animation: rpg-icon-hop .34s steps(2, end) 1;
   }
 
@@ -259,25 +244,6 @@
     color: var(--rpg-color-text);
     padding-left: 6px;
     padding-right: 6px;
-  }
-
-  .rpg-window-interactive:hover .rpg-window-controls {
-    opacity: 1;
-  }
-
-  .rpg-window-interactive:hover .rpg-window-control:nth-child(1) {
-    color: var(--rpg-color-yellow);
-    transform: translateY(-1px);
-  }
-
-  .rpg-window-interactive:hover .rpg-window-control:nth-child(2) {
-    color: var(--rpg-color-green);
-    transform: translateY(-1px);
-  }
-
-  .rpg-window-interactive:hover .rpg-window-control:nth-child(3) {
-    color: var(--rpg-color-red);
-    transform: translateY(-1px);
   }
 }
 

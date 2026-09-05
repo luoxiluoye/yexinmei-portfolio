@@ -12,8 +12,8 @@ import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
   email: "items.mail",
-  phone: "items.laptop",
-  wechat: "ui.speechBubble",
+  phone: "ui.speechBubble",
+  wechat: "ui.heart",
   resume: "items.notebook",
 };
 
@@ -21,11 +21,13 @@ const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   email: "求职 / 合作 / 内容交流",
   phone: "需要时可以直接联系",
   wechat: "点击按钮复制微信号",
-  resume: "PDF 版本之后补充",
+  resume: "如需 PDF 简历，欢迎邮件联系我",
 };
 
 export default function ContactPage() {
   const [copied, setCopied] = useState(false);
+  const email = contact.items.find((item) => item.type === "email")?.value ?? "";
+  const resumeHref = `mailto:${email}?subject=${encodeURIComponent("简历索取｜罗叶馨梅")}`;
 
   async function copyWechat(value: string) {
     try {
@@ -56,15 +58,17 @@ export default function ContactPage() {
 
       <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
         {contact.items.map((item, index) => {
-          const pending = item.value === "TODO";
-          const displayValue = pending ? "COMING SOON" : item.value;
+          const resumePending = item.type === "resume" && item.value === "TODO";
+          const displayValue = resumePending ? "邮件可索取" : item.value;
           const isWechat = item.type === "wechat";
           const href =
             item.type === "email"
               ? `mailto:${item.value}`
               : item.type === "phone"
                 ? `tel:${item.value}`
-                : undefined;
+                : item.type === "resume"
+                  ? resumeHref
+                  : undefined;
 
           return (
             <PixelPanel
@@ -72,7 +76,6 @@ export default function ContactPage() {
               eyebrow={`0${index + 1}`}
               title={item.label}
               accent={index === 0}
-              interactive
               className="h-full"
               contentClassName="flex h-[190px] flex-col p-4 lg:p-5"
             >
@@ -83,7 +86,7 @@ export default function ContactPage() {
                     decorative
                     width={48}
                     height={48}
-                    className="rpg-item-icon h-[46px] w-[46px]"
+                    className="h-[46px] w-[46px]"
                   />
                 </div>
                 <div className="min-w-0">
@@ -93,11 +96,7 @@ export default function ContactPage() {
               </div>
 
               <div className="mt-auto pt-4">
-                {pending ? (
-                  <PixelButton variant="secondary" disabled className="w-full">
-                    简历稍后补充
-                  </PixelButton>
-                ) : isWechat ? (
+                {isWechat ? (
                   <PixelButton
                     variant="secondary"
                     className="w-full"
@@ -106,8 +105,16 @@ export default function ContactPage() {
                     {copied ? "已复制 ✓" : "复制微信号"}
                   </PixelButton>
                 ) : (
-                  <PixelButton href={href} variant={index === 0 ? "primary" : "secondary"} className="w-full">
-                    {item.type === "email" ? "发送邮件" : "拨打电话"}
+                  <PixelButton
+                    href={href}
+                    variant={index === 0 ? "primary" : "secondary"}
+                    className="w-full"
+                  >
+                    {item.type === "email"
+                      ? "发送邮件"
+                      : item.type === "phone"
+                        ? "拨打电话"
+                        : "邮件索取简历"}
                   </PixelButton>
                 )}
               </div>

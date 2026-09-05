@@ -74,14 +74,12 @@ export function PixelPanel({
             {rightSlot ? (
               <div className="shrink-0">{rightSlot}</div>
             ) : windowChrome ? (
-              <div
+              <span
                 aria-hidden="true"
-                className="rpg-window-controls hidden shrink-0 items-center gap-2 font-pixel text-[11px] leading-none text-muted lg:flex"
+                className="hidden shrink-0 font-pixel text-[10px] tracking-[0.24em] text-divider lg:block"
               >
-                <span className="rpg-window-control">−</span>
-                <span className="rpg-window-control">□</span>
-                <span className="rpg-window-control">×</span>
-              </div>
+                ···
+              </span>
             ) : null}
           </div>
         )}

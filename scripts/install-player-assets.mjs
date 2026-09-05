@@ -1,10 +1,9 @@
-import { execFileSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 
-const zipPath = path.resolve("asset-delivery/player-page-pixel-assets-18.zip");
 const outRoot = path.resolve("public/assets/player");
+const baseUrl = (process.env.PLAYER_ASSET_BASE_URL || "https://yexinmei-portfolio.vercel.app/assets/player").replace(/\/$/, "");
+
 const expected = [
   "achievement-badge.png",
   "fact-camera-kit.png",
@@ -26,25 +25,51 @@ const expected = [
   "memory-locked.png",
 ];
 
-if (!fs.existsSync(zipPath)) {
-  throw new Error(`PLAYER asset ZIP not found: ${zipPath}`);
+const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+
+function validPng(filePath) {
+  if (!fs.existsSync(filePath)) return false;
+  const fd = fs.openSync(filePath, "r");
+  const header = Buffer.alloc(8);
+  try {
+    fs.readSync(fd, header, 0, 8, 0);
+  } finally {
+    fs.closeSync(fd);
+  }
+  return header.equals(pngSignature);
 }
 
-const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "yexinmei-player-assets-"));
-
-try {
-  execFileSync("unzip", ["-q", "-o", zipPath, "-d", tempRoot], { stdio: "inherit" });
+async function install() {
   fs.mkdirSync(outRoot, { recursive: true });
 
-  for (const file of expected) {
-    const source = path.join(tempRoot, file);
-    if (!fs.existsSync(source)) {
-      throw new Error(`Missing PLAYER asset in ZIP: ${file}`);
-    }
-    fs.copyFileSync(source, path.join(outRoot, file));
+  const missing = expected.filter((file) => !validPng(path.join(outRoot, file)));
+  if (missing.length === 0) {
+    console.log(`PLAYER assets verified: ${expected.length}/${expected.length}`);
+    return;
   }
 
-  console.log(`PLAYER assets installed: ${expected.length}/${expected.length}`);
-} finally {
-  fs.rmSync(tempRoot, { recursive: true, force: true });
+  console.log(`PLAYER assets missing locally: ${missing.length}. Restoring from last production.`);
+
+  for (const file of missing) {
+    const response = await fetch(`${baseUrl}/${file}`);
+    if (!response.ok) {
+      throw new Error(`Failed to restore PLAYER asset ${file}: HTTP ${response.status}`);
+    }
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    if (buffer.length < 8 || !buffer.subarray(0, 8).equals(pngSignature)) {
+      throw new Error(`Restored PLAYER asset is not a valid PNG: ${file}`);
+    }
+
+    fs.writeFileSync(path.join(outRoot, file), buffer);
+  }
+
+  const invalid = expected.filter((file) => !validPng(path.join(outRoot, file)));
+  if (invalid.length > 0) {
+    throw new Error(`PLAYER asset verification failed: ${invalid.join(", ")}`);
+  }
+
+  console.log(`PLAYER assets restored: ${expected.length}/${expected.length}`);
 }
+
+await install();

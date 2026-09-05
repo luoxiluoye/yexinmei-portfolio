@@ -35,7 +35,7 @@ export function InventoryChest() {
       <button
         type="button"
         onClick={openChest}
-        className="rpg-item-slot group flex w-full items-center gap-3 border border-border bg-soft p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="rpg-item-slot rpg-item-interactive group flex w-full items-center gap-3 border border-border bg-soft p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         aria-expanded={opened}
       >
         <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-divider bg-paper">

@@ -6,8 +6,8 @@ import { QuestExplorer } from "@/components/quests/quest-explorer";
 import { QuestStatusSidebar } from "@/components/quests/quest-status-sidebar";
 
 export const metadata: Metadata = {
-  title: "Quests",
-  description: "Projects and experiments by Yexinmei Luo.",
+  title: "项目经历与作品｜罗叶馨梅",
+  description: "罗叶馨梅的项目与实践：内容运营、社区运营、新媒体、国际传播、科技内容、AI 工作流与个人项目。",
 };
 
 export default function QuestsPage() {
