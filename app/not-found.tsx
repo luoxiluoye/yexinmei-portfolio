@@ -7,7 +7,7 @@ export default function NotFound() {
     <main className="site-container flex min-h-[calc(100vh-180px)] flex-col justify-center py-8">
       <section className="grid items-center gap-6 lg:grid-cols-[42fr_58fr] lg:gap-5">
         <div>
-          <p className="font-pixel text-[12px] text-muted">08. 404 PAGE PREVIEW</p>
+          <p className="font-pixel text-[12px] text-muted">08. UNKNOWN AREA</p>
           <h1 className="rpg-page-title mt-2 text-[56px] lg:text-[72px]">404</h1>
           <p className="mt-2 font-pixel text-[15px]">QUEST NOT FOUND</p>
           <p className="mt-4 max-w-md text-[15px] leading-[26px] text-muted">

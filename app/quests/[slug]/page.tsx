@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { QuestVisitAchievement } from "@/components/game/quest-visit-achievement";
 import { getQuestBySlug, getQuestSlugs } from "@/data/quests";
+import { buildPageMetadata } from "@/lib/site-metadata";
 import { QuestContext } from "@/components/quests/quest-context";
 import { QuestDetailSidebar } from "@/components/quests/quest-detail-sidebar";
 import { QuestGallery } from "@/components/quests/quest-gallery";
@@ -26,12 +27,13 @@ export async function generateMetadata({ params }: QuestPageProps): Promise<Meta
   const { slug } = await params;
   const quest = getQuestBySlug(slug);
 
-  if (!quest) return { title: "Quest Not Found" };
+  if (!quest) return { title: "Quest Not Found", robots: { index: false, follow: false } };
 
-  return {
+  return buildPageMetadata({
     title: quest.title,
     description: quest.summary,
-  };
+    path: `/quests/${slug}`,
+  });
 }
 
 export default async function QuestPage({ params }: QuestPageProps) {
@@ -73,11 +75,11 @@ export default async function QuestPage({ params }: QuestPageProps) {
           <QuestMeta quest={quest} />
 
           <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
-            <QuestContext quest={quest} index={1} />
-            <QuestSection id="actions" index={2} label="WHAT I DID" title="我实际做了什么" bullets={quest.actions} />
-            {quest.realCase && <QuestRealCaseSection realCase={quest.realCase} index={3} />}
-            <QuestOutcomes index={4} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
-            <QuestSection id="learnings" index={5} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
+            <QuestContext quest={quest} index={2} />
+            <QuestSection id="actions" index={3} label="WHAT I DID" title="我实际做了什么" bullets={quest.actions} />
+            {quest.realCase && <QuestRealCaseSection realCase={quest.realCase} index={4} />}
+            <QuestOutcomes index={5} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
+            <QuestSection id="learnings" index={6} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
             <QuestGallery gallery={quest.gallery} />
           </div>
 

@@ -11,10 +11,11 @@ export function QuestStatusSidebar() {
   return (
     <div className="space-y-4">
       <PixelPanel eyebrow="QUEST" title="STATUS">
-        <div className="grid min-w-0 grid-cols-3 gap-2 lg:grid-cols-1">
+        <div className="grid min-w-0 grid-cols-2 gap-2 lg:grid-cols-1">
           <Stat label="TOTAL" value={quests.length} />
           <Stat label="ACTIVE" value={active} accent />
           <Stat label="ONGOING" value={ongoing} />
+          <Stat label="DONE" value={completed} />
         </div>
 
         <div className="mt-4 hidden border-t border-divider pt-4 lg:block">

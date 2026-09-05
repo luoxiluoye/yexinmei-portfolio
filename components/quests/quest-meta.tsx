@@ -5,7 +5,7 @@ import { PixelTag } from "@/components/ui/pixel-tag";
 export function QuestMeta({ quest }: { quest: Quest }) {
   return (
     <div id="quick-look" className="scroll-mt-24">
-      <PixelPanel eyebrow="QUEST" title="QUICK LOOK">
+      <PixelPanel eyebrow="01" title="QUICK LOOK">
         <dl className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <Meta label="ROLE" value={quest.role} />
           <Meta label="TIME" value={quest.period} />
