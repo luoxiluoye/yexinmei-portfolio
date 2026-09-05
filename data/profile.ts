@@ -13,6 +13,11 @@ export const profile = {
     "到现在，我还是很喜欢观察一件事：什么内容会让人停下来，为什么有人愿意看、愿意讨论，甚至愿意因此做出一个决定。",
   ],
   status: "探索 · 创作 · 连接 · 持续升级中",
+  xp: {
+    level: 28,
+    current: 7888,
+    max: 10000,
+  },
   locationLabel: "成都",
   email: "2657351670@qq.com",
   phone: "18080409809",
