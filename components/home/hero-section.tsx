@@ -47,6 +47,10 @@ export function HeroSection() {
               {homeContent.ctaSecondary}
             </PixelButton>
           </div>
+
+          <div className="mt-4 hidden max-w-[560px] lg:block">
+            <DataBadges />
+          </div>
         </div>
 
         <div className="order-2">
@@ -54,7 +58,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="mt-4 lg:mt-6">
+      <div className="mt-4 lg:hidden">
         <DataBadges />
       </div>
     </section>
