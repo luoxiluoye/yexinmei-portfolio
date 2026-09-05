@@ -35,6 +35,14 @@ export function HeroSection() {
             {homeContent.intro}
           </p>
 
+          <div className="mt-3 flex max-w-[560px] flex-wrap gap-x-3 gap-y-1 border-l-2 border-accent pl-3">
+            {homeContent.capabilities.map((item) => (
+              <span key={item} className="font-pixel text-[9px] leading-5 text-muted lg:text-[10px]">
+                + {item}
+              </span>
+            ))}
+          </div>
+
           <div className="mt-4 max-w-[560px]">
             <DataBadges />
           </div>
