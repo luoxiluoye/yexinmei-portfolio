@@ -14,7 +14,7 @@ export function QuestSection({
   id?: string;
 }) {
   return (
-    <section id={id} className="grid gap-3 border-t border-divider py-6 lg:grid-cols-[150px_1fr] lg:gap-6">
+    <section id={id} className="scroll-mt-24 grid gap-3 border-t border-divider py-6 lg:grid-cols-[150px_1fr] lg:gap-6">
       <div>
         <p className="font-pixel text-[11px] text-accent">
           {String(index).padStart(2, "0")}{label ? ` · ${label}` : ""}
