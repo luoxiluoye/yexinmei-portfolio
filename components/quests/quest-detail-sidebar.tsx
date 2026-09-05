@@ -4,10 +4,10 @@ import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const sections = [
-  ["01", "项目简介", "intro"],
-  ["02", "项目目标", "objective"],
-  ["03", "主要难点", "challenge"],
-  ["04", "我做了什么", "actions"],
+  ["01", "Quick Look", "quick-look"],
+  ["02", "项目背景", "context"],
+  ["03", "我做了什么", "actions"],
+  ["04", "真实案例", "case"],
   ["05", "结果与沉淀", "outcomes"],
   ["06", "复盘与收获", "learnings"],
 ] as const;
