@@ -14,8 +14,8 @@ export const profile = {
   ],
   status: "探索 · 创作 · 连接 · 持续升级中",
   locationLabel: "成都",
-  email: "TODO",
-  xiaohongshu: "TODO",
-  wechat: "TODO",
-  resumePath: "TODO",
+  email: "2657351670@qq.com",
+  wechat: "luoxiluoye",
+  xiaohongshu: null,
+  resumePath: null,
 } as const;
