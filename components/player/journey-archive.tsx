@@ -43,9 +43,9 @@ export function JourneyArchive() {
   const active = activeIndex === null ? null : memories[activeIndex];
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col">
-      <div className="relative shrink-0 border border-divider bg-soft px-3 pb-3 pt-5 lg:px-4 lg:pb-4 lg:pt-6">
-        <div className="no-scrollbar overflow-x-auto pb-1">
+    <div className="flex h-full w-full min-h-0 min-w-0 max-w-full flex-1 flex-col">
+      <div className="relative w-full min-w-0 max-w-full shrink-0 border border-divider bg-soft px-3 pb-3 pt-5 lg:px-4 lg:pb-4 lg:pt-6">
+        <div className="no-scrollbar w-full min-w-0 max-w-full overflow-x-auto pb-1">
           <div className="relative min-w-[620px] lg:min-w-0">
             <div
               aria-hidden="true"
