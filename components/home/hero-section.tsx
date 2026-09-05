@@ -7,7 +7,7 @@ export function HeroSection() {
   return (
     <section className="site-container pt-4 lg:pt-8">
       <div className="grid gap-4 lg:grid-cols-[45fr_55fr] lg:items-center lg:gap-5">
-        <div className="order-2 py-2 lg:order-1 lg:py-4">
+        <div className="order-1 py-2 lg:py-4">
           <p className="font-pixel text-[11px] text-muted lg:text-[12px]">
             {homeContent.eyebrow}
           </p>
@@ -26,26 +26,18 @@ export function HeroSection() {
             <span className="flex items-center bg-foreground px-2.5 py-2 font-pixel text-[10px] leading-none text-white lg:px-3 lg:text-[11px]">
               CLASS
             </span>
-            <span className="min-w-0 px-3 py-1.5 text-[12px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[13px]">
+            <span className="min-w-0 px-3 py-1.5 font-pixel text-[10px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[11px]">
               {homeContent.keywords.join(" · ")}
             </span>
           </div>
 
-          <p className="mt-4 max-w-[560px] text-[15px] leading-[26px] text-muted lg:text-[16px]">
-            {homeContent.intro}
+          <p className="mt-3 text-[13px] font-semibold text-foreground lg:text-[14px]">
+            {homeContent.directionZh}
           </p>
 
-          <div className="mt-3 flex max-w-[560px] flex-wrap gap-x-3 gap-y-1 border-l-2 border-accent pl-3">
-            {homeContent.capabilities.map((item) => (
-              <span key={item} className="font-pixel text-[9px] leading-5 text-muted lg:text-[10px]">
-                + {item}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-4 max-w-[560px]">
-            <DataBadges />
-          </div>
+          <p className="mt-3 max-w-[560px] text-[15px] leading-[26px] text-muted lg:text-[16px]">
+            {homeContent.intro}
+          </p>
 
           <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
             <PixelButton href="/quests" variant="primary" className="w-full sm:w-auto">
@@ -57,9 +49,13 @@ export function HeroSection() {
           </div>
         </div>
 
-        <div className="order-1 lg:order-2">
+        <div className="order-2">
           <CharacterScene variant="home" bubbleText={homeContent.bubble} />
         </div>
+      </div>
+
+      <div className="mt-4 lg:mt-6">
+        <DataBadges />
       </div>
     </section>
   );
