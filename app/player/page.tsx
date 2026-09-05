@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
+
 import { FunFactsInspect, JourneyArchive } from "@/components/player/player-interactions";
 import { CharacterScene } from "@/components/scenes/character-scene";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
 import { XPBar } from "@/components/ui/xp-bar";
 import { profile } from "@/data/profile";
+
+export const metadata: Metadata = {
+  title: "关于我",
+  description: "罗叶馨梅的个人经历、成长路径与内容运营方向。",
+};
 
 export default function PlayerPage() {
   return (
