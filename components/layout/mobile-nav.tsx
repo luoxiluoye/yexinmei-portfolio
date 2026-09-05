@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { profile } from "@/data/profile";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { XPBar } from "@/components/ui/xp-bar";
 import { cn } from "@/lib/cn";
@@ -46,7 +47,12 @@ export function MobileNav() {
 
         <div className="flex h-[var(--rpg-mobile-level-height)] items-center justify-between border-t border-divider bg-soft px-4">
           <span className="font-pixel text-[10px] text-muted">PLAYER STATUS</span>
-          <XPBar compact level={28} current={7888} max={10000} />
+          <XPBar
+            compact
+            level={profile.xp.level}
+            current={profile.xp.current}
+            max={profile.xp.max}
+          />
         </div>
       </header>
 
