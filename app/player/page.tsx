@@ -37,8 +37,13 @@ export default function PlayerPage() {
         </PixelPanel>
       </section>
 
-      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-start lg:gap-5 lg:pb-0">
-        <PixelPanel eyebrow="STORY" title="CHARACTER STORY">
+      <section className="mt-5 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[28fr_42fr_30fr] lg:items-stretch lg:gap-5 lg:pb-0">
+        <PixelPanel
+          eyebrow="STORY"
+          title="CHARACTER STORY"
+          className="h-full"
+          surfaceClassName="h-full"
+        >
           <div className="space-y-4 text-[15px] leading-[26px] text-muted">
             {profile.introLong.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -51,11 +56,18 @@ export default function PlayerPage() {
           title="JOURNEY"
           windowChrome={false}
           rightSlot={<span className="font-pixel text-[9px] text-muted">PATH 01—07</span>}
+          className="h-full"
+          surfaceClassName="h-full"
         >
           <JourneyArchive />
         </PixelPanel>
 
-        <PixelPanel eyebrow="INTERESTS" title="FUN FACTS">
+        <PixelPanel
+          eyebrow="INTERESTS"
+          title="FUN FACTS"
+          className="h-full"
+          surfaceClassName="h-full"
+        >
           <FunFactsInspect />
         </PixelPanel>
       </section>
