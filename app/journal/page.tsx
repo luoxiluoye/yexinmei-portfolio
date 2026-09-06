@@ -1,14 +1,27 @@
 import type { Metadata } from "next";
 
 import { CharacterScene } from "@/components/scenes/character-scene";
-import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { JournalExplorer } from "@/components/journal/journal-explorer";
+import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
+import { journalSeed } from "@/data/journal";
 
 export const metadata: Metadata = {
   title: "写作与观察",
   description: "罗叶馨梅的写作、摄影、内容观察与 AI 工作流记录。",
 };
+
+const categoryCounts = journalSeed.reduce(
+  (counts, entry) => {
+    counts[entry.category] += 1;
+    return counts;
+  },
+  {
+    "TECH NOTES": 0,
+    "PHOTO NOTES": 0,
+    "SIDE PROJECT LOG": 0,
+  } as Record<(typeof journalSeed)[number]["category"], number>
+);
 
 export default function JournalPage() {
   return (
@@ -30,14 +43,38 @@ export default function JournalPage() {
         </div>
 
         <aside className="hidden lg:block">
-          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY" contentClassName="p-3">
-            <MiniWorldScene kind="garden" className="min-h-[190px] border-0" />
-            <p className="mt-3 px-2 pb-2 text-[13px] leading-6 text-muted">
-              这里会慢慢长出写作、照片、内容观察和一些还在发芽的小项目。
-            </p>
+          <PixelPanel eyebrow="DIGITAL" title="GARDEN SUMMARY" contentClassName="p-4">
+            <div className="grid grid-cols-2 gap-2">
+              <GardenStat label="FIELD NOTES" value={journalSeed.length} accent />
+              <GardenStat label="TECH" value={categoryCounts["TECH NOTES"]} />
+              <GardenStat label="PHOTO" value={categoryCounts["PHOTO NOTES"]} />
+              <GardenStat label="SIDE PROJECT" value={categoryCounts["SIDE PROJECT LOG"]} />
+            </div>
+
+            <div className="mt-4 flex items-end justify-between gap-3 border-t border-divider pt-4">
+              <div>
+                <p className="font-pixel text-[9px] text-muted">GARDEN STATUS</p>
+                <p className="mt-1 font-pixel text-[11px] text-accent">GROWING...</p>
+                <p className="mt-2 text-[12px] leading-5 text-muted">
+                  写作、照片和还在发芽的小项目，会继续慢慢长在这里。
+                </p>
+              </div>
+              <PixelIcon assetId="cat.sit" decorative width={58} height={58} className="shrink-0" />
+            </div>
           </PixelPanel>
         </aside>
       </section>
     </main>
+  );
+}
+
+function GardenStat({ label, value, accent = false }: { label: string; value: number; accent?: boolean }) {
+  return (
+    <div className="border border-divider bg-soft p-3">
+      <p className="font-pixel text-[8px] leading-4 text-muted">{label}</p>
+      <p className={accent ? "mt-2 font-pixel text-[18px] text-accent" : "mt-2 font-pixel text-[18px]"}>
+        {String(value).padStart(2, "0")}
+      </p>
+    </div>
   );
 }
