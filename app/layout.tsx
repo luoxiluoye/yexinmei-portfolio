@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Pixelify_Sans } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
 
+import { AchievementToaster } from "@/components/game/achievement-toaster";
+import { SystemMenu } from "@/components/game/system-menu";
 import { Navbar } from "@/components/layout/navbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -65,13 +68,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className={pixelFont.variable}>
-      <body className="pb-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom))] lg:pb-0">
-        <Navbar />
-        <MobileNav />
-        {children}
-        <SiteFooter />
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="zh-CN" className={pixelFont.variable}>
+        <body className="pb-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom))] lg:pb-0">
+          <Navbar />
+          <MobileNav />
+          <SystemMenu />
+          <AchievementToaster />
+          {children}
+          <SiteFooter />
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }
