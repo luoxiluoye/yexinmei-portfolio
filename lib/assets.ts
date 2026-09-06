@@ -68,10 +68,9 @@ export const ASSET_REGISTRY = {
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
 
   // PLAYER snapshot
-  // Use an immutable GitHub raw URL for the full 900×675 portrait. The Vercel static
-  // checkout was truncating this binary asset, so serving the exact Git blob avoids
-  // another lossy/truncated copy while keeping the asset registered in one place.
-  "player.snapshotPortrait": "https://raw.githubusercontent.com/luoxiluoye/yexinmei-portfolio/2feef31e0647628ba668426a4cb2d02d215c0b0a/public/assets/player/snapshot/portrait-hq.webp",
+  // The full portrait is restored during build from an immutable source and then served
+  // from the same origin so it also works in browsers/networks that block GitHub raw.
+  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait-900x675-v2.webp`,
   "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.webp`,
   "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.webp`,
   "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.webp`,
