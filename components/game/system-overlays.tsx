@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { useTransitionRouter } from "next-view-transitions";
 
 import { ACHIEVEMENTS } from "@/lib/achievements";
@@ -10,7 +11,6 @@ import {
   getUnlockedAchievementIds,
   QUICK_PROFILE_EVENT,
   SAVE_FILE_EVENT,
-  unlockAchievement,
 } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 
@@ -22,6 +22,7 @@ type SaveSnapshot = {
   unlocked: Set<string>;
   quests: number;
   memories: number;
+  inventory: number;
 };
 
 function readSnapshot(): SaveSnapshot {
@@ -29,7 +30,35 @@ function readSnapshot(): SaveSnapshot {
     unlocked: getUnlockedAchievementIds(),
     quests: Math.min(getAchievementProgress("quests").size, QUEST_TOTAL),
     memories: Math.min(getAchievementProgress("journey").size, MEMORY_TOTAL),
+    inventory: Math.min(getAchievementProgress("inventory").size, INVENTORY_TOTAL),
   };
+}
+
+function getFocusable(container: HTMLElement | null) {
+  if (!container) return [] as HTMLElement[];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((element) => element.getAttribute("aria-hidden") !== "true");
+}
+
+function focusSystemTrigger(fallback: HTMLElement | null) {
+  if (fallback && document.contains(fallback)) {
+    fallback.focus({ preventScroll: true });
+    return;
+  }
+
+  const desktop = document.querySelector<HTMLButtonElement>('button[aria-label*="System Menu"]');
+  if (desktop) {
+    desktop.focus({ preventScroll: true });
+    return;
+  }
+
+  const mobile = Array.from(document.querySelectorAll<HTMLButtonElement>("button")).find(
+    (button) => button.textContent?.trim().includes("MORE")
+  );
+  mobile?.focus({ preventScroll: true });
 }
 
 export function SystemOverlays() {
@@ -39,21 +68,27 @@ export function SystemOverlays() {
     unlocked: new Set(),
     quests: 0,
     memories: 0,
+    inventory: 0,
   }));
+  const dialogRef = useRef<HTMLElement | null>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
-  const close = useCallback(() => setPanel(null), []);
+  const close = useCallback(() => {
+    setPanel(null);
+    window.requestAnimationFrame(() => focusSystemTrigger(returnFocusRef.current));
+  }, []);
 
   useEffect(() => {
+    const rememberReturnTarget = () => {
+      returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    };
     const openSave = () => {
+      rememberReturnTarget();
       setSnapshot(readSnapshot());
       setPanel("save");
     };
     const openQuick = () => {
-      unlockAchievement({
-        id: "quick-reader",
-        title: "60 SEC READY",
-        description: "Opened the recruiter-friendly Quick Profile.",
-      });
+      rememberReturnTarget();
       setPanel("quick");
     };
     const refresh = () => setSnapshot(readSnapshot());
@@ -72,9 +107,34 @@ export function SystemOverlays() {
     if (!panel) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    window.requestAnimationFrame(() => {
+      getFocusable(dialogRef.current)[0]?.focus({ preventScroll: true });
+    });
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = getFocusable(dialogRef.current);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -84,10 +144,10 @@ export function SystemOverlays() {
 
   const go = useCallback(
     (href: string) => {
-      close();
+      setPanel(null);
       router.push(href);
     },
-    [close, router]
+    [router]
   );
 
   if (!panel) return null;
@@ -100,15 +160,23 @@ export function SystemOverlays() {
       }}
     >
       {panel === "save" ? (
-        <SaveFile snapshot={snapshot} onClose={close} />
+        <SaveFile dialogRef={dialogRef} snapshot={snapshot} onClose={close} />
       ) : (
-        <QuickProfile onClose={close} onGo={go} />
+        <QuickProfile dialogRef={dialogRef} onClose={close} onGo={go} />
       )}
     </div>
   );
 }
 
-function SaveFile({ snapshot, onClose }: { snapshot: SaveSnapshot; onClose: () => void }) {
+function SaveFile({
+  dialogRef,
+  snapshot,
+  onClose,
+}: {
+  dialogRef: RefObject<HTMLElement | null>;
+  snapshot: SaveSnapshot;
+  onClose: () => void;
+}) {
   const unlockedCount = useMemo(
     () => ACHIEVEMENTS.filter((item) => snapshot.unlocked.has(item.id)).length,
     [snapshot.unlocked]
@@ -116,6 +184,7 @@ function SaveFile({ snapshot, onClose }: { snapshot: SaveSnapshot; onClose: () =
 
   return (
     <section
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Save File"
@@ -164,7 +233,7 @@ function SaveFile({ snapshot, onClose }: { snapshot: SaveSnapshot; onClose: () =
               <SaveStat label="QUESTS" value={`${snapshot.quests} / ${QUEST_TOTAL}`} />
               <SaveStat label="MEMORIES" value={`${snapshot.memories} / ${MEMORY_TOTAL}`} />
               <SaveStat label="ACHIEVEMENTS" value={`${unlockedCount} / ${ACHIEVEMENTS.length}`} />
-              <SaveStat label="INVENTORY" value={String(INVENTORY_TOTAL)} />
+              <SaveStat label="ITEMS INSPECTED" value={`${snapshot.inventory} / ${INVENTORY_TOTAL}`} />
             </dl>
           </div>
 
@@ -230,14 +299,17 @@ function SaveStat({ label, value }: { label: string; value: string }) {
 }
 
 function QuickProfile({
+  dialogRef,
   onClose,
   onGo,
 }: {
+  dialogRef: RefObject<HTMLElement | null>;
   onClose: () => void;
   onGo: (href: string) => void;
 }) {
   return (
     <section
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="60 second Quick Profile"
