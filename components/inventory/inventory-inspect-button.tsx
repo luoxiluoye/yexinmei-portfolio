@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import type { AssetId } from "@/lib/assets";
-import { unlockAchievement } from "@/lib/rpg-events";
+import { markAchievementProgress, markProgress, unlockAchievement } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 
 type InventoryKind = "tool" | "skill" | "special";
@@ -173,6 +173,15 @@ function fallbackMeta(kind: InventoryKind): InspectMeta {
   };
 }
 
+function getFocusable(container: HTMLElement | null) {
+  if (!container) return [] as HTMLElement[];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-hidden") !== "true");
+}
+
 export function InventoryInspectButton({
   assetId,
   index,
@@ -190,15 +199,25 @@ export function InventoryInspectButton({
 }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const dialogRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const meta = META[label] ?? fallbackMeta(kind);
 
   const openInspect = () => {
     setOpen(true);
+    markProgress("inventory", `${kind}:${label}`);
     unlockAchievement({
       id: "inventory-curious",
       title: "ITEM INSPECTOR",
       description: "Inspected a skill or tool in Inventory.",
     });
+    if (kind === "skill") {
+      markAchievementProgress("skills", label, 7, {
+        id: "skill-scout",
+        title: "SKILL SCOUT",
+        description: "Inspected all 7 core skills.",
+      });
+    }
   };
 
   const close = () => {
@@ -210,15 +229,39 @@ export function InventoryInspectButton({
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => closeButtonRef.current?.focus({ preventScroll: true }));
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = getFocusable(dialogRef.current);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [open]);
+
+  const inspectLabel = kind === "skill" ? "VIEW SKILL →" : "INSPECT →";
 
   return (
     <>
@@ -241,7 +284,7 @@ export function InventoryInspectButton({
             </div>
             <span className="mt-3 font-pixel text-[11px]">{label}</span>
             {detail ? <span className="mt-2 text-[12px] leading-5 text-muted">{detail}</span> : null}
-            <span className="mt-2 font-pixel text-[8px] text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">INSPECT →</span>
+            <span className="mt-2 font-pixel text-[8px] text-accent opacity-100 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100 lg:group-focus-visible:opacity-100">{inspectLabel}</span>
           </>
         ) : (
           <>
@@ -254,7 +297,7 @@ export function InventoryInspectButton({
             <div className="mt-3">
               <p className="text-[13px] font-semibold leading-5">{label}</p>
               {detail ? <p className="mt-1 text-[11px] leading-5 text-muted">{detail}</p> : null}
-              <p className="mt-2 font-pixel text-[8px] text-accent opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">INSPECT →</p>
+              <p className="mt-2 font-pixel text-[8px] text-accent opacity-100 lg:opacity-0 lg:transition-opacity lg:group-hover:opacity-100 lg:group-focus-visible:opacity-100">{inspectLabel}</p>
             </div>
           </>
         )}
@@ -268,67 +311,161 @@ export function InventoryInspectButton({
           }}
         >
           <section
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-label={`${label} item inspect`}
-            className="pixel-cut-frame w-[min(620px,100%)]"
+            className={kind === "skill" ? "pixel-cut-frame w-[min(680px,100%)]" : "pixel-cut-frame w-[min(620px,100%)]"}
           >
-            <div className="pixel-cut-surface max-h-[min(88dvh,680px)] overflow-y-auto bg-paper">
+            <div className="pixel-cut-surface max-h-[min(86dvh,650px)] overflow-y-auto bg-paper">
               <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-border bg-paper px-4 py-3">
                 <div>
-                  <p className="font-pixel text-[8px] text-accent">ITEM INSPECT · {String(index + 1).padStart(2, "0")}</p>
+                  <p className="font-pixel text-[8px] text-accent">
+                    {kind === "skill" ? "SKILL FILE" : "ITEM INSPECT"} · {String(index + 1).padStart(2, "0")}
+                  </p>
                   <h2 className="mt-1 font-pixel text-[14px]">{label}</h2>
                 </div>
                 <button
+                  ref={closeButtonRef}
                   type="button"
                   onClick={close}
                   className="flex h-11 w-11 items-center justify-center border-2 border-border bg-paper font-pixel text-[11px] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                  aria-label="关闭 Item Inspect"
+                  aria-label="关闭详情"
                 >
                   ×
                 </button>
               </header>
 
-              <div className="p-4 lg:p-5">
-                <div className="grid gap-4 sm:grid-cols-[112px_1fr]">
-                  <div className="flex h-[112px] w-[112px] items-center justify-center border-2 border-border bg-soft">
-                    <PixelIcon assetId={assetId} decorative width={Math.min(iconSize + 24, 76)} height={Math.min(iconSize + 24, 76)} />
-                  </div>
-                  <dl className="divide-y divide-divider border-y border-divider text-[12px]">
-                    <InspectRow label="TYPE" value={meta.type} />
-                    <InspectRow label="STATUS" value={meta.status} accent />
-                    <InspectRow label="USED IN" value={`${meta.usedIn.length} QUEST${meta.usedIn.length === 1 ? "" : "S"}`} />
-                  </dl>
-                </div>
-
-                <div className="mt-5 border-t border-divider pt-4">
-                  <p className="font-pixel text-[9px] text-accent">DESCRIPTION</p>
-                  <p className="mt-2 text-[14px] leading-7 text-muted">{meta.description}</p>
-                  {meta.note ? <p className="mt-3 border border-divider bg-soft px-3 py-2 font-pixel text-[9px] leading-5 text-foreground">{meta.note}</p> : null}
-                </div>
-
-                <div className="mt-5 border-t border-divider pt-4">
-                  <p className="font-pixel text-[9px] text-accent">USED IN</p>
-                  <div className="mt-2 divide-y divide-divider border-y border-divider">
-                    {meta.usedIn.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpen(false)}
-                        className="flex min-h-11 items-center justify-between gap-3 py-2.5 text-[12px] font-medium hover:text-accent"
-                      >
-                        <span>{item.title}</span>
-                        <span className="font-pixel text-[9px] text-accent">OPEN →</span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
+              {kind === "skill" ? (
+                <SkillInspectContent
+                  assetId={assetId}
+                  iconSize={iconSize}
+                  meta={meta}
+                  onNavigate={() => setOpen(false)}
+                />
+              ) : (
+                <ItemInspectContent
+                  assetId={assetId}
+                  iconSize={iconSize}
+                  meta={meta}
+                  onNavigate={() => setOpen(false)}
+                />
+              )}
             </div>
           </section>
         </div>
       ) : null}
     </>
+  );
+}
+
+function SkillInspectContent({
+  assetId,
+  iconSize,
+  meta,
+  onNavigate,
+}: {
+  assetId: AssetId;
+  iconSize: number;
+  meta: InspectMeta;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="p-4 lg:p-5">
+      <div className="grid gap-4 sm:grid-cols-[92px_1fr] sm:items-start">
+        <div className="flex h-[92px] w-[92px] items-center justify-center border-2 border-border bg-soft">
+          <PixelIcon assetId={assetId} decorative width={Math.min(iconSize + 30, 68)} height={Math.min(iconSize + 30, 68)} />
+        </div>
+
+        <div className="min-w-0">
+          <div className="flex flex-wrap gap-2">
+            <span className="border border-divider bg-soft px-2 py-1 font-pixel text-[8px] text-foreground">{meta.type}</span>
+            <span className="border border-accent/40 bg-paper px-2 py-1 font-pixel text-[8px] text-accent">{meta.status}</span>
+          </div>
+          <p className="mt-3 text-[14px] leading-7 text-foreground">{meta.description}</p>
+          <div className="mt-4 grid grid-cols-2 border-y border-divider text-[11px]">
+            <div className="border-r border-divider py-2.5 pr-3">
+              <p className="font-pixel text-[8px] text-muted">PROOF</p>
+              <p className="mt-1 font-pixel text-[9px]">REAL QUESTS</p>
+            </div>
+            <div className="py-2.5 pl-3">
+              <p className="font-pixel text-[8px] text-muted">USED IN</p>
+              <p className="mt-1 font-pixel text-[9px] text-accent">{meta.usedIn.length} QUEST{meta.usedIn.length === 1 ? "" : "S"}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 border-t border-divider pt-4">
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-pixel text-[9px] text-accent">EVIDENCE / USED IN</p>
+          <p className="font-pixel text-[8px] text-muted">OPEN PROJECT →</p>
+        </div>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+          {meta.usedIn.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onNavigate}
+              className="group flex min-h-[66px] items-center justify-between gap-3 border border-divider bg-soft px-3 py-2.5 hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <span className="text-[12px] font-semibold leading-5 group-hover:text-accent">{item.title}</span>
+              <span className="shrink-0 font-pixel text-[9px] text-accent">→</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ItemInspectContent({
+  assetId,
+  iconSize,
+  meta,
+  onNavigate,
+}: {
+  assetId: AssetId;
+  iconSize: number;
+  meta: InspectMeta;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="p-4 lg:p-5">
+      <div className="grid gap-4 sm:grid-cols-[96px_1fr]">
+        <div className="flex h-[96px] w-[96px] items-center justify-center border-2 border-border bg-soft">
+          <PixelIcon assetId={assetId} decorative width={Math.min(iconSize + 24, 72)} height={Math.min(iconSize + 24, 72)} />
+        </div>
+        <dl className="divide-y divide-divider border-y border-divider text-[12px]">
+          <InspectRow label="TYPE" value={meta.type} />
+          <InspectRow label="STATUS" value={meta.status} accent />
+          <InspectRow label="USED IN" value={`${meta.usedIn.length} QUEST${meta.usedIn.length === 1 ? "" : "S"}`} />
+        </dl>
+      </div>
+
+      <div className="mt-4 border-t border-divider pt-4">
+        <p className="font-pixel text-[9px] text-accent">DESCRIPTION</p>
+        <p className="mt-2 text-[14px] leading-7 text-muted">{meta.description}</p>
+        {meta.note ? <p className="mt-3 border border-divider bg-soft px-3 py-2 font-pixel text-[9px] leading-5 text-foreground">{meta.note}</p> : null}
+      </div>
+
+      <div className="mt-4 border-t border-divider pt-4">
+        <p className="font-pixel text-[9px] text-accent">USED IN</p>
+        <div className="mt-2 divide-y divide-divider border-y border-divider">
+          {meta.usedIn.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={onNavigate}
+              className="flex min-h-11 items-center justify-between gap-3 py-2.5 text-[12px] font-medium hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              <span>{item.title}</span>
+              <span className="font-pixel text-[9px] text-accent">OPEN →</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
