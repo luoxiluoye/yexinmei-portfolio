@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { memories } from "@/components/player/journey-data";
 import { JourneyMemoryModal } from "@/components/player/journey-memory-modal";
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { markAchievementProgress, unlockAchievement } from "@/lib/rpg-events";
 
 export function JourneyArchive() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -15,6 +16,17 @@ export function JourneyArchive() {
     restoreFocusRef.current = false;
     lastTriggerRef.current = trigger;
     setActiveIndex(index);
+
+    unlockAchievement({
+      id: "memory-hunter",
+      title: "MEMORY HUNTER",
+      description: "Opened the first Memory Archive.",
+    });
+    markAchievementProgress("journey", String(index), memories.length, {
+      id: "archive-complete",
+      title: "ARCHIVE COMPLETE",
+      description: "Explored all 7 Journey memories.",
+    });
   }, []);
 
   const closeMemory = useCallback(() => {
