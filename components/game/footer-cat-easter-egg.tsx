@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { unlockAchievement } from "@/lib/rpg-events";
 
 const CAT_STATES = ["cat.sit", "cat.wave", "cat.happy", "cat.peek", "cat.love"] as const;
 
@@ -12,7 +13,17 @@ export function FooterCatEasterEgg() {
   const unlocked = clicks >= 4;
 
   const handleClick = () => {
-    setClicks((current) => (current >= 4 ? 0 : current + 1));
+    setClicks((current) => {
+      const next = current >= 4 ? 0 : current + 1;
+      if (next === 4) {
+        unlockAchievement({
+          id: "cat-person",
+          title: "CAT PERSON",
+          description: "Found the hidden footer NPC message.",
+        });
+      }
+      return next;
+    });
   };
 
   return (
