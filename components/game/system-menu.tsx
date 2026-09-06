@@ -14,28 +14,10 @@ import {
 const quickTravel = [
   { code: "01", label: "HOME", subtitle: "返回世界入口", href: "/", keywords: ["首页", "主页", "home"] },
   { code: "02", label: "PLAYER", subtitle: "角色资料与 Journey", href: "/player", keywords: ["关于我", "经历", "player", "journey"] },
-  { code: "03", label: "QUESTS", subtitle: "项目与案例", href: "/quests", keywords: ["项目", "作品", "案例", "quests"] },
+  { code: "03", label: "QUESTS", subtitle: "项目与案例", href: "/quests", keywords: ["项目", "作品", "案例", "quests", "知乎", "ccd", "摄影"] },
   { code: "04", label: "INVENTORY", subtitle: "技能与工具箱", href: "/inventory", keywords: ["技能", "工具", "inventory"] },
   { code: "05", label: "JOURNAL", subtitle: "笔记与记录", href: "/journal", keywords: ["文章", "笔记", "journal"] },
   { code: "06", label: "CONTACT", subtitle: "找到我", href: "/contact", keywords: ["联系", "微信", "邮箱", "contact"] },
-] as const;
-
-const questShortcuts = [
-  {
-    label: "知乎汽车与消费电子社区内容运营",
-    href: "/quests/zhihu-auto-consumer-tech",
-    keywords: ["知乎", "数码", "汽车", "内容运营", "community"],
-  },
-  {
-    label: "CCD 20W+ GMV",
-    href: "/quests/ccd-business",
-    keywords: ["ccd", "相机", "20w", "gmv", "个人项目"],
-  },
-  {
-    label: "摄影 / 视觉内容",
-    href: "/quests/visual-storytelling",
-    keywords: ["摄影", "照片", "camera", "visual"],
-  },
 ] as const;
 
 function copyFallback(value: string) {
@@ -140,16 +122,16 @@ export function SystemMenu() {
               <span aria-hidden="true" className="font-pixel text-[11px] text-accent">&gt;</span>
               <Command.Input
                 autoFocus
-                placeholder="Search page, quest, keyword..."
+                placeholder="Search page, action, keyword..."
                 className="h-11 min-w-0 flex-1 border-0 bg-transparent font-pixel text-[10px] text-foreground outline-none placeholder:text-muted"
               />
               <kbd className="hidden border border-divider bg-soft px-1.5 py-1 font-pixel text-[8px] text-muted sm:block">ESC</kbd>
             </div>
           </div>
 
-          <Command.List className="rpg-command-list no-scrollbar max-h-[min(58vh,480px)] overflow-y-auto p-2">
+          <Command.List className="rpg-command-list no-scrollbar max-h-[min(58vh,420px)] overflow-y-auto p-2">
             <Command.Empty className="px-3 py-8 text-center">
-              <p className="font-pixel text-[10px] text-accent">NO QUEST FOUND</p>
+              <p className="font-pixel text-[10px] text-accent">NOT FOUND</p>
               <p className="mt-2 text-[12px] text-muted">换个关键词试试。</p>
             </Command.Empty>
 
@@ -199,24 +181,6 @@ export function SystemMenu() {
                     <span className="block truncate text-[11px] leading-4 text-muted">{item.subtitle}</span>
                   </span>
                   <span aria-hidden="true" className="font-pixel text-[9px] text-muted">→</span>
-                </Command.Item>
-              ))}
-            </Command.Group>
-
-            <Command.Separator className="my-2 h-px bg-divider" />
-
-            <Command.Group heading="FEATURED QUESTS" className="rpg-command-group">
-              {questShortcuts.map((item, index) => (
-                <Command.Item
-                  key={item.href}
-                  value={item.label}
-                  keywords={[...item.keywords]}
-                  onSelect={() => go(item.href)}
-                  className="rpg-command-item"
-                >
-                  <PixelIcon assetId="items.sword" decorative width={20} height={20} className="h-5 w-5 shrink-0" />
-                  <span className="min-w-0 flex-1 truncate text-[12px] font-medium">{item.label}</span>
-                  <span className="shrink-0 font-pixel text-[8px] text-muted">Q{String(index + 1).padStart(2, "0")}</span>
                 </Command.Item>
               ))}
             </Command.Group>
