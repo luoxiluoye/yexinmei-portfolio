@@ -68,7 +68,7 @@ export const ASSET_REGISTRY = {
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
 
   // PLAYER snapshot
-  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait.webp`,
+  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait-hq.webp`,
   "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.webp`,
   "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.webp`,
   "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.webp`,
