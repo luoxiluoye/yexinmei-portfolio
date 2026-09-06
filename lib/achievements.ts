@@ -30,10 +30,10 @@ export const ACHIEVEMENTS = [
     hint: "Explore several project details.",
   },
   {
-    id: "quick-reader",
-    title: "60 SEC READY",
-    description: "Opened the recruiter-friendly Quick Profile.",
-    hint: "Look for a faster way to read this portfolio.",
+    id: "skill-scout",
+    title: "SKILL SCOUT",
+    description: "Inspected all 7 core skills.",
+    hint: "Open every Core Skill in Inventory.",
   },
   {
     id: "inventory-curious",
