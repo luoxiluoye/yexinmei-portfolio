@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import { JourneyArchive } from "@/components/player/journey-archive";
 import { FunFactsInspect } from "@/components/player/fun-facts-inspect";
-import { CharacterScene } from "@/components/scenes/character-scene";
+import { JourneyArchive } from "@/components/player/journey-archive";
+import { PlayerSnapshot } from "@/components/player/player-snapshot";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
 import { XPBar } from "@/components/ui/xp-bar";
@@ -22,7 +22,7 @@ export default function PlayerPage() {
       </header>
 
       <section className="grid gap-4 lg:grid-cols-[40fr_60fr] lg:items-start lg:gap-5">
-        <CharacterScene variant="player" />
+        <PlayerSnapshot />
 
         <PixelPanel eyebrow="PLAYER" title={profile.nameEn.toUpperCase()} accent>
           <div className="grid gap-5 lg:grid-cols-[1fr_170px]">

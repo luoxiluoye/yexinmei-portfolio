@@ -7,6 +7,7 @@ export const ASSET_DIRECTORIES = {
   ui: "/assets/ui",
   items: "/assets/items",
   player: "/assets/player",
+  playerSnapshot: "/assets/player/snapshot",
   projects: "/assets/projects",
 } as const;
 
@@ -65,6 +66,18 @@ export const ASSET_REGISTRY = {
   "items.potion": `${ASSET_DIRECTORIES.items}/potion.png`,
   "items.chest": `${ASSET_DIRECTORIES.items}/chest.png`,
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
+
+  // PLAYER snapshot
+  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait.webp`,
+  "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.webp`,
+  "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.webp`,
+  "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.webp`,
+  "player.snapshotHello": `${ASSET_DIRECTORIES.playerSnapshot}/hello-bubble.webp`,
+  "player.snapshotGoodThings": `${ASSET_DIRECTORIES.playerSnapshot}/good-things.webp`,
+  "player.snapshotDecorHeartLarge": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-lg.webp`,
+  "player.snapshotDecorHeartSmall": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-sm.webp`,
+  "player.snapshotDecorCrossRed": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-red.webp`,
+  "player.snapshotDecorCrossBlack": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-black.webp`,
 
   // PLAYER interaction pack
   "player.achievementBadge": `${ASSET_DIRECTORIES.player}/achievement-badge.png`,
