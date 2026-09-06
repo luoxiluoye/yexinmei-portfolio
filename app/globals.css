@@ -195,6 +195,16 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+@keyframes rpg-page-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-4px); }
+}
+
+@keyframes rpg-page-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .rpg-blink { animation: rpg-blink 1.8s steps(2, end) infinite; }
 .rpg-logo-cat { transform-origin: 50% 80%; }
 .group:hover .rpg-logo-cat { animation: rpg-wiggle 0.45s steps(2, end) 1; }
@@ -203,6 +213,67 @@
 .rpg-cloud-drift-slow { animation: rpg-cloud-drift 10s steps(5, end) infinite reverse; }
 .rpg-twinkle { animation: rpg-twinkle 1.6s steps(2, end) infinite; }
 .rpg-achievement-toast { animation: rpg-toast-in .18s steps(2, end) both; }
+
+/* Keep the site chrome stable while the main scene changes in discrete pixel-like steps. */
+main { view-transition-name: rpg-page; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+::view-transition-old(rpg-page) { animation: rpg-page-out .14s steps(4, end) both; }
+::view-transition-new(rpg-page) { animation: rpg-page-in .18s steps(4, end) both; }
+
+/* Searchable PAUSE / SYSTEM menu powered by cmdk. */
+[cmdk-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 1190;
+  background: rgba(17, 17, 17, .42);
+  backdrop-filter: blur(1px);
+}
+
+[cmdk-dialog] {
+  position: fixed;
+  left: 50%;
+  top: max(72px, calc(env(safe-area-inset-top) + 20px));
+  z-index: 1200;
+  width: min(620px, calc(100vw - 24px));
+  transform: translateX(-50%);
+  outline: none;
+}
+
+.rpg-command-shell { width: 100%; }
+.rpg-command-root { width: 100%; color: var(--rpg-color-text); }
+.rpg-command-list { scroll-padding-block: 8px; }
+
+.rpg-command-group [cmdk-group-heading] {
+  padding: 8px 10px 6px;
+  font-family: var(--rpg-font-pixel);
+  font-size: 8px;
+  line-height: 1;
+  color: var(--rpg-color-red);
+  letter-spacing: .04em;
+}
+
+.rpg-command-item {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--rpg-color-text);
+  cursor: pointer;
+  outline: none;
+}
+
+.rpg-command-item[data-selected="true"] {
+  border-color: var(--rpg-color-border);
+  background: var(--rpg-color-soft);
+  box-shadow: inset 3px 0 0 var(--rpg-color-red);
+}
+
+.rpg-command-item[data-disabled="true"] { opacity: .45; }
 
 /* Only controls and cards that really perform an action get movement feedback. */
 .rpg-window-interactive,
@@ -247,6 +318,13 @@
   }
 }
 
+@media (max-width: 639px) {
+  [cmdk-dialog] {
+    top: max(12px, calc(env(safe-area-inset-top) + 8px));
+    width: calc(100vw - 16px);
+  }
+}
+
 @media (pointer: fine) {
   a, button { cursor: url("/assets/ui/cursor.png") 2 2, pointer; }
 }
@@ -259,4 +337,6 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  ::view-transition-old(rpg-page),
+  ::view-transition-new(rpg-page) { animation: none !important; }
 }
