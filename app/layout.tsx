@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { AchievementToaster } from "@/components/game/achievement-toaster";
 import { SystemMenu } from "@/components/game/system-menu";
+import { SystemOverlays } from "@/components/game/system-overlays";
 import { Navbar } from "@/components/layout/navbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -74,6 +75,7 @@ export default function RootLayout({
           <Navbar />
           <MobileNav />
           <SystemMenu />
+          <SystemOverlays />
           <AchievementToaster />
           {children}
           <SiteFooter />

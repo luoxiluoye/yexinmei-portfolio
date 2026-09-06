@@ -5,7 +5,11 @@ import { Command } from "cmdk";
 import { useTransitionRouter } from "next-view-transitions";
 
 import { PixelIcon } from "@/components/ui/pixel-icon";
-import { SYSTEM_MENU_EVENT } from "@/lib/rpg-events";
+import {
+  openQuickProfile,
+  openSaveFile,
+  SYSTEM_MENU_EVENT,
+} from "@/lib/rpg-events";
 
 const quickTravel = [
   { code: "01", label: "HOME", subtitle: "返回世界入口", href: "/", keywords: ["首页", "主页", "home"] },
@@ -59,6 +63,11 @@ export function SystemMenu() {
     },
     [router]
   );
+
+  const openSystemPanel = useCallback((openPanel: () => void) => {
+    setOpen(false);
+    window.setTimeout(openPanel, 0);
+  }, []);
 
   useEffect(() => {
     const openMenu = () => setOpen(true);
@@ -143,6 +152,37 @@ export function SystemMenu() {
               <p className="font-pixel text-[10px] text-accent">NO QUEST FOUND</p>
               <p className="mt-2 text-[12px] text-muted">换个关键词试试。</p>
             </Command.Empty>
+
+            <Command.Group heading="PLAYER SYSTEM" className="rpg-command-group">
+              <Command.Item
+                value="Save File achievement collection progress achievements"
+                keywords={["存档", "成就", "进度", "save", "achievement"]}
+                onSelect={() => openSystemPanel(openSaveFile)}
+                className="rpg-command-item"
+              >
+                <PixelIcon assetId="player.achievementBadge" decorative width={20} height={20} className="h-5 w-5 shrink-0" />
+                <span className="min-w-0 flex-1">
+                  <span className="block font-pixel text-[10px]">SAVE FILE</span>
+                  <span className="block text-[11px] text-muted">探索进度与成就图鉴</span>
+                </span>
+                <span aria-hidden="true" className="font-pixel text-[9px] text-muted">→</span>
+              </Command.Item>
+              <Command.Item
+                value="Quick Profile 60 sec recruiter resume summary"
+                keywords={["60秒", "快速", "招聘", "hr", "resume", "summary"]}
+                onSelect={() => openSystemPanel(openQuickProfile)}
+                className="rpg-command-item"
+              >
+                <PixelIcon assetId="ui.sparkle" decorative width={20} height={20} className="h-5 w-5 shrink-0" />
+                <span className="min-w-0 flex-1">
+                  <span className="block font-pixel text-[10px]">QUICK PROFILE · 60 SEC</span>
+                  <span className="block text-[11px] text-muted">给招聘方的快速阅读模式</span>
+                </span>
+                <span aria-hidden="true" className="font-pixel text-[9px] text-muted">→</span>
+              </Command.Item>
+            </Command.Group>
+
+            <Command.Separator className="my-2 h-px bg-divider" />
 
             <Command.Group heading="QUICK TRAVEL" className="rpg-command-group">
               {quickTravel.map((item) => (
