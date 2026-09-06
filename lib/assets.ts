@@ -1,5 +1,4 @@
 import { EMBEDDED_UI_ASSETS } from "@/lib/embedded-ui-assets";
-import { EMBEDDED_PLAYER_SNAPSHOT_ASSETS } from "@/lib/embedded-player-snapshot-assets";
 
 export const ASSET_DIRECTORIES = {
   character: "/assets/character",
@@ -69,18 +68,16 @@ export const ASSET_REGISTRY = {
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
 
   // PLAYER snapshot
-  // Keep the portrait embedded so it cannot disappear because a binary static asset or
-  // external raw host was truncated/blocked. This source is bundled with the page itself.
-  "player.snapshotPortrait": EMBEDDED_PLAYER_SNAPSHOT_ASSETS.portrait,
-  "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.webp`,
-  "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.webp`,
-  "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.webp`,
-  "player.snapshotHello": `${ASSET_DIRECTORIES.playerSnapshot}/hello-bubble.webp`,
-  "player.snapshotGoodThings": `${ASSET_DIRECTORIES.playerSnapshot}/good-things.webp`,
-  "player.snapshotDecorHeartLarge": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-lg.webp`,
-  "player.snapshotDecorHeartSmall": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-sm.webp`,
-  "player.snapshotDecorCrossRed": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-red.webp`,
-  "player.snapshotDecorCrossBlack": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-black.webp`,
+  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait.png`,
+  "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.png`,
+  "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.png`,
+  "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.png`,
+  "player.snapshotHello": `${ASSET_DIRECTORIES.playerSnapshot}/hello-bubble.png`,
+  "player.snapshotGoodThings": `${ASSET_DIRECTORIES.playerSnapshot}/good-things.png`,
+  "player.snapshotDecorHeartLarge": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-lg.png`,
+  "player.snapshotDecorHeartSmall": `${ASSET_DIRECTORIES.playerSnapshot}/decor-heart-sm.png`,
+  "player.snapshotDecorCrossRed": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-red.png`,
+  "player.snapshotDecorCrossBlack": `${ASSET_DIRECTORIES.playerSnapshot}/decor-cross-black.png`,
 
   // PLAYER interaction pack
   "player.achievementBadge": `${ASSET_DIRECTORIES.player}/achievement-badge.png`,

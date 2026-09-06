@@ -60,7 +60,7 @@ export function PlayerSnapshot() {
         className="pointer-events-none absolute right-[6%] bottom-[24%] z-[1] hidden w-[3.8%] min-w-[12px] [image-rendering:pixelated] md:block"
       />
 
-      <div className="absolute bottom-0 left-[4%] right-[-2%] top-[6%] z-[2] sm:left-[7%] sm:right-0 sm:top-[5%] lg:left-[9%] lg:right-[1%] lg:top-[4%]">
+      <div className="absolute bottom-[7%] left-[3%] right-[-2%] top-[2%] z-[2] sm:left-[5%] sm:right-[-1%] sm:top-[2%] lg:left-[5%] lg:right-[-1%] lg:top-[2%]">
         <img
           src={getAsset("player.snapshotPortrait")}
           alt="罗叶馨梅冬日肖像"
