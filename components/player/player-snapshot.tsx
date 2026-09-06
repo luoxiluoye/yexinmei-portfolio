@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { getAsset } from "@/lib/assets";
+import { EMBEDDED_PLAYER_SNAPSHOT_ASSETS } from "@/lib/embedded-player-snapshot-assets";
 
 export function PlayerSnapshot() {
   return (
@@ -62,7 +63,7 @@ export function PlayerSnapshot() {
 
       <div className="absolute bottom-0 left-[4%] right-[-2%] top-[6%] z-[2] sm:left-[7%] sm:right-0 sm:top-[5%] lg:left-[9%] lg:right-[1%] lg:top-[4%]">
         <Image
-          src={getAsset("player.snapshotPortrait")}
+          src={EMBEDDED_PLAYER_SNAPSHOT_ASSETS.snapshotPortrait}
           alt="罗叶馨梅冬日肖像"
           fill
           priority
