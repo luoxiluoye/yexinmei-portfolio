@@ -4,10 +4,10 @@
   "private": true,
   "packageManager": "npm@10.9.2",
   "scripts": {
-    "dev": "node scripts/install-player-assets.mjs && next dev",
-    "build": "node scripts/install-player-assets.mjs && next build",
+    "dev": "node scripts/install-player-portrait.mjs && node scripts/install-player-assets.mjs && next dev",
+    "build": "node scripts/install-player-portrait.mjs && node scripts/install-player-assets.mjs && next build",
     "start": "next start",
-    "assets:verify": "node scripts/install-player-assets.mjs && node scripts/verify-assets.mjs",
+    "assets:verify": "node scripts/install-player-portrait.mjs && node scripts/install-player-assets.mjs && node scripts/verify-assets.mjs",
     "assets:install": "node scripts/install-assets.mjs"
   },
   "dependencies": {
