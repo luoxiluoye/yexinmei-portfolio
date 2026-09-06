@@ -1,4 +1,5 @@
 import { EMBEDDED_UI_ASSETS } from "@/lib/embedded-ui-assets";
+import { EMBEDDED_PLAYER_SNAPSHOT_ASSETS } from "@/lib/embedded-player-snapshot-assets";
 
 export const ASSET_DIRECTORIES = {
   character: "/assets/character",
@@ -68,9 +69,9 @@ export const ASSET_REGISTRY = {
   "items.key": `${ASSET_DIRECTORIES.items}/key.png`,
 
   // PLAYER snapshot
-  // The full portrait is restored during build from an immutable source and then served
-  // from the same origin so it also works in browsers/networks that block GitHub raw.
-  "player.snapshotPortrait": `${ASSET_DIRECTORIES.playerSnapshot}/portrait-900x675-v2.webp`,
+  // Keep the portrait embedded so it cannot disappear because a binary static asset or
+  // external raw host was truncated/blocked. This source is bundled with the page itself.
+  "player.snapshotPortrait": EMBEDDED_PLAYER_SNAPSHOT_ASSETS.portrait,
   "player.snapshotFrame": `${ASSET_DIRECTORIES.playerSnapshot}/snapshot-frame.webp`,
   "player.snapshotCat": `${ASSET_DIRECTORIES.playerSnapshot}/cat.webp`,
   "player.snapshotCloud": `${ASSET_DIRECTORIES.playerSnapshot}/cloud.webp`,
