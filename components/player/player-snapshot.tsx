@@ -60,7 +60,7 @@ export function PlayerSnapshot() {
         className="pointer-events-none absolute right-[6%] bottom-[24%] z-[1] hidden w-[3.8%] min-w-[12px] [image-rendering:pixelated] md:block"
       />
 
-      <div className="absolute bottom-[7%] left-[3%] right-[-2%] top-[2%] z-[2] sm:left-[5%] sm:right-[-1%] sm:top-[2%] lg:left-[5%] lg:right-[-1%] lg:top-[2%]">
+      <div className="absolute bottom-[9%] left-[3%] right-[2%] top-[2%] z-[2] sm:left-[5%] sm:right-[2%] sm:top-[2%] lg:left-[5%] lg:right-[2%] lg:top-[2%]">
         <img
           src={getAsset("player.snapshotPortrait")}
           alt="罗叶馨梅冬日肖像"
@@ -93,7 +93,7 @@ export function PlayerSnapshot() {
         alt="黑色像素猫"
         width={160}
         height={160}
-        className="pointer-events-none absolute bottom-[4.5%] left-[3.5%] z-[3] w-[16%] min-w-[48px] max-w-[64px] [image-rendering:pixelated] sm:max-w-[78px] lg:max-w-[92px]"
+        className="pointer-events-none absolute bottom-[9%] left-[3.5%] z-[3] w-[16%] min-w-[48px] max-w-[64px] [image-rendering:pixelated] sm:max-w-[78px] lg:max-w-[92px]"
       />
 
       <Image
