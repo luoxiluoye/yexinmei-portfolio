@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import type { AssetId } from "@/lib/assets";
 import { markAchievementProgress, markProgress, unlockAchievement } from "@/lib/rpg-events";
@@ -263,6 +264,59 @@ export function InventoryInspectButton({
 
   const inspectLabel = kind === "skill" ? "VIEW SKILL →" : "INSPECT →";
 
+  const modal = (
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-black/45 p-3 overscroll-contain lg:p-6"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) close();
+      }}
+    >
+      <section
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${label} item inspect`}
+        className={kind === "skill" ? "pixel-cut-frame my-auto w-[min(680px,100%)]" : "pixel-cut-frame my-auto w-[min(620px,100%)]"}
+      >
+        <div className="pixel-cut-surface max-h-[calc(100dvh-24px)] overflow-y-auto bg-paper lg:max-h-[min(88dvh,700px)]">
+          <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-border bg-paper px-4 py-3">
+            <div>
+              <p className="font-pixel text-[8px] text-accent">
+                {kind === "skill" ? "SKILL FILE" : "ITEM INSPECT"} · {String(index + 1).padStart(2, "0")}
+              </p>
+              <h2 className="mt-1 font-pixel text-[14px]">{label}</h2>
+            </div>
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={close}
+              className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-border bg-paper font-pixel text-[11px] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              aria-label="关闭详情"
+            >
+              ×
+            </button>
+          </header>
+
+          {kind === "skill" ? (
+            <SkillInspectContent
+              assetId={assetId}
+              iconSize={iconSize}
+              meta={meta}
+              onNavigate={() => setOpen(false)}
+            />
+          ) : (
+            <ItemInspectContent
+              assetId={assetId}
+              iconSize={iconSize}
+              meta={meta}
+              onNavigate={() => setOpen(false)}
+            />
+          )}
+        </div>
+      </section>
+    </div>
+  );
+
   return (
     <>
       <button
@@ -303,58 +357,7 @@ export function InventoryInspectButton({
         )}
       </button>
 
-      {open ? (
-        <div
-          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/35 p-3 lg:p-6"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) close();
-          }}
-        >
-          <section
-            ref={dialogRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${label} item inspect`}
-            className={kind === "skill" ? "pixel-cut-frame w-[min(680px,100%)]" : "pixel-cut-frame w-[min(620px,100%)]"}
-          >
-            <div className="pixel-cut-surface max-h-[min(86dvh,650px)] overflow-y-auto bg-paper">
-              <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-border bg-paper px-4 py-3">
-                <div>
-                  <p className="font-pixel text-[8px] text-accent">
-                    {kind === "skill" ? "SKILL FILE" : "ITEM INSPECT"} · {String(index + 1).padStart(2, "0")}
-                  </p>
-                  <h2 className="mt-1 font-pixel text-[14px]">{label}</h2>
-                </div>
-                <button
-                  ref={closeButtonRef}
-                  type="button"
-                  onClick={close}
-                  className="flex h-11 w-11 items-center justify-center border-2 border-border bg-paper font-pixel text-[11px] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                  aria-label="关闭详情"
-                >
-                  ×
-                </button>
-              </header>
-
-              {kind === "skill" ? (
-                <SkillInspectContent
-                  assetId={assetId}
-                  iconSize={iconSize}
-                  meta={meta}
-                  onNavigate={() => setOpen(false)}
-                />
-              ) : (
-                <ItemInspectContent
-                  assetId={assetId}
-                  iconSize={iconSize}
-                  meta={meta}
-                  onNavigate={() => setOpen(false)}
-                />
-              )}
-            </div>
-          </section>
-        </div>
-      ) : null}
+      {open && typeof document !== "undefined" ? createPortal(modal, document.body) : null}
     </>
   );
 }
