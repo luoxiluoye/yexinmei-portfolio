@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import type { AssetId } from "@/lib/assets";
+import { markAchievementProgress } from "@/lib/rpg-events";
 
 type Fact = {
   title: string;
@@ -121,6 +122,11 @@ export function FunFactsInspect() {
               restoreFocusRef.current = false;
               lastTriggerRef.current = event.currentTarget;
               setActiveIndex(index);
+              markAchievementProgress("fun-facts", String(index), facts.length, {
+                id: "know-the-player",
+                title: "KNOW THE PLAYER",
+                description: "Inspected all 5 Fun Facts items.",
+              });
             }}
             className="group flex min-h-[82px] w-full cursor-pointer items-center gap-3 border border-divider bg-soft px-3 py-3 text-left transition-[transform,border-color,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-px hover:border-accent hover:shadow-[2px_2px_0_rgba(17,17,17,.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-haspopup="dialog"
