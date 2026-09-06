@@ -61,14 +61,14 @@ export function PlayerSnapshot() {
       />
 
       <div className="absolute bottom-0 left-[4%] right-[-2%] top-[6%] z-[2] sm:left-[7%] sm:right-0 sm:top-[5%] lg:left-[9%] lg:right-[1%] lg:top-[4%]">
-        <Image
+        <img
           src={getAsset("player.snapshotPortrait")}
           alt="罗叶馨梅冬日肖像"
-          fill
-          priority
-          unoptimized
-          sizes="(max-width: 1023px) 100vw, 40vw"
-          className="object-contain object-right-bottom"
+          width={900}
+          height={675}
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-contain object-right-bottom"
         />
       </div>
 
