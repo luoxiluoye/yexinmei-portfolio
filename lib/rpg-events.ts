@@ -56,6 +56,16 @@ export function getAchievementProgress(group: string) {
   return readStoredSet(`yexinmei:rpg:progress:${group}`);
 }
 
+export function markProgress(group: string, itemId: string) {
+  if (typeof window === "undefined") return new Set<string>();
+
+  const key = `yexinmei:rpg:progress:${group}`;
+  const progress = readStoredSet(key);
+  progress.add(itemId);
+  writeStringSet(key, progress);
+  return progress;
+}
+
 export function unlockAchievement(payload: AchievementPayload) {
   if (typeof window === "undefined") return;
 
@@ -73,12 +83,7 @@ export function markAchievementProgress(
   total: number,
   achievement: AchievementPayload
 ) {
-  if (typeof window === "undefined") return;
-
-  const key = `yexinmei:rpg:progress:${group}`;
-  const progress = readStoredSet(key);
-  progress.add(itemId);
-  writeStringSet(key, progress);
+  const progress = markProgress(group, itemId);
 
   if (progress.size >= total) {
     unlockAchievement(achievement);
