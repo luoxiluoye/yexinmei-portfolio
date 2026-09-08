@@ -21,7 +21,7 @@ export default function PlayerPage() {
         <h1 className="rpg-page-title mt-2">PLAYER PROFILE</h1>
       </header>
 
-      <section className="grid gap-4 lg:grid-cols-[40fr_60fr] lg:items-start lg:gap-5">
+      <section className="grid gap-4 lg:grid-cols-[40fr_60fr] lg:items-stretch lg:gap-5">
         <PlayerSnapshot />
 
         <PixelPanel eyebrow="PLAYER" title={profile.nameEn.toUpperCase()} accent>
