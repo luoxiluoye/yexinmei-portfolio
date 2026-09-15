@@ -14,7 +14,7 @@ import {
 } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 
-const INVENTORY_TOTAL = 17;
+const INVENTORY_TOTAL = 4;
 const QUEST_TOTAL = 6;
 const MEMORY_TOTAL = 7;
 
@@ -344,7 +344,7 @@ function QuickProfile({
             <div className="border-2 border-border bg-soft p-4 text-[12px] leading-6">
               <p><strong>BASE</strong> · 成都</p>
               <p className="mt-2"><strong>EDU</strong> · 电子科技大学 · 新闻与传播</p>
-              <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 产品运营 / AI 产品运营 / 品牌传播</p>
+              <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 社区 / 科技内容</p>
             </div>
           </div>
 
