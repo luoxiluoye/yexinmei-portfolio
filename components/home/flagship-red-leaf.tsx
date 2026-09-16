@@ -41,7 +41,7 @@ export function FlagshipRedLeaf() {
 
             <div className="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 border-y border-divider py-5">
               {metrics.map((metric) => (
-                <div key={metric.label}>
+                <div key={metric.label} className="red-leaf-metric">
                   <p className="font-pixel text-[15px] text-foreground lg:text-[17px]">{metric.value}</p>
                   <p className="mt-1 text-[12px] leading-5 text-muted">{metric.label}</p>
                 </div>
@@ -51,7 +51,7 @@ export function FlagshipRedLeaf() {
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 href="/quests/red-leaf"
-                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[10px] text-white transition-[transform,border-color,background-color] duration-100 hover:-translate-y-px hover:border-accent hover:bg-accent"
+                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[10px] text-white transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-accent"
               >
                 查看完整案例 →
               </Link>
@@ -59,7 +59,7 @@ export function FlagshipRedLeaf() {
                 href="https://zhihu.hegelsalon.com/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-paper px-4 font-pixel text-[10px] transition-[transform,border-color,color] duration-100 hover:-translate-y-px hover:border-accent hover:text-accent"
+                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-paper px-4 font-pixel text-[10px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent"
               >
                 在线体验 ↗
               </a>
@@ -70,7 +70,7 @@ export function FlagshipRedLeaf() {
         <ScrollReveal>
           <div className="relative">
             <div className="absolute -bottom-3 -right-3 h-full w-full bg-accent/80" aria-hidden="true" />
-            <div className="relative overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
+            <div className="red-leaf-stage relative overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]" style={{ viewTransitionName: "project-red-leaf" }}>
               <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4 text-white">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 bg-accent" />
