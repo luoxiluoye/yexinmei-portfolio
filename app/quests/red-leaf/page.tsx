@@ -83,9 +83,9 @@ export default function RedLeafPage() {
       <section className="grid gap-8 border-y border-divider py-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12 lg:py-14">
         <div>
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">COMPANION UX</p>
-          <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">刘看山，不只是一个吉祥物</h2>
+          <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">刘看山的陪伴与引导</h2>
           <p className="mt-5 text-[15px] leading-7 text-muted">
-            刘看山会贯穿原文阅读、线索整理、人物关系梳理、剧情讨论和改编过程，并通过动作、动画与隐藏彩蛋回应用户。它承担的是陪伴与引导，并持续帮助用户理解当前故事状态。
+            刘看山会贯穿原文阅读、线索整理、人物关系梳理、剧情讨论和改编过程，并通过动作、动画与隐藏彩蛋回应用户。它承担陪伴与引导，也会持续帮助用户理解当前故事状态。
           </p>
         </div>
 
@@ -144,7 +144,7 @@ export default function RedLeafPage() {
         <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FROM 0 → 1</p>
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">我完成了什么</h2>
         <p className="mt-5 max-w-[900px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
-          从最初的产品概念、内容解析与故事生成逻辑，到互动叙事结构、刘看山陪伴体验、资源体系、游戏流程、页面实现和最终上线，我完成了赤页从想法到可运行产品的完整闭环。它具备从原文走到游玩、存档、回溯与多结局收集的完整体验。
+          从最初的产品概念、内容解析与故事生成逻辑，到互动叙事结构、刘看山陪伴体验、资源体系、游戏流程、页面实现和最终上线，我完成了赤页从想法到可运行产品的完整过程。它具备从原文走到游玩、存档、回溯与多结局收集的完整体验。
         </p>
         <div className="mt-7 flex flex-wrap gap-2 font-pixel text-[9px]">
           {['PRODUCT', 'NARRATIVE', 'AI WORKFLOW', 'UX', 'ASSET SYSTEM', 'BUILD', 'LAUNCH'].map((item) => (
