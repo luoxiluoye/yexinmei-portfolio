@@ -1,3 +1,5 @@
+import "@/styles/project-cover-system.css";
+
 import { buildPageMetadata } from "@/lib/site-metadata";
 
 export const metadata = buildPageMetadata({
@@ -9,4 +11,3 @@ export const metadata = buildPageMetadata({
 export default function QuestsLayout({ children }: { children: React.ReactNode }) {
   return children;
 }
-
