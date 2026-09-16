@@ -4,10 +4,10 @@ import { Link } from "next-view-transitions";
 import { ScrollReveal } from "@/components/home/scroll-reveal";
 
 const metrics = [
+  { value: "0 → 1", label: "独立完成产品" },
   { value: "≈ 5 MIN", label: "从内容到可玩故事" },
-  { value: "3,608", label: "公开资源文件" },
-  { value: "8.75 GiB", label: "游戏与美术资源" },
   { value: "50", label: "《重生周》决策位置" },
+  { value: "28", label: "常规与失败结局" },
 ] as const;
 
 export function FlagshipRedLeaf() {
@@ -37,11 +37,11 @@ export function FlagshipRedLeaf() {
               把知乎里的故事，变成可以走进去玩的世界。
             </p>
             <p className="mt-5 text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
-              我从 0 到 1 完成的一款 AI 互动叙事产品。用户可以把知乎故事、盐选内容、回答或任意内容片段交给刘看山，系统会解析人物、关系、情节与线索，并在约 5 分钟内生成一款包含人物、场景、剧情分支、玩家选择与多结局的文字冒险游戏。
+              用户把知乎故事、盐选内容或回答交给刘看山，系统会解析人物、关系、情节与线索，再重构成带剧情分支、玩家选择和多结局的文字冒险。生成后可以直接游玩、存档、回溯剧情和收集结局。
             </p>
-            <p className="mt-4 text-[14px] leading-7 text-muted">
-              从内容理解、叙事重构，到互动创作、游玩、存档、剧情回溯与结局收集，我搭建了完整的「内容 → 互动故事 → 可游玩世界」产品流程。
-            </p>
+            <div className="mt-5 border-l-2 border-accent pl-4 text-[13px] leading-6 text-muted">
+              我负责产品概念、内容解析逻辑、互动叙事结构、AI Workflow、交互体验、资源体系、前端实现与上线。
+            </div>
 
             <div className="mt-7 grid grid-cols-2 gap-x-5 gap-y-5 border-y border-divider py-5">
               {metrics.map((metric) => (
@@ -53,20 +53,20 @@ export function FlagshipRedLeaf() {
             </div>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/quests/red-leaf"
-                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[10px] text-white transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-accent"
-              >
-                查看完整案例 →
-              </Link>
               <a
                 href="https://zhihu.hegelsalon.com/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-paper px-4 font-pixel text-[10px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent"
+                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[10px] text-white transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-accent"
               >
                 在线体验 ↗
               </a>
+              <Link
+                href="/quests/red-leaf"
+                className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-paper px-4 font-pixel text-[10px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent"
+              >
+                看产品过程 →
+              </Link>
             </div>
           </div>
         </ScrollReveal>
@@ -114,7 +114,7 @@ export function FlagshipRedLeaf() {
             </div>
           </div>
           <p className="mt-3 text-[11px] leading-5 text-muted">
-            真实产品截图；点击「在线体验」可进入当前版本。
+            真实产品截图；当前版本可以直接在线体验。
           </p>
         </ScrollReveal>
       </div>
