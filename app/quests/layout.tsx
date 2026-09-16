@@ -1,5 +1,3 @@
-import "@/styles/project-cover-system.css";
-
 import { buildPageMetadata } from "@/lib/site-metadata";
 
 export const metadata = buildPageMetadata({
