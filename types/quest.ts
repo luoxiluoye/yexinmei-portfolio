@@ -42,3 +42,4 @@ export type Quest = {
   gallery: QuestGalleryItem[];
   mediaStatus?: "LATER";
 };
+

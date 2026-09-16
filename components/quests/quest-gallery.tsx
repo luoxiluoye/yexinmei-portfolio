@@ -43,3 +43,4 @@ export function QuestGallery({ gallery }: { gallery: QuestGalleryItem[] }) {
     </section>
   );
 }
+

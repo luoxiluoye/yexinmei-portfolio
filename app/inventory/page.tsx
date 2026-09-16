@@ -5,7 +5,6 @@ import { skills } from "@/data/skills";
 import { InventoryChest } from "@/components/game/inventory-chest";
 import { InventoryInspectButton } from "@/components/inventory/inventory-inspect-button";
 import { CharacterScene } from "@/components/scenes/character-scene";
-import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 import { PixelTag } from "@/components/ui/pixel-tag";
 import { StatusBar } from "@/components/ui/status-bar";
@@ -51,7 +50,7 @@ export default function InventoryPage() {
           <p className="font-pixel text-[12px] text-muted">05. INVENTORY</p>
           <h1 className="rpg-page-title mt-2">INVENTORY & SKILLS</h1>
           <p className="mt-4 max-w-2xl text-[15px] leading-[26px] text-muted">
-            内容策划、新媒体运营、社区运营、AI 辅助工作流，以及摄影与常用创作工具。核心能力保持清晰展示，Special Items 才承担更强的 Inspect 交互。
+            内容策划、新媒体运营、社区运营、AI 辅助工作流，以及摄影与常用创作工具。现在每个格子都可以打开查看它实际用在了哪里。
           </p>
         </div>
 
@@ -63,13 +62,14 @@ export default function InventoryPage() {
           <PixelPanel eyebrow="01" title={`TOOLS · ${skills.tools.length}`}>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
               {skills.tools.map((tool, index) => (
-                <InventoryDisplaySlot
+                <InventoryInspectButton
                   key={tool.name}
                   assetId={toolIcons[index]}
                   index={index}
                   label={tool.name}
                   detail={tool.level}
                   iconSize={toolIconSizes[index]}
+                  kind="tool"
                 />
               ))}
             </div>
@@ -78,12 +78,13 @@ export default function InventoryPage() {
           <PixelPanel eyebrow="02" title={`SKILLS · ${skills.core.length}`}>
             <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
               {skills.core.map((skill, index) => (
-                <InventoryDisplaySlot
+                <InventoryInspectButton
                   key={skill}
                   assetId={skillIcons[index]}
                   index={index}
                   label={skill}
                   iconSize={36}
+                  kind="skill"
                 />
               ))}
             </div>
@@ -142,32 +143,3 @@ export default function InventoryPage() {
   );
 }
 
-function InventoryDisplaySlot({
-  assetId,
-  index,
-  label,
-  detail,
-  iconSize,
-}: {
-  assetId: AssetId;
-  index: number;
-  label: string;
-  detail?: string;
-  iconSize: number;
-}) {
-  return (
-    <div className="rpg-item-slot group flex min-h-[116px] w-full flex-col justify-between border border-divider bg-soft p-3 text-left transition-[transform,border-color,box-shadow] duration-100 hover:-translate-y-px hover:border-border hover:shadow-[2px_2px_0_rgba(17,17,17,.06)]">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex h-[52px] w-[52px] items-center justify-center border border-divider bg-paper">
-          <PixelIcon assetId={assetId} decorative width={iconSize} height={iconSize} />
-        </div>
-        <span className="font-pixel text-[10px] text-muted">{String(index + 1).padStart(2, "0")}</span>
-      </div>
-      <div className="mt-3">
-        <p className="text-[13px] font-semibold leading-5">{label}</p>
-        {detail ? <p className="mt-1 text-[11px] leading-5 text-muted">{detail}</p> : null}
-        <p className="mt-2 font-pixel text-[8px] text-muted">EQUIPPED</p>
-      </div>
-    </div>
-  );
-}

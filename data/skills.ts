@@ -29,3 +29,4 @@ export const skills = {
     { name: "CAT COMPANION", buff: "+999 心情值" },
   ],
 } as const;
+

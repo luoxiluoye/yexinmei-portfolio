@@ -59,3 +59,4 @@ try {
 } finally {
   fs.rmSync(tempRoot, { recursive: true, force: true });
 }
+

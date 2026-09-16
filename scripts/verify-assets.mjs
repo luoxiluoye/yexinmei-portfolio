@@ -124,3 +124,4 @@ if (missing.length) {
 }
 
 console.log(`Asset QA Total: ${officialResult.found + playerResult.found}/${officialTotal + playerExpected.length} PASS.`);
+

@@ -37,3 +37,4 @@ export function QuestVisitAchievement({ slug }: { slug: string }) {
 
   return null;
 }
+

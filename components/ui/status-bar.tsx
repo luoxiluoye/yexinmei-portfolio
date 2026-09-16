@@ -35,3 +35,4 @@ export function StatusBar({ items, className }: StatusBarProps) {
     </div>
   );
 }
+

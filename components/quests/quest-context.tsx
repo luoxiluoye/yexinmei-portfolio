@@ -28,3 +28,4 @@ export function QuestContext({ quest, index }: { quest: Quest; index: number }) 
     </section>
   );
 }
+

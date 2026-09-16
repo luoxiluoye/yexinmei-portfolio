@@ -25,3 +25,4 @@ export const profile = {
   xiaohongshu: null,
   resumePath: null,
 } as const;
+

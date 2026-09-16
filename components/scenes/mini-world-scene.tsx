@@ -92,3 +92,4 @@ export function MiniWorldScene({ kind = "cat", className }: MiniWorldSceneProps)
     </div>
   );
 }
+

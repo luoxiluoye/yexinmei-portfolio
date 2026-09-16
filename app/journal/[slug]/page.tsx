@@ -129,3 +129,4 @@ export default async function JournalNotePage({ params }: JournalNotePageProps) 
     </main>
   );
 }
+

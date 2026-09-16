@@ -104,3 +104,4 @@ export function HeroCatQuest() {
     </div>
   );
 }
+

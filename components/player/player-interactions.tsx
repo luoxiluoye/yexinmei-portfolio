@@ -533,3 +533,4 @@ function InspectDialog({ fact, onClose }: { fact: Fact; onClose: () => void }) {
     </div>
   );
 }
+

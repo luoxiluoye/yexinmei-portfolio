@@ -71,3 +71,4 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
     </>
   );
 }
+

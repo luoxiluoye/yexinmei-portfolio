@@ -275,3 +275,4 @@ export function getQuestBySlug(slug: string) {
 export function getQuestSlugs() {
   return quests.map((quest) => ({ slug: quest.slug }));
 }
+

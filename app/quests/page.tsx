@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 import { quests } from "@/data/quests";
-import { MiniWorldScene } from "@/components/scenes/mini-world-scene";
 import { QuestExplorer } from "@/components/quests/quest-explorer";
+import { PixelIcon } from "@/components/ui/pixel-icon";
 
 export const metadata: Metadata = {
   title: "项目经历与作品",
@@ -11,19 +11,21 @@ export const metadata: Metadata = {
 
 export default function QuestsPage() {
   return (
-    <main className="site-container py-4 lg:py-8">
-      <header className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-end">
-        <div className="min-w-0">
-          <p className="font-pixel text-[12px] text-muted">03. QUESTS</p>
-          <h1 className="rpg-page-title mt-2">QUEST LOG</h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-[26px] text-muted">
+    <main className="site-container project-archive" id="main-content">
+      <header className="project-archive-header">
+        <div>
+          <p className="project-archive-eyebrow font-pixel"><span>01 /</span> PROJECTS & PRACTICE</p>
+          <h1>项目与实践<span aria-hidden="true">✳</span></h1>
+          <p className="project-archive-intro">
             这里记录做过的项目、正在探索的方向，以及一些从兴趣出发的 Side Quests。
           </p>
         </div>
-        <MiniWorldScene kind="cat" className="min-h-[104px] lg:min-h-[118px]" />
+        <div className="project-archive-counter" aria-label={`共 ${quests.length} 个项目`}>
+          <PixelIcon assetId="items.notebook" decorative width={52} height={52} />
+          <div><span className="font-pixel">{String(quests.length).padStart(2, "0")}</span><span>段探索，持续发生。</span></div>
+        </div>
       </header>
-
-      <section className="mt-4 pb-8 lg:mt-8 lg:pb-0">
+      <section className="project-archive-explorer" aria-label="筛选与浏览项目">
         <QuestExplorer quests={quests} />
       </section>
     </main>

@@ -99,3 +99,4 @@ export default async function QuestPage({ params }: QuestPageProps) {
     </main>
   );
 }
+

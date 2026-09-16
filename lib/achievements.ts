@@ -30,10 +30,16 @@ export const ACHIEVEMENTS = [
     hint: "Explore several project details.",
   },
   {
+    id: "skill-scout",
+    title: "SKILL SCOUT",
+    description: "Inspected all 7 core skills.",
+    hint: "Open every Core Skill in Inventory.",
+  },
+  {
     id: "inventory-curious",
     title: "ITEM INSPECTOR",
-    description: "Inspected a Special Item in Inventory.",
-    hint: "Open one of the Special Items in Inventory.",
+    description: "Inspected a skill or tool in Inventory.",
+    hint: "Try opening an Inventory slot.",
   },
   {
     id: "field-notes-reader",
@@ -44,3 +50,4 @@ export const ACHIEVEMENTS = [
 ] as const;
 
 export type AchievementId = (typeof ACHIEVEMENTS)[number]["id"];
+

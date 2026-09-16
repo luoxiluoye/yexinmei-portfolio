@@ -15,3 +15,4 @@ export function JournalReadAchievement() {
 
   return null;
 }
+

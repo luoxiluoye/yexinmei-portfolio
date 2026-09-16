@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Command } from "cmdk";
 import { useTransitionRouter } from "next-view-transitions";
 
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { focusSystemTrigger } from "@/lib/system-focus";
 import {
   openQuickProfile,
   openSaveFile,
@@ -37,6 +38,15 @@ export function SystemMenu() {
   const router = useTransitionRouter();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(false);
+
+  const handleOpenChange = useCallback((nextOpen: boolean) => {
+    if (nextOpen) {
+      returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    }
+    setOpen(nextOpen);
+  }, []);
 
   const go = useCallback(
     (href: string) => {
@@ -52,11 +62,11 @@ export function SystemMenu() {
   }, []);
 
   useEffect(() => {
-    const openMenu = () => setOpen(true);
+    const openMenu = () => handleOpenChange(true);
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
-        setOpen((current) => !current);
+        handleOpenChange(!open);
       }
     };
 
@@ -66,7 +76,28 @@ export function SystemMenu() {
       window.removeEventListener(SYSTEM_MENU_EVENT, openMenu);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, []);
+  }, [handleOpenChange, open]);
+
+  useEffect(() => {
+    const wasOpen = wasOpenRef.current;
+    wasOpenRef.current = open;
+    if (open || !wasOpen) return;
+
+    // cmdk has no Dialog.Trigger: wait for Radix's unmount autofocus to finish.
+    let frame = 0;
+    const timer = window.setTimeout(() => {
+      frame = window.requestAnimationFrame(() => {
+        // Quick Profile / Save File own focus after a palette action opens them.
+        const nextDialog = Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]'))
+          .some((dialog) => dialog.getClientRects().length > 0);
+        if (!nextDialog) focusSystemTrigger(returnFocusRef.current);
+      });
+    }, 0);
+    return () => {
+      window.clearTimeout(timer);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [open]);
 
   useEffect(() => {
     if (!open) setCopied(false);
@@ -90,7 +121,7 @@ export function SystemMenu() {
   return (
     <Command.Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={handleOpenChange}
       label="System Menu / Quick Travel"
       loop
       className="rpg-command-root"

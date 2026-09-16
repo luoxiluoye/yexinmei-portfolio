@@ -64,3 +64,4 @@ export function getJournalEntry(slug: string) {
 export function getJournalSlugs() {
   return journalSeed.map((entry) => ({ slug: entry.slug }));
 }
+

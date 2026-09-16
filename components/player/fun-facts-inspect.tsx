@@ -290,3 +290,4 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
     document.body
   );
 }
+

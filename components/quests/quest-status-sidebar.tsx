@@ -49,3 +49,4 @@ function Stat({ label, value, accent = false }: { label: string; value: number; 
     </div>
   );
 }
+

@@ -2,6 +2,7 @@ import type { Quest } from "@/types/quest";
 import type { AssetId } from "@/lib/assets";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelTag } from "@/components/ui/pixel-tag";
+import { ProjectArt } from "@/components/quests/project-art";
 
 function getStatusVariant(status: Quest["status"]) {
   if (status === "ACTIVE") return "active" as const;
@@ -48,6 +49,9 @@ export function QuestHero({ quest }: { quest: Quest }) {
             height={52}
           />
         </div>
+      </div>
+      <div style={{ viewTransitionName: `project-${quest.slug}` }}>
+        <ProjectArt slug={quest.slug} className="studio-detail-art" />
       </div>
     </header>
   );

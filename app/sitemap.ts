@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 
-import { getJournalSlugs } from "@/data/journal";
 import { getQuestSlugs } from "@/data/quests";
 import { SITE_URL } from "@/lib/site-metadata";
 
@@ -30,12 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  const journalPages: MetadataRoute.Sitemap = getJournalSlugs().map(({ slug }) => ({
-    url: `${SITE_URL}/journal/${slug}`,
-    lastModified,
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
-
-  return [...pages, ...questPages, ...journalPages];
+  return [...pages, ...questPages];
 }
+

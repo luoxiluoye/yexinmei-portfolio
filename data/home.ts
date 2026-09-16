@@ -33,7 +33,8 @@ export const homeQuests = homeQuestSlugs
   .filter((quest): quest is NonNullable<typeof quest> => Boolean(quest));
 
 export const skillGroups = [
-  { title: "CONTENT", items: [skills.core[0], skills.core[1], skills.core[4], skills.core[5]] },
-  { title: "COMMUNITY", items: [skills.core[2], skills.core[3], skills.core[6]] },
+  { title: "CONTENT", items: skills.core.slice(0, 4) },
+  { title: "COMMUNITY", items: skills.core.slice(3, 7) },
   { title: "TOOLS", items: skills.tools.slice(0, 4).map((item) => item.name) },
 ];
+

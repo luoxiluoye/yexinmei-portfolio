@@ -1,66 +1,47 @@
-import { homeContent } from "@/data/home";
-import { DataBadges } from "@/components/home/data-badges";
-import { PixelButton } from "@/components/ui/pixel-button";
-import { CharacterScene } from "@/components/scenes/character-scene";
-
+"use client";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { Link } from "next-view-transitions";
+import { openQuickProfile } from "@/lib/rpg-events";
+import { HomeWorld } from "@/components/home/home-world";
+const delay = (ms: number) => ({ "--enter-delay": `${ms}ms` }) as CSSProperties;
 export function HeroSection() {
-  return (
-    <section className="site-container pt-4 lg:pt-8">
-      <div className="grid gap-4 lg:grid-cols-[45fr_55fr] lg:items-center lg:gap-5">
-        <div className="order-1 py-2 lg:py-4">
-          <p className="font-pixel text-[11px] text-muted lg:text-[12px]">
-            {homeContent.eyebrow}
-          </p>
-
-          <h1 className="mt-3">
-            <span className="font-pixel-zh block text-[clamp(48px,12vw,60px)] leading-[1.02] tracking-[-0.01em] lg:text-[68px]">
-              {homeContent.titleZh}
-              <span className="ml-2 align-top font-pixel text-[0.30em] text-accent">♥</span>
-            </span>
-            <span className="mt-1.5 block font-pixel text-[16px] uppercase tracking-[-0.02em] text-muted lg:text-[19px]">
-              {homeContent.titleEn}
-            </span>
-          </h1>
-
-          <div className="mt-4 inline-grid max-w-full grid-cols-[auto_minmax(0,1fr)] border-2 border-border bg-paper shadow-[2px_2px_0_rgba(17,17,17,.10)]">
-            <span className="flex items-center bg-foreground px-2.5 py-2 font-pixel text-[10px] leading-none text-white lg:px-3 lg:text-[11px]">
-              CLASS
-            </span>
-            <span className="min-w-0 px-3 py-1.5 font-pixel text-[10px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[11px]">
-              {homeContent.keywords.join(" · ")}
-            </span>
-          </div>
-
-          <p className="mt-3 text-[13px] font-semibold text-foreground lg:text-[14px]">
-            {homeContent.directionZh}
-          </p>
-
-          <p className="mt-3 max-w-[560px] text-[15px] leading-[26px] text-muted lg:text-[16px]">
-            {homeContent.intro}
-          </p>
-
-          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
-            <PixelButton href="/quests" variant="primary" className="w-full sm:w-auto">
-              {homeContent.ctaPrimary} →
-            </PixelButton>
-            <PixelButton href="/player" variant="secondary" className="w-full sm:w-auto">
-              {homeContent.ctaSecondary}
-            </PixelButton>
-          </div>
-
-          <div className="mt-4 hidden max-w-[560px] lg:block">
-            <DataBadges />
-          </div>
-        </div>
-
-        <div className="order-2">
-          <CharacterScene variant="home" bubbleText={homeContent.bubble} />
-        </div>
+    const ref = useRef<HTMLElement>(null);
+    const [motion, setMotion] = useState(true);
+    useEffect(() => {
+        try {
+            if (sessionStorage.getItem("yexinmei:intro-seen") && ref.current)
+                ref.current.dataset.returning = "true";
+            sessionStorage.setItem("yexinmei:intro-seen", "true");
+        }
+        catch { /* Storage is optional. */ }
+    }, []);
+    function replay() {
+        const node = ref.current;
+        if (!node)
+            return;
+        node.dataset.returning = "false";
+        node.getAnimations({ subtree: true }).forEach(animation => {
+            if (animation.effect?.getTiming().iterations !== Infinity) {
+                animation.currentTime = 0;
+                animation.play();
+            }
+        });
+    }
+    return <section ref={ref} className="studio-hero" data-motion={motion ? "on" : "off"} aria-labelledby="home-title">
+    <div className="studio-hero-meta studio-enter" style={delay(0)}>
+      <span className="studio-kicker">YEXINMEI LUO <span className="studio-meta-slash">/</span> PERSONAL WORLD</span>
+      <span className="studio-location"><span aria-hidden="true"/>成都，中国 <span className="font-pixel">↗</span></span>
+    </div>
+    <div className="studio-hero-layout">
+      <div className="studio-hero-copy">
+        <p className="studio-introduction studio-enter" style={delay(90)}><span className="studio-intro-cross" aria-hidden="true">✳</span>你好，我是罗叶馨梅</p>
+        <h1 id="home-title" className="studio-headline"><span className="studio-title-line"><span>把好奇，</span></span><span className="studio-title-line studio-title-accent"><span>变成作品。</span></span></h1>
+        <div className="studio-enter" style={delay(360)}><p className="studio-hero-role">内容运营 <span>×</span> 社区 <span>×</span> 科技内容</p><p className="studio-hero-description">研究用户为什么停留，也探索内容还能怎样表达。<br className="studio-desktop-break"/>在工作与生活之间，持续创作一点新东西。</p></div>
+        <div className="studio-hero-actions studio-enter" style={delay(480)}><Link href="/quests" className="studio-button studio-button-primary">探索我的项目 <span aria-hidden="true">↗</span></Link><button type="button" className="studio-button studio-button-quiet" onClick={openQuickProfile}>60 秒了解我 <span aria-hidden="true">→</span></button></div>
+        <div className="studio-hero-note studio-enter" style={delay(610)}><span className="studio-note-line" aria-hidden="true"/>内容有后话，好奇无终点。</div>
       </div>
-
-      <div className="mt-4 lg:hidden">
-        <DataBadges />
-      </div>
-    </section>
-  );
+      <HomeWorld />
+    </div>
+    <div className="studio-hero-bottom studio-enter" style={delay(650)}><a className="studio-scroll-link" href="#selected-work"><span aria-hidden="true">↓</span>往下看看，故事才刚开始</a><div className="studio-motion-controls"><button type="button" onClick={replay} aria-label="重播首页进场动画">重播开场 <span aria-hidden="true">↺</span></button><button type="button" onClick={() => setMotion(value => !value)}>{motion ? "暂停动效" : "开启动效"}</button></div></div>
+  </section>;
 }

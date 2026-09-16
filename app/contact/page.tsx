@@ -15,14 +15,12 @@ const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
   email: "items.mail",
   phone: "ui.contactPhone",
   wechat: "ui.heart",
-  resume: "items.notebook",
 };
 
 const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
   email: "求职 / 合作 / 内容交流",
   phone: "求职沟通可直接电话联系",
   wechat: "点击按钮复制微信号",
-  resume: "添加微信 luoxiluoye，备注「简历」即可",
 };
 
 async function copyText(value: string) {
@@ -53,22 +51,22 @@ async function copyText(value: string) {
 }
 
 export default function ContactPage() {
-  const [copiedTarget, setCopiedTarget] = useState<"wechat" | "resume" | null>(null);
+  const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
 
-  async function copyWechat(target: "wechat" | "resume" = "wechat") {
+  async function copyWechat() {
     setCopyError(false);
     const success = await copyText(wechat);
 
     if (success) {
-      setCopiedTarget(target);
-      window.setTimeout(() => setCopiedTarget(null), 1600);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
       return;
     }
 
-    setCopiedTarget(null);
+    setCopied(false);
     setCopyError(true);
     window.setTimeout(() => setCopyError(false), 2600);
   }
@@ -85,30 +83,22 @@ export default function ContactPage() {
           <p className="mt-4 font-pixel text-[10px] text-accent">MAILBOX OPEN · PLAYER ONLINE</p>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            {profile.resumePath ? (
+            {profile.resumePath && (
               <PixelButton href={profile.resumePath} variant="primary">
                 DOWNLOAD RESUME ↓
               </PixelButton>
-            ) : (
-              <PixelButton variant="primary" onClick={() => copyWechat("resume")}>
-                加微信索取简历
-              </PixelButton>
             )}
-            <PixelButton href={`mailto:${email}`} variant="secondary">
+            <PixelButton href={`mailto:${email}`} variant={profile.resumePath ? "secondary" : "primary"}>
               EMAIL ME →
             </PixelButton>
-            <PixelButton variant="secondary" onClick={() => copyWechat("wechat")}>
-              {copiedTarget === "wechat" ? "WECHAT COPIED ✓" : "COPY WECHAT"}
+            <PixelButton variant="secondary" onClick={copyWechat}>
+              {copied ? "WECHAT COPIED ✓" : "COPY WECHAT"}
             </PixelButton>
           </div>
 
-          {profile.resumePath ? (
+          {profile.resumePath && (
             <p className="mt-2 font-pixel text-[9px] text-muted">
               PDF · UPDATED {contact.resumeUpdated}
-            </p>
-          ) : (
-            <p className="mt-2 text-[11px] leading-5 text-muted">
-              暂未公开 PDF · 微信备注「简历」即可索取
             </p>
           )}
         </div>
@@ -118,18 +108,15 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
+      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3 lg:pb-0">
         {contact.items.map((item, index) => {
           const isWechat = item.type === "wechat";
-          const isResume = item.type === "resume";
           const href =
             item.type === "email"
               ? `mailto:${item.value}`
               : item.type === "phone"
                 ? `tel:${item.value}`
-                : isResume && profile.resumePath
-                  ? profile.resumePath
-                  : undefined;
+                : undefined;
 
           return (
             <PixelPanel
@@ -151,21 +138,15 @@ export default function ContactPage() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="break-all text-[14px] font-semibold leading-5">
-                    {isResume && profile.resumePath ? "PDF RESUME" : item.value}
-                  </p>
+                  <p className="break-all text-[14px] font-semibold leading-5">{item.value}</p>
                   <p className="mt-2 text-[12px] leading-5 text-muted">{hintByType[item.type]}</p>
                 </div>
               </div>
 
               <div className="mt-auto pt-4">
                 {isWechat ? (
-                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("wechat")}>
-                    {copiedTarget === "wechat" ? "已复制微信号 ✓" : "复制微信号"}
-                  </PixelButton>
-                ) : isResume && !profile.resumePath ? (
-                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("resume")}>
-                    {copiedTarget === "resume" ? "已复制微信号 ✓" : "加微信索取简历"}
+                  <PixelButton variant="secondary" className="w-full" onClick={copyWechat}>
+                    {copied ? "已复制微信号 ✓" : "复制微信号"}
                   </PixelButton>
                 ) : (
                   <PixelButton
@@ -173,11 +154,7 @@ export default function ContactPage() {
                     variant={index === 0 ? "primary" : "secondary"}
                     className="w-full"
                   >
-                    {item.type === "email"
-                      ? "发送邮件"
-                      : item.type === "phone"
-                        ? "拨打电话"
-                        : "DOWNLOAD RESUME ↓"}
+                    {item.type === "email" ? "发送邮件" : "拨打电话"}
                   </PixelButton>
                 )}
               </div>
@@ -186,9 +163,9 @@ export default function ContactPage() {
         })}
       </section>
 
-      {copiedTarget && (
+      {copied && (
         <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
-          {copiedTarget === "resume" ? "WECHAT COPIED · 备注「简历」" : "WECHAT COPIED · 微信号已复制"}
+          WECHAT COPIED · 微信号已复制
         </div>
       )}
 
@@ -200,3 +177,4 @@ export default function ContactPage() {
     </main>
   );
 }
+

@@ -6,9 +6,9 @@ export function PlayerSnapshot() {
   return (
     <section
       aria-label="PLAYER SNAPSHOT"
-      className="group relative isolate aspect-[4/3] w-full overflow-hidden bg-paper transition-transform duration-150 hover:-translate-y-px lg:min-h-[360px] lg:max-h-[430px]"
+      className="group relative isolate aspect-[4/3] w-full overflow-hidden bg-background transition-transform duration-150 hover:-translate-y-px lg:min-h-[360px] lg:max-h-[430px]"
     >
-      <div className="absolute inset-0 z-0 bg-paper" aria-hidden="true" />
+      <div className="absolute inset-0 z-0 bg-background" aria-hidden="true" />
 
       <Image
         src={getAsset("player.snapshotCloud")}

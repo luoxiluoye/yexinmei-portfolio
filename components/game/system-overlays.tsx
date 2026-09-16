@@ -13,8 +13,9 @@ import {
   SAVE_FILE_EVENT,
 } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { focusSystemTrigger } from "@/lib/system-focus";
 
-const INVENTORY_TOTAL = 4;
+const INVENTORY_TOTAL = 17;
 const QUEST_TOTAL = 6;
 const MEMORY_TOTAL = 7;
 
@@ -41,24 +42,6 @@ function getFocusable(container: HTMLElement | null) {
       'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
     )
   ).filter((element) => element.getAttribute("aria-hidden") !== "true");
-}
-
-function focusSystemTrigger(fallback: HTMLElement | null) {
-  if (fallback && document.contains(fallback)) {
-    fallback.focus({ preventScroll: true });
-    return;
-  }
-
-  const desktop = document.querySelector<HTMLButtonElement>('button[aria-label*="System Menu"]');
-  if (desktop) {
-    desktop.focus({ preventScroll: true });
-    return;
-  }
-
-  const mobile = Array.from(document.querySelectorAll<HTMLButtonElement>("button")).find(
-    (button) => button.textContent?.trim().includes("MORE")
-  );
-  mobile?.focus({ preventScroll: true });
 }
 
 export function SystemOverlays() {
@@ -344,7 +327,7 @@ function QuickProfile({
             <div className="border-2 border-border bg-soft p-4 text-[12px] leading-6">
               <p><strong>BASE</strong> · 成都</p>
               <p className="mt-2"><strong>EDU</strong> · 电子科技大学 · 新闻与传播</p>
-              <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 社区 / 科技内容</p>
+              <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 产品运营 / AI 产品运营 / 品牌传播</p>
             </div>
           </div>
 

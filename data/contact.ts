@@ -5,7 +5,7 @@ export const contact = {
     { type: "email", label: "EMAIL", value: "2657351670@qq.com" },
     { type: "phone", label: "PHONE", value: "18080409809" },
     { type: "wechat", label: "WECHAT", value: "luoxiluoye" },
-    { type: "resume", label: "RESUME", value: "微信索取简历" },
   ],
   resumeUpdated: "2026",
 } as const;
+
