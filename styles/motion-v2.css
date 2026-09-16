@@ -1,0 +1,189 @@
+:root {
+  --motion-micro: 160ms;
+  --motion-interaction: 240ms;
+  --motion-panel: 320ms;
+  --motion-page: 420ms;
+  --motion-section: 520ms;
+  --motion-hero: 760ms;
+  --motion-ease-standard: cubic-bezier(.22,1,.36,1);
+  --motion-ease-emphasized: cubic-bezier(.16,1,.3,1);
+}
+
+/* Keep tiny RPG feedback crisp, but make large movement continuous. */
+.studio-button,
+.studio-text-link,
+.studio-work-open,
+.project-archive-open,
+.project-archive-read > span,
+.project-archive-copy h2,
+.portfolio-desktop-nav-link,
+.portfolio-system-button,
+.portfolio-mobile-nav-link {
+  transition-duration: var(--motion-interaction) !important;
+  transition-timing-function: var(--motion-ease-standard) !important;
+}
+
+/* HomeWorld is interpolated in JS; CSS transitions would fight the spring. */
+.studio-world-sun,
+.studio-world-layer,
+.studio-world-person img {
+  transition: none !important;
+  will-change: transform;
+}
+
+.studio-world-person img { transform-origin: 50% 86%; }
+
+/* Flagship project gets a quieter, portfolio-like hover instead of a pixel jump. */
+.red-leaf-stage {
+  position: relative;
+  transform: translateZ(0);
+  transition: transform var(--motion-section) var(--motion-ease-emphasized), box-shadow var(--motion-section) var(--motion-ease-standard);
+}
+
+.red-leaf-stage img {
+  transition: transform 720ms var(--motion-ease-emphasized), filter 520ms ease;
+  will-change: transform;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .red-leaf-stage:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 50px rgba(17,17,17,.08);
+  }
+
+  .red-leaf-stage:hover img { transform: scale(1.025); }
+}
+
+.red-leaf-metric {
+  transition: transform var(--motion-panel) var(--motion-ease-standard), color var(--motion-panel) ease;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .red-leaf-metric:hover { transform: translateY(-3px); }
+  .red-leaf-metric:hover p:first-child { color: var(--rpg-color-red); }
+}
+
+/* Project list motion. */
+.project-archive-card {
+  transition: transform var(--motion-panel) var(--motion-ease-standard), box-shadow var(--motion-panel) var(--motion-ease-standard);
+}
+
+.project-archive-link .studio-project-art {
+  transition: transform 560ms var(--motion-ease-emphasized);
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .project-archive-card:hover { transform: translateY(-5px); }
+  .project-archive-link:hover .studio-project-art { transform: scale(1.04); }
+  .project-archive-link:hover .project-archive-open { transform: translate(2px,-3px) rotate(2deg); }
+}
+
+.project-archive-grid {
+  animation: quest-grid-in var(--motion-panel) var(--motion-ease-emphasized) both;
+}
+
+.project-archive-grid .project-archive-card {
+  animation: quest-card-in var(--motion-page) var(--motion-ease-emphasized) both;
+}
+.project-archive-grid .project-archive-card:nth-child(2){animation-delay:45ms}
+.project-archive-grid .project-archive-card:nth-child(3){animation-delay:90ms}
+.project-archive-grid .project-archive-card:nth-child(4){animation-delay:135ms}
+.project-archive-grid .project-archive-card:nth-child(5){animation-delay:180ms}
+.project-archive-grid .project-archive-card:nth-child(6){animation-delay:225ms}
+
+@keyframes quest-grid-in { from {opacity:.72} to {opacity:1} }
+@keyframes quest-card-in { from {opacity:0;transform:translateY(12px) scale(.992)} to {opacity:1;transform:none} }
+
+/* Softer route changes; project artwork keeps its identity during navigation. */
+::view-transition-old(root) { animation: page-out 180ms ease-in both; }
+::view-transition-new(root) { animation: page-in var(--motion-page) var(--motion-ease-emphasized) both; }
+
+::view-transition-group(project-zhihu-auto-consumer-tech),
+::view-transition-group(project-global-content),
+::view-transition-group(project-tech-you-houhua),
+::view-transition-group(project-ccd-business),
+::view-transition-group(project-visual-storytelling),
+::view-transition-group(project-inspiration-studio) {
+  animation-duration: var(--motion-page);
+  animation-timing-function: var(--motion-ease-emphasized);
+  z-index: 30;
+}
+
+@keyframes page-out { from {opacity:1;transform:translateY(0)} to {opacity:.18;transform:translateY(-6px)} }
+@keyframes page-in { from {opacity:0;transform:translateY(10px)} to {opacity:1;transform:none} }
+
+.quest-detail-heading { animation: quest-heading-in var(--motion-section) var(--motion-ease-emphasized) 80ms both; }
+@keyframes quest-heading-in { from {opacity:0;transform:translateY(12px)} to {opacity:1;transform:none} }
+
+@supports (animation-timeline:view()) {
+  main section[id="context"],
+  main section[id="actions"],
+  main section[id="case"],
+  main section[id="outcomes"],
+  main section[id="learnings"] {
+    animation: quest-section-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 28%;
+  }
+  @keyframes quest-section-in { from {opacity:.2;transform:translateY(18px)} to {opacity:1;transform:none} }
+}
+
+/* Six distinct project identities. */
+.studio-art-zhihu { background:#e7eadf; }
+.studio-art-zhihu .studio-art-watermark { color:rgba(88,108,73,.09); }
+.studio-art-zhihu .studio-question-back { transform:rotate(-5deg) translate(-2%,1%); }
+.studio-art-zhihu .studio-question-front { transform:rotate(3deg); box-shadow:8px 8px 0 rgba(115,135,91,.24); }
+.studio-zhihu-pulse { position:absolute;right:14%;top:20%;font-family:var(--rpg-font-pixel);font-size:8px;color:#60734e;display:flex;align-items:center;gap:6px; }
+.studio-zhihu-pulse::before { content:"";width:6px;height:6px;background:#60734e;animation:status-pulse 1.9s ease-in-out infinite; }
+
+.studio-global-routes { position:absolute;inset:18% 10% 18%;pointer-events:none; }
+.studio-global-route { position:absolute;height:1px;width:42%;background:linear-gradient(90deg,transparent,#7f4b3d 18%,#7f4b3d 82%,transparent);opacity:.55;transform-origin:left center; }
+.studio-global-route:nth-child(1){left:16%;top:42%;transform:rotate(-16deg)}
+.studio-global-route:nth-child(2){left:40%;top:58%;width:34%;transform:rotate(13deg)}
+.studio-global-route:nth-child(3){left:20%;top:72%;width:48%;transform:rotate(4deg)}
+
+.studio-art-tech { background:#e7e5df; }
+.studio-tech-terminal { position:absolute;left:9%;top:22%;width:62%;min-height:52%;border:1.5px solid #38352f;background:#f6f2e9;box-shadow:8px 8px 0 rgba(51,47,41,.11);padding:18px 20px;overflow:hidden; }
+.studio-tech-terminal::before { content:"●  ●  ●";display:block;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid #d7d0c4;color:#b03d31;letter-spacing:4px;font-size:7px; }
+.studio-tech-kicker { display:block;font-family:var(--rpg-font-pixel);font-size:8px;color:#a13b30;margin-bottom:10px; }
+.studio-tech-line { display:block;width:82%;height:7px;margin-top:9px;background:#d8d3c9; }
+.studio-tech-line:nth-of-type(3){width:64%}.studio-tech-line:nth-of-type(4){width:74%}
+.studio-tech-cursor { display:inline-block;width:8px;height:12px;margin:14px 0 0 4px;background:#b23f32;animation:cursor-blink 1s steps(1,end) infinite; }
+.studio-tech-stack { position:absolute;right:8%;top:29%;display:grid;gap:9px; }
+.studio-tech-chip { min-width:70px;border:1px solid #8d8579;background:#f3efe6;padding:7px 9px;font-family:var(--rpg-font-pixel);font-size:8px;text-align:center;transition:transform var(--motion-interaction) var(--motion-ease-standard); }
+.project-archive-link:hover .studio-tech-chip:nth-child(1){transform:translateX(-5px)}
+.project-archive-link:hover .studio-tech-chip:nth-child(2){transform:translateX(4px)}
+.project-archive-link:hover .studio-tech-chip:nth-child(3){transform:translateX(-3px)}
+
+.studio-art-ccd { background:#e8e2d8; }
+.studio-art-ccd .studio-art-camera-object { left:22%;top:25%;width:31%;transition:transform var(--motion-panel) var(--motion-ease-standard); }
+.project-archive-link:hover .studio-art-ccd .studio-art-camera-object { transform:rotate(-4deg) scale(1.04); }
+.studio-ccd-metric { position:absolute;right:9%;top:27%;display:grid;gap:3px;text-align:right; }
+.studio-ccd-metric strong { font-family:var(--rpg-font-pixel);font-size:clamp(31px,5vw,67px);line-height:1;color:#a53d32; }
+.studio-ccd-metric span { font-family:var(--rpg-font-pixel);font-size:8px; }
+.studio-ccd-tags { position:absolute;right:9%;bottom:27%;display:flex;gap:7px; }
+.studio-ccd-tags span { border:1px solid #9a8e7c;background:rgba(255,253,248,.72);padding:5px 7px;font-family:var(--rpg-font-pixel);font-size:7px; }
+
+.studio-art-visual { background:#e4e1db; }
+.studio-visual-sheet { position:absolute;inset:18% 11% 19%;display:grid;grid-template-columns:1.2fr .9fr;grid-template-rows:1fr 1fr;gap:8px;transform:rotate(-1.5deg); }
+.studio-visual-frame { position:relative;overflow:hidden;border:5px solid #f8f5ee;outline:1px solid #5b5750;background:radial-gradient(circle at 68% 34%,rgba(180,65,51,.34) 0 8%,transparent 9%),linear-gradient(135deg,#bcb9b1 0 34%,#5f625d 35% 58%,#ded9ce 59% 100%);transition:transform var(--motion-panel) var(--motion-ease-standard); }
+.studio-visual-frame:nth-child(2){background:linear-gradient(145deg,#d9d3c7 0 35%,#7a756a 36% 58%,#a74638 59% 72%,#eee9df 73%)}
+.studio-visual-frame:nth-child(3){background:radial-gradient(circle at 37% 48%,#a44839 0 14%,transparent 15%),linear-gradient(120deg,#53564f,#d5cfc4 57%,#ede9df)}
+.studio-visual-frame:nth-child(4){background:linear-gradient(165deg,#ece7dc 0 43%,#8a887f 44% 56%,#444741 57%)}
+.studio-visual-frame::after { content:attr(data-frame);position:absolute;right:5px;bottom:4px;padding:2px 4px;background:rgba(255,253,248,.8);font-family:var(--rpg-font-pixel);font-size:6px; }
+
+.studio-art-workflow { background:#e7e5dc; }
+.studio-workflow-map { position:absolute;inset:21% 10% 23%; }
+.studio-workflow-line { position:absolute;left:10%;right:10%;top:50%;height:1px;background:#a19a8d; }
+.studio-workflow-node { position:absolute;top:50%;width:68px;transform:translate(-50%,-50%);border:1px solid #68645d;background:#f7f3ea;padding:8px 5px;text-align:center;font-family:var(--rpg-font-pixel);font-size:7px;box-shadow:4px 4px 0 rgba(84,78,69,.08);transition:transform var(--motion-interaction) var(--motion-ease-standard); }
+.studio-workflow-node:nth-of-type(2){left:10%}.studio-workflow-node:nth-of-type(3){left:37%}.studio-workflow-node:nth-of-type(4){left:64%}.studio-workflow-node:nth-of-type(5){left:90%}
+.project-archive-link:hover .studio-workflow-node:nth-of-type(3){transform:translate(-50%,-58%)}
+.project-archive-link:hover .studio-workflow-node:nth-of-type(4){transform:translate(-50%,-42%)}
+
+@keyframes status-pulse { 50% { opacity:.25;transform:scale(.7) } }
+@keyframes cursor-blink { 50% { opacity:0 } }
+
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:.01ms !important;animation-iteration-count:1 !important;scroll-behavior:auto !important;transition-duration:.01ms !important; }
+  ::view-transition-old(root),::view-transition-new(root){animation:none !important}
+}
