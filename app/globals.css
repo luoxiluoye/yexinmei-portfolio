@@ -2,6 +2,7 @@
 @import "../styles/design-tokens.css";
 @import "../styles/studio.css";
 @import "../styles/motion-v2.css";
+@import "../styles/red-leaf-transition.css";
 
 @font-face {
   font-family: "Fusion Pixel 12px Proportional SC";
