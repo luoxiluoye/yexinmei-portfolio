@@ -16,51 +16,19 @@ export function PlayerSnapshot() {
         width={160}
         height={107}
         aria-hidden="true"
-        className="pointer-events-none absolute left-[1.5%] top-[40%] z-[1] w-[17%] opacity-70 [image-rendering:pixelated] sm:w-[15%]"
-      />
-      <Image
-        src={getAsset("player.snapshotCloud")}
-        alt=""
-        width={160}
-        height={107}
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[8%] top-[25%] z-[1] w-[13%] opacity-60 [image-rendering:pixelated] sm:w-[11%]"
+        className="pointer-events-none absolute left-[2%] top-[39%] z-[1] w-[15%] opacity-55 [image-rendering:pixelated]"
       />
 
-      <Image
-        src={getAsset("player.snapshotDecorCrossBlack")}
-        alt=""
-        width={24}
-        height={24}
-        aria-hidden="true"
-        className="pointer-events-none absolute left-[20%] top-[18%] z-[1] w-[3.4%] min-w-[10px] [image-rendering:pixelated]"
-      />
       <Image
         src={getAsset("player.snapshotDecorCrossRed")}
         alt=""
         width={24}
         height={24}
         aria-hidden="true"
-        className="pointer-events-none absolute left-[18%] top-[51%] z-[1] w-[4%] min-w-[12px] [image-rendering:pixelated]"
-      />
-      <Image
-        src={getAsset("player.snapshotDecorCrossRed")}
-        alt=""
-        width={24}
-        height={24}
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[18%] top-[17%] z-[1] hidden w-[3.8%] min-w-[11px] [image-rendering:pixelated] sm:block"
-      />
-      <Image
-        src={getAsset("player.snapshotDecorHeartSmall")}
-        alt=""
-        width={24}
-        height={22}
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[6%] bottom-[24%] z-[1] hidden w-[3.8%] min-w-[12px] [image-rendering:pixelated] md:block"
+        className="pointer-events-none absolute right-[16%] top-[18%] z-[1] hidden w-[3.6%] min-w-[11px] opacity-80 [image-rendering:pixelated] sm:block"
       />
 
-      <div className="absolute bottom-[9%] left-[3%] right-[2%] top-[2%] z-[2] sm:left-[5%] sm:right-[2%] sm:top-[2%] lg:left-[5%] lg:right-[2%] lg:top-[2%]">
+      <div className="absolute bottom-[8%] left-[3%] right-[1%] top-[1%] z-[2] sm:left-[5%] lg:left-[5%]">
         <img
           src={getAsset("player.snapshotPortrait")}
           alt="罗叶馨梅冬日肖像"
@@ -77,15 +45,7 @@ export function PlayerSnapshot() {
         alt="HELLO!"
         width={200}
         height={133}
-        className="absolute left-[11%] top-[29%] z-[3] w-[30%] transition-transform duration-150 group-hover:-translate-y-0.5 sm:left-[12%] sm:w-[27%] lg:w-[25%] [image-rendering:pixelated]"
-      />
-
-      <Image
-        src={getAsset("player.snapshotGoodThings")}
-        alt="GOOD THINGS AHEAD"
-        width={100}
-        height={76}
-        className="pointer-events-none absolute right-[4.5%] top-[43%] z-[3] hidden w-[15%] opacity-90 [image-rendering:pixelated] md:block lg:w-[13%]"
+        className="absolute left-[10%] top-[27%] z-[3] w-[28%] transition-transform duration-150 group-hover:-translate-y-0.5 sm:w-[25%] lg:w-[23%] [image-rendering:pixelated]"
       />
 
       <Image
@@ -93,7 +53,7 @@ export function PlayerSnapshot() {
         alt="黑色像素猫"
         width={160}
         height={160}
-        className="pointer-events-none absolute bottom-[9%] left-[3.5%] z-[3] w-[16%] min-w-[48px] max-w-[64px] [image-rendering:pixelated] sm:max-w-[78px] lg:max-w-[92px]"
+        className="pointer-events-none absolute bottom-[8%] left-[3.5%] z-[3] w-[15%] min-w-[48px] max-w-[66px] [image-rendering:pixelated] sm:max-w-[78px] lg:max-w-[88px]"
       />
 
       <Image
