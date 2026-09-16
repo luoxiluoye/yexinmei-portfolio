@@ -2,14 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { RefObject } from "react";
-import { useTransitionRouter } from "next-view-transitions";
 
 import { ACHIEVEMENTS } from "@/lib/achievements";
 import {
   ACHIEVEMENT_EVENT,
   getAchievementProgress,
   getUnlockedAchievementIds,
-  QUICK_PROFILE_EVENT,
   SAVE_FILE_EVENT,
 } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
@@ -45,8 +43,7 @@ function getFocusable(container: HTMLElement | null) {
 }
 
 export function SystemOverlays() {
-  const router = useTransitionRouter();
-  const [panel, setPanel] = useState<"save" | "quick" | null>(null);
+  const [open, setOpen] = useState(false);
   const [snapshot, setSnapshot] = useState<SaveSnapshot>(() => ({
     unlocked: new Set(),
     quests: 0,
@@ -57,37 +54,28 @@ export function SystemOverlays() {
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const close = useCallback(() => {
-    setPanel(null);
+    setOpen(false);
     window.requestAnimationFrame(() => focusSystemTrigger(returnFocusRef.current));
   }, []);
 
   useEffect(() => {
-    const rememberReturnTarget = () => {
-      returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    };
     const openSave = () => {
-      rememberReturnTarget();
+      returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
       setSnapshot(readSnapshot());
-      setPanel("save");
-    };
-    const openQuick = () => {
-      rememberReturnTarget();
-      setPanel("quick");
+      setOpen(true);
     };
     const refresh = () => setSnapshot(readSnapshot());
 
     window.addEventListener(SAVE_FILE_EVENT, openSave);
-    window.addEventListener(QUICK_PROFILE_EVENT, openQuick);
     window.addEventListener(ACHIEVEMENT_EVENT, refresh);
     return () => {
       window.removeEventListener(SAVE_FILE_EVENT, openSave);
-      window.removeEventListener(QUICK_PROFILE_EVENT, openQuick);
       window.removeEventListener(ACHIEVEMENT_EVENT, refresh);
     };
   }, []);
 
   useEffect(() => {
-    if (!panel) return;
+    if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -123,17 +111,9 @@ export function SystemOverlays() {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [close, panel]);
+  }, [close, open]);
 
-  const go = useCallback(
-    (href: string) => {
-      setPanel(null);
-      router.push(href);
-    },
-    [router]
-  );
-
-  if (!panel) return null;
+  if (!open) return null;
 
   return (
     <div
@@ -142,11 +122,7 @@ export function SystemOverlays() {
         if (event.target === event.currentTarget) close();
       }}
     >
-      {panel === "save" ? (
-        <SaveFile dialogRef={dialogRef} snapshot={snapshot} onClose={close} />
-      ) : (
-        <QuickProfile dialogRef={dialogRef} onClose={close} onGo={go} />
-      )}
+      <SaveFile dialogRef={dialogRef} snapshot={snapshot} onClose={close} />
     </div>
   );
 }
@@ -278,127 +254,5 @@ function SaveStat({ label, value }: { label: string; value: string }) {
       <dt className="font-pixel text-[9px] text-muted">{label}</dt>
       <dd className="font-pixel text-[10px]">{value}</dd>
     </div>
-  );
-}
-
-function QuickProfile({
-  dialogRef,
-  onClose,
-  onGo,
-}: {
-  dialogRef: RefObject<HTMLElement | null>;
-  onClose: () => void;
-  onGo: (href: string) => void;
-}) {
-  return (
-    <section
-      ref={dialogRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label="60 second Quick Profile"
-      className="pixel-cut-frame w-[min(840px,100%)]"
-    >
-      <div className="pixel-cut-surface max-h-[min(90dvh,760px)] overflow-y-auto bg-paper">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-border bg-paper px-4 py-3 lg:px-5">
-          <div>
-            <p className="font-pixel text-[9px] text-accent">RECRUITER MODE</p>
-            <h2 className="mt-1 font-pixel text-[16px]">QUICK PROFILE · 60 SEC</h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-11 w-11 items-center justify-center border-2 border-border bg-paper font-pixel text-[12px] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            aria-label="关闭 Quick Profile"
-          >
-            ×
-          </button>
-        </header>
-
-        <div className="p-4 lg:p-6">
-          <div className="grid gap-5 lg:grid-cols-[1fr_240px]">
-            <div>
-              <p className="font-pixel text-[11px] text-muted">YEXINMEI LUO</p>
-              <h3 className="mt-2 font-pixel-zh text-[36px] leading-tight lg:text-[44px]">罗叶馨梅</h3>
-              <p className="mt-2 font-pixel text-[11px] text-accent">CONTENT · AI PRODUCT · TECH</p>
-              <p className="mt-4 max-w-xl text-[14px] leading-7 text-muted">
-                内容运营、AI 产品与科技内容方向。现在做社区与新品运营，也独立完成了 AI 互动叙事产品「赤页 RED LEAF」，长期关注用户为什么停留、参与和继续使用。
-              </p>
-            </div>
-            <div className="border-2 border-border bg-soft p-4 text-[12px] leading-6">
-              <p><strong>BASE</strong> · 成都</p>
-              <p className="mt-2"><strong>EDU</strong> · 电子科技大学 · 新闻与传播硕士 · 2027</p>
-              <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 产品运营 / AI 产品运营 / 品牌传播</p>
-            </div>
-          </div>
-
-          <section className="mt-6 border-t-2 border-border pt-4">
-            <p className="font-pixel text-[10px] text-accent">SELECTED RESULTS</p>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
-              <QuickMetric value="0→1" label="AI 产品独立完成" />
-              <QuickMetric value="20W+" label="个人项目 GMV" />
-              <QuickMetric value="1000+" label="海外社媒内容" />
-              <QuickMetric value="8000+" label="海外账号涨粉" />
-            </div>
-          </section>
-
-          <section className="mt-6 border-t border-divider pt-4">
-            <p className="font-pixel text-[10px] text-accent">SELECTED QUESTS</p>
-            <div className="mt-3 grid gap-2 md:grid-cols-3">
-              <QuickQuest code="Q01" title="赤页 RED LEAF · AI 互动叙事产品" onClick={() => onGo("/quests/red-leaf")} />
-              <QuickQuest code="Q02" title="知乎汽车与消费电子社区内容运营" onClick={() => onGo("/quests/zhihu-auto-consumer-tech")} />
-              <QuickQuest code="Q03" title="CCD 20W+ GMV" onClick={() => onGo("/quests/ccd-business")} />
-            </div>
-          </section>
-
-          <section className="mt-6 border-t border-divider pt-4">
-            <p className="font-pixel text-[10px] text-accent">CORE SKILLS</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {["内容策划", "社区运营", "新品运营", "用户洞察", "AI 产品", "数据复盘"].map((skill) => (
-                <span key={skill} className="border border-divider bg-soft px-2.5 py-1.5 text-[12px]">{skill}</span>
-              ))}
-            </div>
-          </section>
-
-          <div className="mt-6 grid gap-2 sm:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => onGo("/quests")}
-              className="min-h-12 border-2 border-border bg-foreground px-4 font-pixel text-[11px] text-white hover:border-accent hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              VIEW ALL QUESTS →
-            </button>
-            <button
-              type="button"
-              onClick={() => onGo("/contact")}
-              className="min-h-12 border-2 border-border bg-paper px-4 font-pixel text-[11px] hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              CONTACT ME →
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function QuickMetric({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="border border-divider bg-soft p-3">
-      <strong className="block font-pixel text-[22px] text-accent">{value}</strong>
-      <span className="mt-1 block text-[11px] leading-5 text-muted">{label}</span>
-    </div>
-  );
-}
-
-function QuickQuest({ code, title, onClick }: { code: string; title: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group flex min-h-[84px] items-start gap-3 border border-divider bg-soft p-3 text-left hover:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-    >
-      <span className="font-pixel text-[9px] text-accent">{code}</span>
-      <span className="text-[13px] font-semibold leading-5 group-hover:text-accent">{title}</span>
-    </button>
   );
 }
