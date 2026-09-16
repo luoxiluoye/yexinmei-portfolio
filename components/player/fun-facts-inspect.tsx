@@ -37,18 +37,6 @@ const facts: Fact[] = [
     ],
   },
   {
-    title: "会为了一个选题翻很多资料",
-    itemTitle: "RESEARCH NOTES",
-    icon: "player.factNotes",
-    type: "WORK HABIT",
-    rarity: 4,
-    status: "ALWAYS ON",
-    story: [
-      "遇到一个想讲清楚的选题，我通常会顺着线索继续翻报道、资料和数据。",
-      "很多时候，真正有意思的角度就藏在那些看起来不起眼的细节里。",
-    ],
-  },
-  {
     title: "相机既是爱好，也是生产工具",
     itemTitle: "CAMERA KIT",
     icon: "player.factCameraKit",
@@ -113,7 +101,7 @@ export function FunFactsInspect() {
 
   return (
     <>
-      <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         {facts.map((fact, index) => (
           <button
             key={fact.title}
@@ -125,21 +113,18 @@ export function FunFactsInspect() {
               markAchievementProgress("fun-facts", String(index), facts.length, {
                 id: "know-the-player",
                 title: "KNOW THE PLAYER",
-                description: "Inspected all 5 Fun Facts items.",
+                description: "Inspected all 4 Side Quest items.",
               });
             }}
-            className="group flex min-h-[82px] w-full cursor-pointer items-center gap-3 border border-divider bg-soft px-3 py-3 text-left transition-[transform,border-color,box-shadow] duration-100 hover:-translate-x-px hover:-translate-y-px hover:border-accent hover:shadow-[2px_2px_0_rgba(17,17,17,.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="group flex min-h-[70px] w-full cursor-pointer items-center gap-3 border border-divider bg-soft px-3 py-2.5 text-left transition-[transform,border-color,box-shadow] duration-100 hover:-translate-y-px hover:border-accent hover:shadow-[2px_2px_0_rgba(17,17,17,.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             aria-haspopup="dialog"
             aria-label={`查看 ${fact.title}`}
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center">
-              <PixelIcon assetId={fact.icon} decorative width={46} height={46} className="h-auto max-h-11 w-auto max-w-11" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center">
+              <PixelIcon assetId={fact.icon} decorative width={40} height={40} className="h-auto max-h-9 w-auto max-w-9" />
             </span>
-            <span className="min-w-0 flex-1 text-[14px] leading-6">{fact.title}</span>
-            <span className="shrink-0 font-pixel text-[8px] text-accent lg:text-[9px]">
-              <span className="lg:hidden">VIEW →</span>
-              <span className="hidden lg:inline">INSPECT →</span>
-            </span>
+            <span className="min-w-0 flex-1 text-[13px] leading-5">{fact.title}</span>
+            <span className="shrink-0 font-pixel text-[8px] text-accent" aria-hidden="true">↗</span>
           </button>
         ))}
       </div>
@@ -239,7 +224,7 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
               ref={closeRef}
               type="button"
               onClick={onClose}
-              className="inline-flex min-h-10 shrink-0 cursor-pointer items-center justify-center border-2 border-border bg-paper px-3 font-pixel text-[10px] transition-[transform,border-color,color] duration-100 hover:-translate-x-px hover:-translate-y-px hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="inline-flex min-h-10 shrink-0 cursor-pointer items-center justify-center border-2 border-border bg-paper px-3 font-pixel text-[10px] transition-[transform,border-color,color] duration-100 hover:-translate-y-px hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               aria-label="关闭 Inspect Item"
             >
               CLOSE ×
@@ -248,7 +233,7 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
 
           <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 lg:px-5 lg:py-5">
             <div className="grid min-w-0 gap-5 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-6">
-              <div className="flex min-h-[190px] items-center justify-center border-2 border-border bg-soft p-5">
+              <div className="flex min-h-[190px] items-center justify-center border border-divider bg-soft p-5">
                 <PixelIcon assetId={fact.icon} decorative width={150} height={150} className="h-auto max-h-[150px] w-auto max-w-[150px]" />
               </div>
 
@@ -290,4 +275,3 @@ function FunFactModal({ fact, index, onClose }: { fact: Fact; index: number; onC
     document.body
   );
 }
-
