@@ -1,0 +1,36 @@
+@supports (view-transition-name: none) {
+  ::view-transition-group(red-leaf-hero) {
+    z-index: 60;
+    animation-duration: 520ms;
+    animation-timing-function: var(--motion-ease-emphasized);
+  }
+
+  ::view-transition-old(red-leaf-hero),
+  ::view-transition-new(red-leaf-hero) {
+    height: 100%;
+    overflow: clip;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-group(red-leaf-title) {
+    z-index: 61;
+    animation-duration: 420ms;
+    animation-timing-function: var(--motion-ease-emphasized);
+  }
+
+  ::view-transition-old(red-leaf-title),
+  ::view-transition-new(red-leaf-title) {
+    mix-blend-mode: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(red-leaf-hero),
+  ::view-transition-group(red-leaf-title),
+  ::view-transition-old(red-leaf-hero),
+  ::view-transition-new(red-leaf-hero),
+  ::view-transition-old(red-leaf-title),
+  ::view-transition-new(red-leaf-title) {
+    animation: none !important;
+  }
+}
