@@ -197,7 +197,7 @@ function SaveFile({
               </div>
               <div className="min-w-0">
                 <p className="font-pixel text-[13px]">YEXINMEI LUO</p>
-                <p className="mt-1 text-[12px] text-muted">CONTENT · COMMUNITY · TECH</p>
+                <p className="mt-1 text-[12px] text-muted">CONTENT · AI PRODUCT · TECH</p>
                 <p className="mt-3 font-pixel text-[11px] text-accent">LV.28</p>
               </div>
             </div>
@@ -319,14 +319,14 @@ function QuickProfile({
             <div>
               <p className="font-pixel text-[11px] text-muted">YEXINMEI LUO</p>
               <h3 className="mt-2 font-pixel-zh text-[36px] leading-tight lg:text-[44px]">罗叶馨梅</h3>
-              <p className="mt-2 font-pixel text-[11px] text-accent">CONTENT · COMMUNITY · TECH</p>
+              <p className="mt-2 font-pixel text-[11px] text-accent">CONTENT · AI PRODUCT · TECH</p>
               <p className="mt-4 max-w-xl text-[14px] leading-7 text-muted">
-                内容运营、新媒体与社区方向。擅长从热点判断、用户需求和内容供给出发，把选题、分发、活动与复盘串起来，也长期做科技内容、摄影和个人项目。
+                内容运营、AI 产品与科技内容方向。现在做社区与新品运营，也独立完成了 AI 互动叙事产品「赤页 RED LEAF」，长期关注用户为什么停留、参与和继续使用。
               </p>
             </div>
             <div className="border-2 border-border bg-soft p-4 text-[12px] leading-6">
               <p><strong>BASE</strong> · 成都</p>
-              <p className="mt-2"><strong>EDU</strong> · 电子科技大学 · 新闻与传播</p>
+              <p className="mt-2"><strong>EDU</strong> · 电子科技大学 · 新闻与传播硕士 · 2027</p>
               <p className="mt-2"><strong>FOCUS</strong> · 内容运营 / 产品运营 / AI 产品运营 / 品牌传播</p>
             </div>
           </div>
@@ -334,8 +334,8 @@ function QuickProfile({
           <section className="mt-6 border-t-2 border-border pt-4">
             <p className="font-pixel text-[10px] text-accent">SELECTED RESULTS</p>
             <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <QuickMetric value="0→1" label="AI 产品独立完成" />
               <QuickMetric value="20W+" label="个人项目 GMV" />
-              <QuickMetric value="50%+" label="项目利润率" />
               <QuickMetric value="1000+" label="海外社媒内容" />
               <QuickMetric value="8000+" label="海外账号涨粉" />
             </div>
@@ -344,16 +344,16 @@ function QuickProfile({
           <section className="mt-6 border-t border-divider pt-4">
             <p className="font-pixel text-[10px] text-accent">SELECTED QUESTS</p>
             <div className="mt-3 grid gap-2 md:grid-cols-3">
-              <QuickQuest code="Q01" title="知乎汽车与消费电子社区内容运营" onClick={() => onGo("/quests/zhihu-auto-consumer-tech")} />
-              <QuickQuest code="Q04" title="CCD 20W+ GMV" onClick={() => onGo("/quests/ccd-business")} />
-              <QuickQuest code="Q02" title="国际传播 / 海外社媒" onClick={() => onGo("/quests/global-content")} />
+              <QuickQuest code="Q01" title="赤页 RED LEAF · AI 互动叙事产品" onClick={() => onGo("/quests/red-leaf")} />
+              <QuickQuest code="Q02" title="知乎汽车与消费电子社区内容运营" onClick={() => onGo("/quests/zhihu-auto-consumer-tech")} />
+              <QuickQuest code="Q03" title="CCD 20W+ GMV" onClick={() => onGo("/quests/ccd-business")} />
             </div>
           </section>
 
           <section className="mt-6 border-t border-divider pt-4">
             <p className="font-pixel text-[10px] text-accent">CORE SKILLS</p>
             <div className="mt-3 flex flex-wrap gap-2">
-              {["内容策划", "社区运营", "用户洞察", "新媒体运营", "数据复盘", "AI Workflow"].map((skill) => (
+              {["内容策划", "社区运营", "新品运营", "用户洞察", "AI 产品", "数据复盘"].map((skill) => (
                 <span key={skill} className="border border-divider bg-soft px-2.5 py-1.5 text-[12px]">{skill}</span>
               ))}
             </div>
