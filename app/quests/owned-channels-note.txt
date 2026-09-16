@@ -1,0 +1,1 @@
+Owned channels section is implemented in components/quests/owned-channels.tsx and rendered from app/quests/page.tsx.
