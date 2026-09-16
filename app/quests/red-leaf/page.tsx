@@ -29,7 +29,10 @@ export default function RedLeafPage() {
       <section className="grid items-start gap-8 border-b border-divider pb-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:pb-14">
         <div className="red-leaf-detail-copy">
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FLAGSHIP PROJECT / 2026</p>
-          <h1 className="mt-4 text-[44px] font-semibold leading-[1.03] tracking-[-0.045em] sm:text-[56px] lg:text-[72px]">
+          <h1
+            className="mt-4 text-[44px] font-semibold leading-[1.03] tracking-[-0.045em] sm:text-[56px] lg:text-[72px]"
+            style={{ viewTransitionName: "red-leaf-title" }}
+          >
             赤页 <span className="text-accent">RED LEAF</span>
           </h1>
           <p className="mt-6 text-[22px] font-semibold leading-8 tracking-[-0.02em] lg:text-[28px] lg:leading-10">
@@ -50,7 +53,7 @@ export default function RedLeafPage() {
           </div>
         </div>
 
-        <ProductFrame label="RED LEAF / 知乎故事书库" transitionName="project-red-leaf" hero>
+        <ProductFrame label="RED LEAF / 知乎故事书库" transitionName="red-leaf-hero" hero>
           <Image
             src="/assets/projects/red-leaf/library.webp"
             alt="赤页 RED LEAF 知乎故事书库真实产品界面"
