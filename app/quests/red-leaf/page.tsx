@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Link } from "next-view-transitions";
 
 export const metadata: Metadata = {
@@ -49,32 +50,17 @@ export default function RedLeafPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
-          <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4 text-white">
-            <span className="font-pixel text-[9px] tracking-[0.08em]">RED LEAF / LIVE PRODUCT</span>
-            <span className="h-2 w-2 bg-[#ff424b]" />
-          </div>
-          <div className="relative aspect-[16/10] min-h-[340px] overflow-hidden bg-[#111317] lg:min-h-[470px]">
-            <iframe
-              src="https://zhihu.hegelsalon.com/"
-              title="赤页 RED LEAF 产品预览"
-              loading="eager"
-              tabIndex={-1}
-              className="pointer-events-none absolute left-0 top-0 h-[128%] w-[128%] origin-top-left border-0 opacity-95 [transform:scale(.78125)]"
-            />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0b0c0e] to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
-              <div>
-                <p className="font-pixel text-[9px] text-[#ff424b]">FEATURED STORY</p>
-                <p className="mt-1 text-[21px] font-semibold">《重生周》</p>
-                <p className="mt-1 text-[12px] text-white/60">50 决策位置 · 20 常规结局 · 8 失败结局</p>
-              </div>
-              <a href="https://zhihu.hegelsalon.com/" target="_blank" rel="noreferrer" className="pointer-events-auto border border-white/35 bg-black/40 px-3 py-2 font-pixel text-[9px] hover:border-[#ff424b] hover:text-[#ff424b]">
-                ENTER ↗
-              </a>
-            </div>
-          </div>
-        </div>
+        <ProductFrame label="RED LEAF / 知乎故事书库">
+          <Image
+            src="/assets/projects/red-leaf/library.webp"
+            alt="赤页 RED LEAF 知乎故事书库真实产品界面"
+            width={900}
+            height={469}
+            sizes="(max-width: 1023px) 100vw, 58vw"
+            className="h-auto w-full object-cover object-top"
+            priority
+          />
+        </ProductFrame>
       </section>
 
       <section className="py-10 lg:py-14">
@@ -91,7 +77,7 @@ export default function RedLeafPage() {
         </div>
       </section>
 
-      <section className="grid gap-8 border-y border-divider py-10 lg:grid-cols-2 lg:gap-14 lg:py-14">
+      <section className="grid gap-8 border-y border-divider py-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12 lg:py-14">
         <div>
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">COMPANION UX</p>
           <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">刘看山，不只是一个吉祥物</h2>
@@ -99,21 +85,59 @@ export default function RedLeafPage() {
             刘看山会贯穿原文阅读、线索整理、人物关系梳理、剧情讨论和改编过程，并通过动作、动画与隐藏彩蛋回应用户。它承担的是陪伴与引导，而不是单纯的视觉装饰。
           </p>
         </div>
+
         <div>
-          <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FEATURED STORY</p>
-          <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">《重生周》</h2>
-          <p className="mt-5 text-[15px] leading-7 text-muted">
-            屠亦娆在丧尸围校、物资耗尽后死去，再睁眼时却回到了末日发生前整整七天。玩家需要重新规划物资、寻找安全屋、建立信任并调查灾变线索；而前期留下的物资、人物关系和信息，会真正改变之后的剧情。
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2 text-[12px]">
-            <span className="border border-divider bg-soft px-3 py-2">50 个决策位置</span>
-            <span className="border border-divider bg-soft px-3 py-2">20 个常规结局</span>
-            <span className="border border-divider bg-soft px-3 py-2">8 个失败结局</span>
+          <ProductFrame label="FEATURED STORY / 《重生周》">
+            <Image
+              src="/assets/projects/red-leaf/story-modal.webp"
+              alt="赤页 RED LEAF《重生周》故事介绍真实产品界面"
+              width={900}
+              height={478}
+              sizes="(max-width: 1023px) 100vw, 62vw"
+              className="h-auto w-full object-cover object-top"
+            />
+          </ProductFrame>
+          <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+            <div className="max-w-[620px]">
+              <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">FEATURED STORY</p>
+              <h3 className="mt-2 text-[24px] font-semibold tracking-[-0.025em]">《重生周》</h3>
+              <p className="mt-3 text-[14px] leading-7 text-muted">
+                屠亦娆在丧尸围校、物资耗尽后死去，再睁眼时却回到了末日发生前整整七天。玩家需要重新规划物资、寻找安全屋、建立信任并调查灾变线索；而前期留下的物资、人物关系和信息，会真正改变之后的剧情。
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2 text-[11px] sm:max-w-[230px] sm:justify-end">
+              <span className="border border-divider bg-soft px-3 py-2">50 决策位置</span>
+              <span className="border border-divider bg-soft px-3 py-2">20 常规结局</span>
+              <span className="border border-divider bg-soft px-3 py-2">8 失败结局</span>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="py-10 lg:py-14">
+        <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">PLAYABLE EXPERIENCE</p>
+            <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">选择会留下后果</h2>
+          </div>
+          <p className="max-w-[520px] text-[13px] leading-6 text-muted sm:text-right">
+            玩家留下的物资、人物信任与剧情线索，会在后续章节继续生效，而不是一次性的选项反馈。
+          </p>
+        </div>
+
+        <ProductFrame label="GAMEPLAY / 最后几颗安眠药">
+          <Image
+            src="/assets/projects/red-leaf/gameplay.webp"
+            alt="赤页 RED LEAF《重生周》文字冒险游玩真实界面"
+            width={900}
+            height={472}
+            sizes="100vw"
+            className="h-auto w-full object-cover object-top"
+          />
+        </ProductFrame>
+      </section>
+
+      <section className="border-t border-divider py-10 lg:py-14">
         <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FROM 0 → 1</p>
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">我完成了什么</h2>
         <p className="mt-5 max-w-[900px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
@@ -136,6 +160,18 @@ export default function RedLeafPage() {
         </a>
       </section>
     </main>
+  );
+}
+
+function ProductFrame({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
+      <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4 text-white">
+        <span className="font-pixel text-[8px] tracking-[0.08em] text-white/72">{label}</span>
+        <span className="h-2 w-2 bg-[#ff424b]" aria-hidden="true" />
+      </div>
+      <div className="bg-[#111317]">{children}</div>
+    </div>
   );
 }
 
