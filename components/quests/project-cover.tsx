@@ -63,8 +63,8 @@ const coverBySlug = {
     accent: "CONTENT OS",
     descriptor: "选题 → 创作 → 发布 → 数据 → 复盘",
     metrics: [
-      { value: "AI", label: "内容工作台" },
-      { value: "FLOW", label: "运营流程整理" },
+      { value: "32", label: "内容运营字段" },
+      { value: "8", label: "看板视图" },
     ],
   },
 } as const;
