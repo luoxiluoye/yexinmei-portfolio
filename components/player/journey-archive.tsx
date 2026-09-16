@@ -29,7 +29,10 @@ export function JourneyArchive() {
   const [modalIndex, setModalIndex] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [exploreProgress, setExploreProgress] = useState(0);
-  const [playerPoint, setPlayerPoint] = useState({ x: NODE_POINTS[0].x, y: NODE_POINTS[0].y });
+  const [playerPoint, setPlayerPoint] = useState<{ x: number; y: number }>({
+    x: NODE_POINTS[0].x,
+    y: NODE_POINTS[0].y,
+  });
   const routeRef = useRef<HTMLDivElement | null>(null);
   const activePathRef = useRef<SVGPathElement | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
