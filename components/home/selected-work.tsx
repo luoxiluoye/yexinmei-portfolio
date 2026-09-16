@@ -1,7 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import { ScrollReveal } from "@/components/home/scroll-reveal";
-import { ProjectArt } from "@/components/quests/project-art";
+import { ProjectCover } from "@/components/quests/project-cover";
 import { quests } from "@/data/quests";
 
 const selections = [
@@ -54,7 +54,7 @@ export function SelectedWork() {
             <ScrollReveal key={selection.slug} className={index === 0 ? "studio-work-featured" : ""}>
               <Link href={`/quests/${selection.slug}`} className="studio-work-card" aria-label={`查看项目：${quest.title}`}>
                 <div className="studio-work-cover" style={{ viewTransitionName: `project-${selection.slug}` }}>
-                  <ProjectArt slug={selection.slug} />
+                  <ProjectCover slug={selection.slug} code={selection.number} />
                   <span className="studio-work-open" aria-hidden="true">↗</span>
                 </div>
                 <div className="studio-work-caption">
