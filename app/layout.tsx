@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | 罗叶馨梅",
   },
   description:
-    "罗叶馨梅的像素 RPG 个人作品集，聚焦内容运营、社区与科技内容。",
+    "罗叶馨梅的个人作品集，聚焦内容运营、AI 产品与科技内容，包含社区新品运营、AI 互动叙事产品与个人项目。",
   alternates: {
     canonical: "/",
   },
@@ -46,8 +46,8 @@ export const metadata: Metadata = {
     locale: "zh_CN",
     url: siteUrl,
     siteName: "YEXINMEI LUO",
-    title: "罗叶馨梅 | Content · Community · Tech",
-    description: "内容运营 × 社区 × 科技内容。一个轻复古 Pixel RPG 风格的个人作品集。",
+    title: "罗叶馨梅 | Content · AI Product · Tech",
+    description: "内容运营 × AI 产品 × 科技内容。社区、新品、互动叙事与个人项目作品集。",
     images: [
       {
         url: "/opengraph-image",
@@ -59,8 +59,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "罗叶馨梅 | Content · Community · Tech",
-    description: "内容运营 × 社区 × 科技内容。",
+    title: "罗叶馨梅 | Content · AI Product · Tech",
+    description: "内容运营 × AI 产品 × 科技内容。",
     images: ["/opengraph-image"],
   },
 };
