@@ -28,7 +28,7 @@ export function AboutPreview() {
         <div className="studio-about-copy">
           <p className="studio-kicker"><span>03 /</span> A LITTLE ABOUT ME</p>
           <h2 id="about-preview-title">工作之外，<br />还有很多个我。</h2>
-          <p>从内容、社区到 AI 产品，我一直在研究人为什么会停下来、愿意继续，以及一个想法怎样真正落地。</p>
+          <p>从内容、社区到 AI 产品，我一直在研究人为什么会停下来、愿意继续，以及一个想法怎样真正做成可以使用的东西。</p>
           <p>拿起相机记录日常，打开工作台折腾新工具，也会把一些突发奇想真的做成网站、内容和小产品。</p>
           <div className="studio-about-tags">
             <span>内容观察者</span>
