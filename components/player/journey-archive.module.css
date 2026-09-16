@@ -1,0 +1,196 @@
+.routeViewport {
+  overflow-x: auto;
+  padding: 12px 0 18px;
+  scrollbar-width: none;
+}
+
+.routeViewport::-webkit-scrollbar {
+  display: none;
+}
+
+.routeStage {
+  position: relative;
+  min-width: 720px;
+  height: 182px;
+}
+
+.routeSvg {
+  position: absolute;
+  inset: 12px 0 34px;
+  width: 100%;
+  height: 124px;
+  overflow: visible;
+}
+
+.routeBase,
+.routeActive {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.routeBase {
+  stroke: var(--rpg-color-divider);
+  stroke-width: 1.4;
+}
+
+.routeActive {
+  stroke: var(--rpg-color-red);
+  stroke-width: 2.2;
+  stroke-linecap: square;
+  transition: stroke-dashoffset 140ms linear;
+}
+
+.node {
+  position: absolute;
+  width: 104px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 4;
+}
+
+.nodeButton {
+  position: relative;
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--rpg-color-divider);
+  background: var(--rpg-color-bg);
+  color: var(--rpg-color-text-2);
+  font-family: var(--rpg-font-pixel);
+  font-size: 9px;
+  cursor: pointer;
+  transition:
+    transform var(--motion-interaction) var(--motion-ease-standard),
+    border-color var(--motion-interaction) ease,
+    background-color var(--motion-interaction) ease,
+    color var(--motion-interaction) ease,
+    box-shadow var(--motion-interaction) ease;
+}
+
+.nodeButton:hover,
+.nodeButton:focus-visible {
+  border-color: var(--rpg-color-red);
+  color: var(--rpg-color-red);
+  transform: translateY(-3px) scale(1.03);
+  outline: none;
+  box-shadow: 3px 3px 0 rgba(17, 17, 17, .08);
+}
+
+.unlocked .nodeButton {
+  border-color: var(--rpg-color-text);
+  color: var(--rpg-color-text);
+  background: var(--rpg-color-surface);
+}
+
+.selected .nodeButton {
+  border-color: var(--rpg-color-text);
+  background: var(--rpg-color-text);
+  color: white;
+  transform: translateY(-4px) scale(1.06);
+  box-shadow: 4px 4px 0 rgba(191, 56, 43, .16);
+}
+
+.nodeLabel {
+  display: block;
+  margin-top: 10px;
+  color: var(--rpg-color-text-2);
+  font-size: 11px;
+  line-height: 16px;
+  transition: color var(--motion-interaction) ease, transform var(--motion-interaction) var(--motion-ease-standard);
+}
+
+.unlocked .nodeLabel {
+  color: var(--rpg-color-text);
+}
+
+.selected .nodeLabel {
+  color: var(--rpg-color-red);
+  transform: translateY(-1px);
+  font-weight: 600;
+}
+
+.currentTag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  width: max-content;
+  color: var(--rpg-color-red);
+  font-family: var(--rpg-font-pixel);
+  font-size: 7px;
+  letter-spacing: .06em;
+}
+
+.current .nodeButton::after {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(191, 56, 43, .35);
+  animation: currentPulse 1.8s ease-in-out infinite;
+}
+
+.playerMarker {
+  position: absolute;
+  z-index: 6;
+  width: 42px;
+  height: 42px;
+  transform: translate(-50%, -118%);
+  pointer-events: none;
+  transition: left 140ms linear, top 140ms linear;
+  filter: drop-shadow(2px 3px 0 rgba(17, 17, 17, .08));
+}
+
+.playerMarker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.progressMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: -6px;
+  color: var(--rpg-color-text-2);
+  font-family: var(--rpg-font-pixel);
+  font-size: 8px;
+  letter-spacing: .06em;
+}
+
+.detailCard {
+  animation: detailIn 360ms var(--motion-ease-emphasized) both;
+}
+
+@keyframes currentPulse {
+  0%, 100% { opacity: .25; transform: scale(.94); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes detailIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767px) {
+  .routeStage {
+    min-width: 690px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .routeActive,
+  .playerMarker,
+  .nodeButton,
+  .nodeLabel,
+  .detailCard {
+    transition: none;
+    animation: none;
+  }
+
+  .current .nodeButton::after {
+    animation: none;
+  }
+}
