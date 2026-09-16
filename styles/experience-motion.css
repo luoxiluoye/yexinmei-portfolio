@@ -1,16 +1,4 @@
-/* Red Leaf shared transition and the two rebuilt interactive sections. */
-::view-transition-group(project-red-leaf) {
-  animation-duration: 560ms;
-  animation-timing-function: cubic-bezier(.16,1,.3,1);
-  z-index: 60;
-}
-
-::view-transition-old(project-red-leaf),
-::view-transition-new(project-red-leaf) {
-  animation-timing-function: cubic-bezier(.16,1,.3,1);
-  mix-blend-mode: normal;
-}
-
+/* Shared page motion and rebuilt interactive sections. */
 ::view-transition-old(rpg-page) {
   animation: experience-page-out 220ms ease-in both;
 }
@@ -88,9 +76,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(rpg-page),
-  ::view-transition-new(rpg-page),
-  ::view-transition-old(project-red-leaf),
-  ::view-transition-new(project-red-leaf) {
+  ::view-transition-new(rpg-page) {
     animation: none !important;
   }
 
