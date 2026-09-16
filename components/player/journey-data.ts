@@ -58,7 +58,7 @@ export const memories: Memory[] = [
     icon: "player.journeyContent",
     summary: [
       "继续做内容、热点和账号，也开始接触更多行业与不同形态的内容项目。",
-      "我越来越习惯把选题、生产、分发和复盘看成一条完整的内容链路。",
+      "我越来越习惯把选题、生产、分发和复盘看成一个完整的内容过程。",
     ],
     abilities: [
       { title: "内容策划", detail: "选题与内容结构", icon: "player.journeyContent" },
@@ -89,7 +89,7 @@ export const memories: Memory[] = [
       "从卖闲置 CCD 开始，慢慢做出了一个累计 GMV 20W+ 的小生意。",
     ],
     abilities: [
-      { title: "独立运营", detail: "从想法到执行自己跑通", icon: "player.journeySidequest" },
+      { title: "独立运营", detail: "从想法到执行完整完成", icon: "player.journeySidequest" },
       { title: "20W+ GMV", detail: "把兴趣做成真实交易", icon: "player.factCcd" },
       { title: "摄影创作", detail: "相机也是我的生产工具", icon: "player.factCameraKit" },
     ],
@@ -106,8 +106,7 @@ export const memories: Memory[] = [
     abilities: [
       { title: "持续学习", detail: "保持好奇，每天进步一点", icon: "items.notebook" },
       { title: "社区连接", detail: "倾听与分享，一起创造价值", icon: "ui.heart" },
-      { title: "内容实践", detail: "从想法到落地，解决真实问题", icon: "items.sword" },
+      { title: "内容实践", detail: "从想法到成品，解决真实问题", icon: "items.sword" },
     ],
   },
 ];
-
