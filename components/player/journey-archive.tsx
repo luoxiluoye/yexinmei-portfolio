@@ -1,17 +1,94 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import styles from "@/components/player/journey-archive.module.css";
 import { memories } from "@/components/player/journey-data";
 import { JourneyMemoryModal } from "@/components/player/journey-memory-modal";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { markAchievementProgress, unlockAchievement } from "@/lib/rpg-events";
 
+const NODE_POINTS = [
+  { x: 6, y: 54 },
+  { x: 20, y: 42 },
+  { x: 34, y: 56 },
+  { x: 49, y: 38 },
+  { x: 64, y: 52 },
+  { x: 79, y: 34 },
+  { x: 94, y: 48 },
+] as const;
+
+const ROUTE_PATH = "M6 54 C12 42 15 39 20 42 S28 60 34 56 S43 32 49 38 S57 58 64 52 S72 29 79 34 S88 55 94 48";
+
+function clampProgress(value: number) {
+  return Math.min(1, Math.max(0, value));
+}
+
+function getRoutePoint(progress: number) {
+  const scaled = clampProgress(progress) * (NODE_POINTS.length - 1);
+  const index = Math.min(Math.floor(scaled), NODE_POINTS.length - 2);
+  const local = scaled - index;
+  const start = NODE_POINTS[index];
+  const end = NODE_POINTS[index + 1];
+
+  return {
+    x: start.x + (end.x - start.x) * local,
+    y: start.y + (end.y - start.y) * local,
+  };
+}
+
 export function JourneyArchive() {
-  const [selectedIndex, setSelectedIndex] = useState(4);
+  const currentIndex = useMemo(() => {
+    const index = memories.findIndex((memory) => memory.current);
+    return index >= 0 ? index : memories.length - 1;
+  }, []);
+  const [selectedIndex, setSelectedIndex] = useState(currentIndex);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [exploreProgress, setExploreProgress] = useState(0);
+  const routeRef = useRef<HTMLDivElement | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const restoreFocusRef = useRef(false);
+
+  const routeProgress = Math.max(scrollProgress, exploreProgress);
+  const playerPoint = getRoutePoint(routeProgress);
+
+  useEffect(() => {
+    const route = routeRef.current;
+    if (!route) return;
+
+    let frame = 0;
+
+    const updateProgress = () => {
+      frame = 0;
+      const rect = route.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const start = viewportHeight * 0.84;
+      const end = viewportHeight * 0.34;
+      const next = clampProgress((start - rect.top) / (start - end));
+      setScrollProgress(next);
+    };
+
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+    };
+  }, []);
+
+  const selectMemory = useCallback((index: number) => {
+    setSelectedIndex(index);
+    setExploreProgress((current) => Math.max(current, index / (memories.length - 1)));
+  }, []);
 
   const openMemory = useCallback((index: number, trigger: HTMLButtonElement) => {
     restoreFocusRef.current = false;
@@ -50,50 +127,65 @@ export function JourneyArchive() {
     setModalIndex((current) => {
       if (current === null) return null;
       const next = (current + delta + memories.length) % memories.length;
-      setSelectedIndex(next);
+      selectMemory(next);
       return next;
     });
-  }, []);
+  }, [selectMemory]);
 
   const active = memories[selectedIndex];
   const modalMemory = modalIndex === null ? null : memories[modalIndex];
 
   return (
     <div className="min-w-0">
-      <div className="no-scrollbar overflow-x-auto pb-2">
-        <div className="relative min-w-[680px]">
-          <div aria-hidden="true" className="absolute left-[6%] right-[6%] top-5 h-px bg-divider" />
-          <ol className="relative z-10 grid grid-cols-7 gap-2">
+      <div ref={routeRef} className={styles.routeViewport} aria-label="成长路径">
+        <div className={styles.routeStage}>
+          <svg className={styles.routeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <path className={styles.routeBase} d={ROUTE_PATH} />
+            <path
+              className={styles.routeActive}
+              d={ROUTE_PATH}
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={1 - routeProgress}
+            />
+          </svg>
+
+          <div
+            className={styles.playerMarker}
+            style={{ left: `${playerPoint.x}%`, top: `${playerPoint.y}%` }}
+            aria-hidden="true"
+          >
+            <PixelIcon assetId="character.avatar" decorative width={42} height={42} />
+          </div>
+
+          <ol>
             {memories.map((memory, index) => {
               const selected = index === selectedIndex;
+              const unlocked = routeProgress + 0.035 >= index / (memories.length - 1);
+              const point = NODE_POINTS[index];
+
               return (
-                <li key={memory.title} className="min-w-0 text-center">
+                <li
+                  key={memory.title}
+                  className={[
+                    styles.node,
+                    unlocked ? styles.unlocked : "",
+                    selected ? styles.selected : "",
+                    memory.current ? styles.current : "",
+                  ].join(" ")}
+                  style={{ left: `${point.x}%`, top: `${point.y}%` }}
+                >
+                  {memory.current ? <span className={styles.currentTag}>YOU ARE HERE</span> : null}
                   <button
                     type="button"
-                    onClick={() => setSelectedIndex(index)}
-                    className="group flex w-full cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    onClick={() => selectMemory(index)}
+                    className={styles.nodeButton}
                     aria-pressed={selected}
                     aria-label={`查看 ${memory.title}`}
                   >
-                    <span
-                      className={[
-                        "flex h-10 w-10 items-center justify-center border-2 font-pixel text-[9px] transition-[transform,border-color,background-color,color] duration-100 group-hover:-translate-y-px",
-                        selected
-                          ? "border-foreground bg-foreground text-white"
-                          : "border-divider bg-background text-muted group-hover:border-accent group-hover:text-accent",
-                      ].join(" ")}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={[
-                        "mt-3 max-w-[86px] text-[12px] leading-[18px]",
-                        selected ? "font-semibold text-foreground" : "text-muted",
-                      ].join(" ")}
-                    >
-                      {memory.title}
-                    </span>
+                    {String(index + 1).padStart(2, "0")}
                   </button>
+                  <span className={styles.nodeLabel}>{memory.title}</span>
                 </li>
               );
             })}
@@ -101,7 +193,16 @@ export function JourneyArchive() {
         </div>
       </div>
 
-      <article className="mt-6 grid gap-6 border-y border-divider py-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 lg:py-8">
+      <div className={styles.progressMeta} aria-hidden="true">
+        <span>START / MEDIA</span>
+        <span>SCROLL TO UNLOCK · CLICK TO EXPLORE</span>
+        <span>NOW / 07</span>
+      </div>
+
+      <article
+        key={selectedIndex}
+        className={`${styles.detailCard} mt-6 grid gap-6 border-y border-divider py-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 lg:py-8`}
+      >
         <div className="flex items-start gap-4 lg:block">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-divider bg-soft lg:h-16 lg:w-16">
             <PixelIcon assetId={active.icon} decorative width={46} height={46} className="h-10 w-10" />
@@ -110,7 +211,7 @@ export function JourneyArchive() {
             <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">{String(selectedIndex + 1).padStart(2, "0")}</p>
             <p className="mt-1 font-pixel text-[10px] text-muted">{active.time}</p>
             {active.current ? (
-              <span className="mt-3 inline-flex border border-accent px-2 py-1 font-pixel text-[8px] text-accent">CURRENT</span>
+              <span className="mt-3 inline-flex border border-accent px-2 py-1 font-pixel text-[8px] text-accent">CURRENT · YOU ARE HERE</span>
             ) : null}
           </div>
         </div>
@@ -142,12 +243,6 @@ export function JourneyArchive() {
           </button>
         </div>
       </article>
-
-      <div className="mt-3 flex items-center justify-between font-pixel text-[8px] tracking-[0.06em] text-muted">
-        <span>START / MEDIA</span>
-        <span>CONTENT · COMMUNITY · BUILD</span>
-        <span>NOW / 07</span>
-      </div>
 
       {modalMemory && modalIndex !== null ? (
         <JourneyMemoryModal
