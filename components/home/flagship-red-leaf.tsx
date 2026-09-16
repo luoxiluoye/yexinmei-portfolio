@@ -49,10 +49,10 @@ export function FlagshipRedLeaf() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
-                href="/quests"
+                href="/quests/red-leaf"
                 className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[10px] text-white transition-[transform,border-color,background-color] duration-100 hover:-translate-y-px hover:border-accent hover:bg-accent"
               >
-                查看项目整理 →
+                查看完整案例 →
               </Link>
               <a
                 href="https://zhihu.hegelsalon.com/"
