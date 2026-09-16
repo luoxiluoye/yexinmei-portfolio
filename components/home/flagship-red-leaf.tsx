@@ -26,7 +26,11 @@ export function FlagshipRedLeaf() {
       <div className="grid items-start gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-12 xl:gap-16">
         <ScrollReveal>
           <div className="max-w-[560px]">
-            <h2 id="red-leaf-title" className="text-[38px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[46px] lg:text-[58px]">
+            <h2
+              id="red-leaf-title"
+              className="text-[38px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[46px] lg:text-[58px]"
+              style={{ viewTransitionName: "red-leaf-title" }}
+            >
               赤页 <span className="text-accent">RED LEAF</span>
             </h2>
             <p className="mt-5 text-[22px] font-semibold leading-8 tracking-[-0.02em] lg:text-[26px] lg:leading-9">
@@ -70,7 +74,10 @@ export function FlagshipRedLeaf() {
         <ScrollReveal>
           <div className="relative">
             <div className="absolute -bottom-3 -right-3 h-full w-full bg-accent/80" aria-hidden="true" />
-            <div className="red-leaf-stage relative overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]" style={{ viewTransitionName: "project-red-leaf" }}>
+            <div
+              className="red-leaf-stage relative overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]"
+              style={{ viewTransitionName: "red-leaf-hero" }}
+            >
               <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4 text-white">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 bg-accent" />
