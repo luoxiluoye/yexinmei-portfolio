@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import styles from "@/components/player/journey-archive.module.css";
 import { memories } from "@/components/player/journey-data";
@@ -38,11 +38,7 @@ function getRoutePoint(progress: number) {
 }
 
 export function JourneyArchive() {
-  const currentIndex = useMemo(() => {
-    const index = memories.findIndex((memory) => memory.current);
-    return index >= 0 ? index : memories.length - 1;
-  }, []);
-  const [selectedIndex, setSelectedIndex] = useState(currentIndex);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [exploreProgress, setExploreProgress] = useState(0);
