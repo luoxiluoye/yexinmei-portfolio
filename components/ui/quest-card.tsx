@@ -1,7 +1,7 @@
 import { Link } from "next-view-transitions";
 
 import type { Quest } from "@/types/quest";
-import { ProjectArt } from "@/components/quests/project-art";
+import { ProjectCover } from "@/components/quests/project-cover";
 import "@/styles/project-list.css";
 
 export function QuestCard({ quest }: { quest: Quest }) {
@@ -11,7 +11,7 @@ export function QuestCard({ quest }: { quest: Quest }) {
     <article className="project-archive-card" aria-labelledby={titleId}>
       <Link href={`/quests/${quest.slug}`} className="project-archive-link" aria-labelledby={titleId}>
         <div className="project-archive-cover" style={{ viewTransitionName: `project-${quest.slug}` }}>
-          <ProjectArt slug={quest.slug} />
+          <ProjectCover slug={quest.slug} code={quest.code} />
           <span className="project-archive-open" aria-hidden="true">↗</span>
         </div>
         <div className="project-archive-copy">
