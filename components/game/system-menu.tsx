@@ -7,7 +7,6 @@ import { useTransitionRouter } from "next-view-transitions";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { focusSystemTrigger } from "@/lib/system-focus";
 import {
-  openQuickProfile,
   openSaveFile,
   SYSTEM_MENU_EVENT,
 } from "@/lib/rpg-events";
@@ -20,19 +19,6 @@ const quickTravel = [
   { code: "05", label: "JOURNAL", subtitle: "笔记与记录", href: "/journal", keywords: ["文章", "笔记", "journal"] },
   { code: "06", label: "CONTACT", subtitle: "找到我", href: "/contact", keywords: ["联系", "微信", "邮箱", "contact"] },
 ] as const;
-
-function copyFallback(value: string) {
-  const textarea = document.createElement("textarea");
-  textarea.value = value;
-  textarea.setAttribute("readonly", "");
-  textarea.style.position = "fixed";
-  textarea.style.opacity = "0";
-  document.body.appendChild(textarea);
-  textarea.select();
-  const copied = document.execCommand("copy");
-  document.body.removeChild(textarea);
-  return copied;
-}
 
 export function SystemMenu() {
   const router = useTransitionRouter();
@@ -83,11 +69,9 @@ export function SystemMenu() {
     wasOpenRef.current = open;
     if (open || !wasOpen) return;
 
-    // cmdk has no Dialog.Trigger: wait for Radix's unmount autofocus to finish.
     let frame = 0;
     const timer = window.setTimeout(() => {
       frame = window.requestAnimationFrame(() => {
-        // Quick Profile / Save File own focus after a palette action opens them.
         const nextDialog = Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"][aria-modal="true"]'))
           .some((dialog) => dialog.getClientRects().length > 0);
         if (!nextDialog) focusSystemTrigger(returnFocusRef.current);
@@ -104,18 +88,8 @@ export function SystemMenu() {
   }, [open]);
 
   const copyWechat = async () => {
-    let success = false;
-    try {
-      await navigator.clipboard.writeText("luoxiluoye");
-      success = true;
-    } catch {
-      try {
-        success = copyFallback("luoxiluoye");
-      } catch {
-        success = false;
-      }
-    }
-    setCopied(success);
+    await navigator.clipboard.writeText("luoxiluoye");
+    setCopied(true);
   };
 
   return (
@@ -177,19 +151,6 @@ export function SystemMenu() {
                 <span className="min-w-0 flex-1">
                   <span className="block font-pixel text-[10px]">SAVE FILE</span>
                   <span className="block text-[11px] text-muted">探索进度与成就图鉴</span>
-                </span>
-                <span aria-hidden="true" className="font-pixel text-[9px] text-muted">→</span>
-              </Command.Item>
-              <Command.Item
-                value="Quick Profile 60 sec recruiter resume summary"
-                keywords={["60秒", "快速", "招聘", "hr", "resume", "summary"]}
-                onSelect={() => openSystemPanel(openQuickProfile)}
-                className="rpg-command-item"
-              >
-                <PixelIcon assetId="ui.sparkle" decorative width={20} height={20} className="h-5 w-5 shrink-0" />
-                <span className="min-w-0 flex-1">
-                  <span className="block font-pixel text-[10px]">QUICK PROFILE · 60 SEC</span>
-                  <span className="block text-[11px] text-muted">给招聘方的快速阅读模式</span>
                 </span>
                 <span aria-hidden="true" className="font-pixel text-[9px] text-muted">→</span>
               </Command.Item>
