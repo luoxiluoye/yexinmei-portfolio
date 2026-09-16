@@ -3,6 +3,7 @@ import { Pixelify_Sans } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
+import "@/styles/motion-v2.css";
 
 import { AchievementToaster } from "@/components/game/achievement-toaster";
 import { SystemMenu } from "@/components/game/system-menu";
@@ -84,4 +85,3 @@ export default function RootLayout({
     </ViewTransitions>
   );
 }
-
