@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Link } from "next-view-transitions";
 
 import { QuestExplorer } from "@/components/quests/quest-explorer";
@@ -81,70 +82,32 @@ export default function QuestsPage() {
               <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 bg-[#ff424b]" />
-                  <span className="font-pixel text-[8px] tracking-[0.09em] text-white/72">RED LEAF / PRODUCT VIEW</span>
+                  <span className="font-pixel text-[8px] tracking-[0.09em] text-white/72">RED LEAF / REAL PRODUCT</span>
                 </div>
-                <span className="font-pixel text-[8px] text-white/32">STORY → PLAYABLE WORLD</span>
+                <span className="font-pixel text-[8px] text-white/32">知乎故事书库</span>
               </div>
 
-              <div className="grid min-h-[360px] grid-cols-[86px_minmax(0,1fr)] sm:grid-cols-[112px_minmax(0,1fr)] lg:min-h-[430px]">
-                <aside className="border-r border-white/10 bg-[#0d0e10] p-3 sm:p-4">
-                  <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 bg-[#e6323f] sm:h-10 sm:w-10" aria-hidden="true" />
-                    <div className="hidden sm:block">
-                      <p className="font-pixel text-[8px] text-white">赤页</p>
-                      <p className="mt-0.5 font-pixel text-[6px] text-white/38">RED LEAF</p>
-                    </div>
+              <div className="relative overflow-hidden bg-[#111317]">
+                <Image
+                  src="/assets/projects/red-leaf/library.webp"
+                  alt="赤页 RED LEAF 知乎故事书库真实产品界面"
+                  width={900}
+                  height={469}
+                  sizes="(max-width: 1023px) 100vw, 58vw"
+                  className="h-auto w-full object-cover object-top"
+                  priority
+                />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="font-pixel text-[8px] text-[#ff5963]">REAL PRODUCT SCREENSHOT</p>
+                    <p className="mt-1 text-[15px] font-medium text-white sm:text-[18px]">知乎故事书库 · 《重生周》</p>
                   </div>
-                  <div className="mt-8 space-y-5 font-pixel text-[7px] leading-4 text-white/30 sm:text-[8px]">
-                    <p className="text-[#ff5963]">知乎故事书库</p>
-                    <p>新故事工作台</p>
-                    <p>我的存档</p>
-                    <p>结局档案</p>
-                  </div>
-                  <div className="mt-8 h-px bg-white/10" />
-                  <p className="mt-4 hidden text-[8px] leading-4 text-white/24 sm:block">原作在这里，下一步由你。</p>
-                </aside>
-
-                <div className="relative overflow-hidden p-5 sm:p-7 lg:p-8">
-                  <div className="flex items-start justify-between gap-5">
-                    <div>
-                      <p className="font-pixel text-[7px] tracking-[0.1em] text-white/30">ZHIHU STORIES / RED LEAF EDITION</p>
-                      <h3 className="mt-3 text-[24px] font-semibold tracking-[-0.035em] sm:text-[30px] lg:text-[34px]">知乎故事书库<span className="text-[#ff424b]">。</span></h3>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-pixel text-[22px] text-white sm:text-[28px]">21</p>
-                      <p className="text-[10px] text-white/35">篇原作</p>
-                    </div>
-                  </div>
-
-                  <div className="relative mt-7 overflow-hidden border border-white/10 bg-[#16181b] p-5 sm:p-6 lg:p-7">
-                    <div className="absolute inset-y-0 right-0 w-[43%] bg-[radial-gradient(circle_at_60%_42%,rgba(255,255,255,.15),transparent_30%),linear-gradient(135deg,#283039,#121417_70%)]" aria-hidden="true" />
-                    <div className="absolute bottom-0 right-[6%] h-[72%] w-[30%] border-l border-white/10 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,.025))]" aria-hidden="true" />
-                    <div className="relative z-10 max-w-[68%]">
-                      <p className="font-pixel text-[8px] text-[#76aaff]">知乎 / 原作精选</p>
-                      <h4 className="mt-5 text-[20px] font-semibold leading-7 tracking-[-0.025em] sm:text-[24px] sm:leading-8 lg:text-[27px]">
-                        末日的45度角躺平：<br className="hidden sm:block" />重生周
-                      </h4>
-                      <p className="mt-4 max-w-[420px] text-[11px] leading-5 text-white/45 sm:text-[12px] sm:leading-6">
-                        重回改变前七天，你能否留住身边的人？阅读剧情、选择分支，走向属于你的结局。
-                      </p>
-                      <div className="mt-5 inline-flex min-h-9 items-center bg-[#ef3340] px-3 font-pixel text-[8px] text-white">
-                        翻开这个故事 →
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
-                    <div>
-                      <p className="font-pixel text-[7px] text-[#ff5963]">FEATURED STORY</p>
-                      <p className="mt-1 text-[13px] font-medium">《重生周》</p>
-                    </div>
-                    <p className="text-[10px] text-white/35">50 个决策位置 · 20 个常规结局 · 8 个失败结局</p>
-                  </div>
+                  <span className="hidden font-pixel text-[8px] text-white/45 sm:block">50 决策位置 · 28 个结局</span>
                 </div>
               </div>
             </div>
-            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">INTERFACE OVERVIEW · LIVE PRODUCT AVAILABLE</p>
+            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">REAL INTERFACE · RED LEAF ARCHIVE</p>
           </div>
         </div>
       </section>
