@@ -4,6 +4,7 @@ import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
 import "@/styles/experience-motion.css";
+import "@/styles/red-leaf-transition.css";
 
 import { AchievementToaster } from "@/components/game/achievement-toaster";
 import { SystemMenu } from "@/components/game/system-menu";
