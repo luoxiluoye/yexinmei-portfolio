@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Link } from "next-view-transitions";
 
 import { ScrollReveal } from "@/components/home/scroll-reveal";
@@ -67,42 +68,46 @@ export function FlagshipRedLeaf() {
         </ScrollReveal>
 
         <ScrollReveal>
-          <div className="overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
-            <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4 text-white">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 bg-accent" />
-                <span className="font-pixel text-[9px] tracking-[0.08em]">RED LEAF / LIVE PRODUCT</span>
-              </div>
-              <span className="font-pixel text-[8px] text-white/45">STORY → PLAYABLE WORLD</span>
-            </div>
-            <div className="relative aspect-[16/10] min-h-[320px] overflow-hidden bg-[#111317] sm:min-h-[390px] lg:min-h-[430px]">
-              <iframe
-                src="https://zhihu.hegelsalon.com/"
-                title="赤页 RED LEAF 产品预览"
-                loading="lazy"
-                tabIndex={-1}
-                className="pointer-events-none absolute left-0 top-0 h-[128%] w-[128%] origin-top-left border-0 opacity-95 [transform:scale(.78125)]"
-              />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0b0c0e] to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
-                <div>
-                  <p className="font-pixel text-[9px] text-[#ff424b]">FEATURED STORY</p>
-                  <p className="mt-1 text-[18px] font-semibold sm:text-[22px]">《重生周》</p>
-                  <p className="mt-1 text-[12px] text-white/60">50 个决策位置 · 20 个常规结局 · 8 个失败结局</p>
+          <div className="relative">
+            <div className="absolute -bottom-3 -right-3 h-full w-full bg-accent/80" aria-hidden="true" />
+            <div className="relative overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
+              <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4 text-white">
+                <div className="flex items-center gap-2">
+                  <span className="h-2 w-2 bg-accent" />
+                  <span className="font-pixel text-[9px] tracking-[0.08em]">RED LEAF / REAL PRODUCT</span>
                 </div>
-                <a
-                  href="https://zhihu.hegelsalon.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="pointer-events-auto shrink-0 border border-white/35 bg-black/40 px-3 py-2 font-pixel text-[9px] transition-colors hover:border-[#ff424b] hover:text-[#ff424b]"
-                >
-                  ENTER ↗
-                </a>
+                <span className="font-pixel text-[8px] text-white/45">STORY → PLAYABLE WORLD</span>
+              </div>
+              <div className="relative overflow-hidden bg-[#111317]">
+                <Image
+                  src="/assets/projects/red-leaf/library.webp"
+                  alt="赤页 RED LEAF 知乎故事书库真实产品界面"
+                  width={900}
+                  height={469}
+                  sizes="(max-width: 1023px) 100vw, 58vw"
+                  className="h-auto w-full object-cover object-top"
+                />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
+                  <div>
+                    <p className="font-pixel text-[9px] text-[#ff424b]">REAL PRODUCT SCREENSHOT</p>
+                    <p className="mt-1 text-[18px] font-semibold sm:text-[22px]">《重生周》</p>
+                    <p className="mt-1 text-[12px] text-white/60">50 个决策位置 · 20 个常规结局 · 8 个失败结局</p>
+                  </div>
+                  <a
+                    href="https://zhihu.hegelsalon.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="shrink-0 border border-white/35 bg-black/40 px-3 py-2 font-pixel text-[9px] transition-colors hover:border-[#ff424b] hover:text-[#ff424b]"
+                  >
+                    ENTER ↗
+                  </a>
+                </div>
               </div>
             </div>
           </div>
           <p className="mt-3 text-[11px] leading-5 text-muted">
-            上方为实时产品预览；若浏览器限制嵌入，可直接点击「在线体验」。
+            真实产品截图；点击「在线体验」可进入当前版本。
           </p>
         </ScrollReveal>
       </div>
