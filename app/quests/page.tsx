@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 
+import { OwnedChannels } from "@/components/quests/owned-channels";
 import { QuestExplorer } from "@/components/quests/quest-explorer";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { quests } from "@/data/quests";
@@ -76,15 +77,15 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          <a
-            href="https://zhihu.hegelsalon.com/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="打开赤页 RED LEAF 在线体验"
-            className="group relative block cursor-pointer lg:pl-2"
-          >
-            <div className="absolute -bottom-3 -right-3 h-full w-full bg-[#ef3340] opacity-70 transition-transform duration-200 group-hover:translate-x-1 group-hover:translate-y-1" aria-hidden="true" />
-            <div className="relative overflow-hidden border border-white/15 bg-[#111317] shadow-[0_30px_80px_rgba(0,0,0,.35)] transition-[transform,border-color,box-shadow] duration-200 group-hover:-translate-y-1 group-hover:border-[#ff424b]/80 group-hover:shadow-[0_36px_90px_rgba(0,0,0,.45)]">
+          <div className="relative lg:pl-2">
+            <div className="absolute -bottom-3 -right-3 h-full w-full bg-[#ef3340] opacity-70" aria-hidden="true" />
+            <a
+              href="https://zhihu.hegelsalon.com/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="进入赤页 RED LEAF 在线产品"
+              className="group relative block overflow-hidden border border-white/15 bg-[#111317] shadow-[0_30px_80px_rgba(0,0,0,.35)] transition-transform duration-150 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff424b] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0b0c0e]"
+            >
               <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 bg-[#ff424b]" />
@@ -104,9 +105,9 @@ export default function QuestsPage() {
                   priority
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
-                <span className="pointer-events-none absolute right-4 top-4 z-10 border border-white/20 bg-black/70 px-3 py-2 font-pixel text-[8px] text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
+                <div className="pointer-events-none absolute right-4 top-4 translate-y-1 bg-[#ff424b] px-3 py-2 font-pixel text-[8px] text-white opacity-0 transition-[opacity,transform] duration-150 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
                   进入赤页 ↗
-                </span>
+                </div>
                 <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
                   <div>
                     <p className="font-pixel text-[8px] text-[#ff5963]">REAL PRODUCT SCREENSHOT</p>
@@ -115,11 +116,13 @@ export default function QuestsPage() {
                   <span className="hidden font-pixel text-[8px] text-white/45 sm:block">50 决策位置 · 28 个结局</span>
                 </div>
               </div>
-            </div>
-            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted transition-colors duration-200 group-hover:text-[#ff5963]">点击产品画面，直接进入 RED LEAF ↗</p>
-          </a>
+            </a>
+            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">点击产品画面，直接进入 RED LEAF ↗</p>
+          </div>
         </div>
       </section>
+
+      <OwnedChannels />
 
       <section className="project-archive-explorer" aria-label="筛选与浏览其他项目">
         <div className="mb-5 flex items-end justify-between gap-4">
