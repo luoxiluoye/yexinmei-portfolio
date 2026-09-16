@@ -44,7 +44,7 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
                   aria-pressed={active}
                   onClick={() => setActiveCategory(category)}
                   className={[
-                    "min-h-11 border-2 px-3 font-pixel text-[12px] transition-[background-color,color,border-color]",
+                    "min-h-11 border-2 px-3 font-pixel text-[12px] transition-[background-color,color,border-color,transform]",
                     active
                       ? "border-border bg-foreground text-white"
                       : "border-divider bg-soft text-foreground hover:border-accent hover:text-accent",
@@ -63,7 +63,7 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
         <span>{filteredQuests.length} FOUND</span>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div key={activeCategory} className="project-archive-grid grid gap-4 md:grid-cols-2">
         {filteredQuests.map((quest) => (
           <QuestCard key={quest.slug} quest={quest} />
         ))}
@@ -71,4 +71,3 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
     </>
   );
 }
-
