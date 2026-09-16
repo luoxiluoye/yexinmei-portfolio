@@ -43,7 +43,11 @@ export default function QuestsPage() {
               <p className="font-pixel text-[9px] tracking-[0.12em] text-[#ff5963]">FEATURED QUEST / 00</p>
             </div>
 
-            <h2 id="featured-quest-title" className="mt-5 text-[40px] font-semibold leading-[0.96] tracking-[-0.045em] sm:text-[48px] lg:text-[56px] xl:text-[62px]">
+            <h2
+              id="featured-quest-title"
+              className="mt-5 text-[40px] font-semibold leading-[0.96] tracking-[-0.045em] sm:text-[48px] lg:text-[56px] xl:text-[62px]"
+              style={{ viewTransitionName: "red-leaf-title" }}
+            >
               赤页 <span className="text-[#ff424b]">RED LEAF</span>
             </h2>
             <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-8 tracking-[-0.02em] sm:text-[22px] lg:text-[24px] lg:leading-9">
@@ -79,12 +83,11 @@ export default function QuestsPage() {
 
           <div className="relative lg:pl-2">
             <div className="absolute -bottom-3 -right-3 h-full w-full bg-[#ef3340] opacity-70" aria-hidden="true" />
-            <a
-              href="https://zhihu.hegelsalon.com/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="进入赤页 RED LEAF 在线产品"
+            <Link
+              href="/quests/red-leaf"
+              aria-label="查看赤页 RED LEAF 完整案例"
               className="group relative block overflow-hidden border border-white/15 bg-[#111317] shadow-[0_30px_80px_rgba(0,0,0,.35)] transition-transform duration-150 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff424b] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0b0c0e]"
+              style={{ viewTransitionName: "red-leaf-hero" }}
             >
               <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4">
                 <div className="flex items-center gap-2">
@@ -106,7 +109,7 @@ export default function QuestsPage() {
                 />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
                 <div className="pointer-events-none absolute right-4 top-4 translate-y-1 bg-[#ff424b] px-3 py-2 font-pixel text-[8px] text-white opacity-0 transition-[opacity,transform] duration-150 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-                  进入赤页 ↗
+                  查看案例 →
                 </div>
                 <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
                   <div>
@@ -116,8 +119,8 @@ export default function QuestsPage() {
                   <span className="hidden font-pixel text-[8px] text-white/45 sm:block">50 决策位置 · 28 个结局</span>
                 </div>
               </div>
-            </a>
-            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">点击产品画面，直接进入 RED LEAF ↗</p>
+            </Link>
+            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">点击产品画面，查看完整案例 →</p>
           </div>
         </div>
       </section>
