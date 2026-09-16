@@ -7,6 +7,7 @@ const accounts = [
     href: "https://www.xiaohongshu.com/user/profile/5a788cf511be1052dbfc6085",
     image: "/assets/projects/personal-social/xiaohongshu.webp",
     alt: "小红书账号「叶子会变成树」主页截图",
+    summary: "近 1 个月冷启动：账号上线不足 1 个月实现 0→500 粉，累计 6500+ 赞藏；独立完成选题、素材筛选、剪辑、字幕、标题与封面包装。",
     metrics: [
       { value: "522", label: "粉丝" },
       { value: "6,712", label: "获赞与收藏" },
@@ -18,6 +19,7 @@ const accounts = [
     href: "https://www.zhihu.com/people/luo-ye-xin-mei",
     image: "/assets/projects/personal-social/zhihu.webp",
     alt: "知乎账号「昔棗」主页截图",
+    summary: null,
     metrics: [
       { value: "1,348", label: "关注者" },
       { value: "1,575", label: "获得赞同" },
@@ -65,6 +67,10 @@ export function OwnedChannels() {
                   ↗
                 </span>
               </div>
+
+              {account.summary ? (
+                <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-muted">{account.summary}</p>
+              ) : null}
 
               <div className="mt-5 flex flex-wrap gap-x-8 gap-y-4 border-t border-divider pt-5">
                 {account.metrics.map((metric) => (
