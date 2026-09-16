@@ -27,7 +27,7 @@ export default function RedLeafPage() {
       </div>
 
       <section className="grid items-start gap-8 border-b border-divider pb-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:pb-14">
-        <div>
+        <div className="red-leaf-detail-copy">
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FLAGSHIP PROJECT / 2026</p>
           <h1 className="mt-4 text-[44px] font-semibold leading-[1.03] tracking-[-0.045em] sm:text-[56px] lg:text-[72px]">
             赤页 <span className="text-accent">RED LEAF</span>
@@ -50,7 +50,7 @@ export default function RedLeafPage() {
           </div>
         </div>
 
-        <ProductFrame label="RED LEAF / 知乎故事书库">
+        <ProductFrame label="RED LEAF / 知乎故事书库" transitionName="project-red-leaf" hero>
           <Image
             src="/assets/projects/red-leaf/library.webp"
             alt="赤页 RED LEAF 知乎故事书库真实产品界面"
@@ -68,7 +68,7 @@ export default function RedLeafPage() {
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">一段内容，怎样变成一个可玩的世界</h2>
         <div className="mt-8 grid gap-px border border-divider bg-divider sm:grid-cols-2 lg:grid-cols-3">
           {pipeline.map(([number, title, detail]) => (
-            <article key={number} className="bg-background p-5 lg:p-6">
+            <article key={number} className="red-leaf-pipeline-card bg-background p-5 lg:p-6">
               <p className="font-pixel text-[9px] text-accent">{number}</p>
               <h3 className="mt-4 font-pixel text-[13px]">{title}</h3>
               <p className="mt-3 text-[13px] leading-6 text-muted">{detail}</p>
@@ -82,7 +82,7 @@ export default function RedLeafPage() {
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">COMPANION UX</p>
           <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">刘看山，不只是一个吉祥物</h2>
           <p className="mt-5 text-[15px] leading-7 text-muted">
-            刘看山会贯穿原文阅读、线索整理、人物关系梳理、剧情讨论和改编过程，并通过动作、动画与隐藏彩蛋回应用户。它承担的是陪伴与引导，而不是单纯的视觉装饰。
+            刘看山会贯穿原文阅读、线索整理、人物关系梳理、剧情讨论和改编过程，并通过动作、动画与隐藏彩蛋回应用户。它承担的是陪伴与引导，并持续帮助用户理解当前故事状态。
           </p>
         </div>
 
@@ -121,7 +121,7 @@ export default function RedLeafPage() {
             <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">选择会留下后果</h2>
           </div>
           <p className="max-w-[520px] text-[13px] leading-6 text-muted sm:text-right">
-            玩家留下的物资、人物信任与剧情线索，会在后续章节继续生效，而不是一次性的选项反馈。
+            玩家留下的物资、人物信任与剧情线索，会在后续章节继续生效，并持续影响剧情走向。
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export default function RedLeafPage() {
         <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FROM 0 → 1</p>
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">我完成了什么</h2>
         <p className="mt-5 max-w-[900px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
-          从最初的产品概念、内容解析与故事生成逻辑，到互动叙事结构、刘看山陪伴体验、资源体系、游戏流程、页面实现和最终上线，我完成了赤页从想法到可运行产品的完整闭环。它不是一个“输入一句话、输出一段文本”的 Demo，而是一套真正能从原文走到游玩、存档、回溯与多结局收集的体验。
+          从最初的产品概念、内容解析与故事生成逻辑，到互动叙事结构、刘看山陪伴体验、资源体系、游戏流程、页面实现和最终上线，我完成了赤页从想法到可运行产品的完整闭环。它具备从原文走到游玩、存档、回溯与多结局收集的完整体验。
         </p>
         <div className="mt-7 flex flex-wrap gap-2 font-pixel text-[9px]">
           {['PRODUCT', 'NARRATIVE', 'AI WORKFLOW', 'UX', 'ASSET SYSTEM', 'BUILD', 'LAUNCH'].map((item) => (
@@ -163,9 +163,25 @@ export default function RedLeafPage() {
   );
 }
 
-function ProductFrame({ label, children }: { label: string; children: React.ReactNode }) {
+function ProductFrame({
+  label,
+  children,
+  transitionName,
+  hero = false,
+}: {
+  label: string;
+  children: React.ReactNode;
+  transitionName?: string;
+  hero?: boolean;
+}) {
   return (
-    <div className="overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]">
+    <div
+      className={[
+        "overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]",
+        hero ? "red-leaf-detail-hero-frame" : "",
+      ].join(" ")}
+      style={transitionName ? { viewTransitionName: transitionName } : undefined}
+    >
       <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4 text-white">
         <span className="font-pixel text-[8px] tracking-[0.08em] text-white/72">{label}</span>
         <span className="h-2 w-2 bg-[#ff424b]" aria-hidden="true" />
