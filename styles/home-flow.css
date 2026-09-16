@@ -1,0 +1,160 @@
+.studio-hero[data-motion="calm"] {
+  padding-top: 22px;
+}
+
+.studio-hero[data-motion="calm"] .studio-hero-layout {
+  min-height: 510px;
+  padding-block: 18px 8px;
+}
+
+.studio-hero[data-motion="calm"] .studio-hero-copy {
+  padding-block: 10px;
+}
+
+.studio-hero[data-motion="calm"] .studio-headline {
+  margin-block: 20px 22px;
+}
+
+.studio-hero[data-motion="calm"] .studio-world {
+  height: 490px;
+}
+
+.studio-hero[data-motion="calm"] :is(
+  .studio-world-backdrop,
+  .studio-world-ground,
+  .studio-world-person,
+  .studio-world-bubble,
+  .studio-world-cat
+) {
+  animation: home-scene-fade 360ms ease-out both !important;
+}
+
+.studio-hero[data-motion="calm"] .studio-cloud {
+  animation-duration: 12s;
+}
+
+.studio-hero[data-motion="calm"] .studio-pixel-spark {
+  animation-duration: 6s;
+}
+
+.home-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-block: 1px solid var(--rpg-color-divider);
+  margin-top: 2px;
+}
+
+.home-proof-item {
+  min-width: 0;
+  padding: 17px 18px 18px;
+}
+
+.home-proof-item + .home-proof-item {
+  border-left: 1px solid var(--rpg-color-divider);
+}
+
+.home-proof-label {
+  display: block;
+  font-family: var(--rpg-font-pixel);
+  font-size: 8px;
+  line-height: 1.5;
+  letter-spacing: .07em;
+  color: var(--rpg-color-red);
+}
+
+.home-proof-value {
+  display: block;
+  margin-top: 7px;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 650;
+  color: var(--rpg-color-text);
+}
+
+.home-proof-detail {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--rpg-color-text-2);
+}
+
+::view-transition-old(root) {
+  animation: calm-page-out 120ms ease-out both !important;
+}
+
+::view-transition-new(root) {
+  animation: calm-page-in 220ms ease-out both !important;
+}
+
+@keyframes home-scene-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes calm-page-out {
+  from { opacity: 1; }
+  to { opacity: .58; }
+}
+
+@keyframes calm-page-in {
+  from { opacity: .58; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 1023px) {
+  .studio-hero[data-motion="calm"] .studio-hero-layout {
+    min-height: 0;
+  }
+
+  .studio-hero[data-motion="calm"] .studio-world {
+    height: 430px;
+  }
+
+  .home-proof-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-proof-item:nth-child(3),
+  .home-proof-item:nth-child(4) {
+    border-top: 1px solid var(--rpg-color-divider);
+  }
+
+  .home-proof-item:nth-child(3) {
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .studio-hero[data-motion="calm"] {
+    padding-top: 14px;
+  }
+
+  .studio-hero[data-motion="calm"] .studio-world {
+    height: 360px;
+  }
+
+  .home-proof-item {
+    padding: 13px 12px 14px;
+  }
+
+  .home-proof-value {
+    font-size: 12px;
+  }
+
+  .home-proof-detail {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .studio-hero[data-motion="calm"] :is(
+    .studio-world-backdrop,
+    .studio-world-ground,
+    .studio-world-person,
+    .studio-world-bubble,
+    .studio-world-cat
+  ) {
+    animation: none !important;
+  }
+}
