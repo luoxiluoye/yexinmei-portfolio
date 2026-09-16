@@ -73,7 +73,7 @@ export default function PlayerPage() {
             </h2>
           </div>
           <p className="max-w-[420px] text-[13px] leading-6 text-muted sm:text-right">
-            时间线负责导航，当前经历负责讲故事。点选节点查看，再打开完整档案。
+            向下滚动会逐步解锁路径，也可以直接点选节点查看经历，并打开完整档案。
           </p>
         </div>
         <JourneyArchive />
