@@ -1,135 +1,63 @@
 import type { Metadata } from "next";
-import type { AssetId } from "@/lib/assets";
-import { skills } from "@/data/skills";
 
 import { InventoryChest } from "@/components/game/inventory-chest";
-import { InventoryInspectButton } from "@/components/inventory/inventory-inspect-button";
-import { CharacterScene } from "@/components/scenes/character-scene";
-import { PixelPanel } from "@/components/ui/pixel-panel";
-import { PixelTag } from "@/components/ui/pixel-tag";
+import { InventoryLoadout } from "@/components/inventory/inventory-loadout";
 import { StatusBar } from "@/components/ui/status-bar";
+import { skills } from "@/data/skills";
 
 export const metadata: Metadata = {
   title: "技能与工具",
   description: "罗叶馨梅的内容运营、新媒体、社区运营、摄影、数据分析与 AI 辅助工作流能力。",
 };
 
-const toolIcons: AssetId[] = [
-  "ui.star",
-  "items.laptop",
-  "items.notebook",
-  "ui.sparkle",
-  "items.camera",
-  "ui.arrow",
-];
-
-const toolIconSizes = [38, 42, 38, 38, 44, 36] as const;
-
-const skillIcons: AssetId[] = [
-  "items.sword",
-  "items.shield",
-  "items.potion",
-  "ui.heart",
-  "ui.star",
-  "ui.sparkle",
-  "ui.arrow",
-];
-
-const specialAssetIds: AssetId[] = [
-  "items.camera",
-  "items.notebook",
-  "items.laptop",
-  "cat.sit",
-];
-
 export default function InventoryPage() {
   return (
-    <main className="site-container py-5 lg:py-8">
-      <header className="grid gap-4 lg:grid-cols-[1fr_320px] lg:items-center">
-        <div>
-          <p className="font-pixel text-[12px] text-muted">05. INVENTORY</p>
-          <h1 className="rpg-page-title mt-2">INVENTORY & SKILLS</h1>
-          <p className="mt-4 max-w-2xl text-[15px] leading-[26px] text-muted">
-            内容策划、新媒体运营、社区运营、AI 辅助工作流，以及摄影与常用创作工具。现在每个格子都可以打开查看它实际用在了哪里。
+    <main className="site-container pb-12 pt-6 lg:pb-16 lg:pt-10">
+      <header className="border-b border-divider pb-8 lg:pb-10">
+        <p className="font-pixel text-[11px] tracking-[0.08em] text-accent">05 / INVENTORY</p>
+        <div className="mt-3 grid gap-5 lg:grid-cols-[0.78fr_1.22fr] lg:items-end lg:gap-10">
+          <div>
+            <h1 className="text-[42px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[52px] lg:text-[64px]">
+              PLAYER LOADOUT
+            </h1>
+            <p className="mt-3 font-pixel text-[11px] tracking-[0.08em] text-muted">CONTENT · GROWTH · CREATIVE · AI</p>
+          </div>
+          <p className="max-w-[700px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
+            把技能按真实使用场景重新装进角色栏。选择一个能力区域，可以查看对应工具、核心能力，以及它们具体出现在哪些项目里；点击装备本身可以继续打开完整详情。
           </p>
         </div>
-
-        <CharacterScene variant="inventory" />
       </header>
 
-      <section className="mt-5 grid gap-4 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5">
-        <div className="min-w-0 space-y-4">
-          <PixelPanel eyebrow="01" title={`TOOLS · ${skills.tools.length}`}>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-              {skills.tools.map((tool, index) => (
-                <InventoryInspectButton
-                  key={tool.name}
-                  assetId={toolIcons[index]}
-                  index={index}
-                  label={tool.name}
-                  detail={tool.level}
-                  iconSize={toolIconSizes[index]}
-                  kind="tool"
-                />
-              ))}
-            </div>
-          </PixelPanel>
+      <div className="py-9 lg:py-14">
+        <InventoryLoadout />
+      </div>
 
-          <PixelPanel eyebrow="02" title={`SKILLS · ${skills.core.length}`}>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              {skills.core.map((skill, index) => (
-                <InventoryInspectButton
-                  key={skill}
-                  assetId={skillIcons[index]}
-                  index={index}
-                  label={skill}
-                  iconSize={36}
-                  kind="skill"
-                />
-              ))}
+      <section className="grid gap-8 border-t border-divider py-9 lg:grid-cols-[1fr_380px] lg:items-start lg:gap-12 lg:py-12">
+        <div>
+          <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">CURRENT FOCUS</p>
+          <h2 className="mt-2 text-[28px] font-semibold tracking-[-0.03em] lg:text-[34px]">现在持续加强的方向</h2>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            <div className="border-t border-divider pt-3">
+              <p className="font-pixel text-[9px] text-muted">CONTENT</p>
+              <p className="mt-2 text-[13px] leading-6">怎样让好内容更容易被看见、讨论和留下。</p>
             </div>
-          </PixelPanel>
-
-          <PixelPanel eyebrow="03" title={`SPECIAL ITEMS · ${skills.specialItems.length}`}>
-            <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 lg:mx-0 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-0">
-              {skills.specialItems.map((item, index) => (
-                <InventoryInspectButton
-                  key={item.name}
-                  assetId={specialAssetIds[index]}
-                  index={index}
-                  label={item.name}
-                  detail={item.buff}
-                  iconSize={46}
-                  kind="special"
-                />
-              ))}
+            <div className="border-t border-divider pt-3">
+              <p className="font-pixel text-[9px] text-muted">PRODUCT</p>
+              <p className="mt-2 text-[13px] leading-6">怎样把内容理解、用户需求和交互体验连接起来。</p>
             </div>
-          </PixelPanel>
+            <div className="border-t border-divider pt-3">
+              <p className="font-pixel text-[9px] text-muted">AI</p>
+              <p className="mt-2 text-[13px] leading-6">怎样用 AI 提高信息处理效率，并继续完成真实产品。</p>
+            </div>
+          </div>
         </div>
 
-        <aside className="lg:sticky lg:top-[84px] lg:self-start">
-          <PixelPanel eyebrow="SKILLS" title="SUMMARY" accent>
-            <div className="space-y-3 text-[13px] leading-6">
-              <p><strong>主线：</strong>内容策划 / 新媒体 / 社区运营</p>
-              <p><strong>辅助：</strong>摄影 / 数据分析 / AI 提效</p>
-              <p><strong>当前关注：</strong>怎样把好内容做得更容易被看见、讨论和留下。</p>
-            </div>
-
-            <div className="mt-5 border-t border-divider pt-4">
-              <p className="mb-2 font-pixel text-[10px] text-muted">AI ASSIST</p>
-              <div className="flex flex-wrap gap-2">
-                {skills.aiAssist.map((item) => (
-                  <PixelTag key={item}>{item}</PixelTag>
-                ))}
-              </div>
-            </div>
-
-            <InventoryChest />
-          </PixelPanel>
-        </aside>
+        <div className="border border-divider bg-soft px-4 pb-4">
+          <InventoryChest />
+        </div>
       </section>
 
-      <div className="mt-5 pb-8 lg:mt-8 lg:pb-0">
+      <div className="pb-2 pt-2">
         <StatusBar
           items={[
             { label: "TOOLS", value: String(skills.tools.length).padStart(2, "0") },
@@ -142,4 +70,3 @@ export default function InventoryPage() {
     </main>
   );
 }
-
