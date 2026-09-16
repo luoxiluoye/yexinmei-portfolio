@@ -1,0 +1,105 @@
+/* Red Leaf shared transition and the two rebuilt interactive sections. */
+::view-transition-group(project-red-leaf) {
+  animation-duration: 560ms;
+  animation-timing-function: cubic-bezier(.16,1,.3,1);
+  z-index: 60;
+}
+
+::view-transition-old(project-red-leaf),
+::view-transition-new(project-red-leaf) {
+  animation-timing-function: cubic-bezier(.16,1,.3,1);
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(rpg-page) {
+  animation: experience-page-out 220ms ease-in both;
+}
+
+::view-transition-new(rpg-page) {
+  animation: experience-page-in 460ms cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes experience-page-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: .16; transform: translateY(-8px); }
+}
+
+@keyframes experience-page-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.red-leaf-detail-copy {
+  animation: red-leaf-copy-in 520ms cubic-bezier(.16,1,.3,1) 120ms both;
+}
+
+.red-leaf-detail-hero-frame {
+  transform-origin: center top;
+}
+
+.red-leaf-detail-hero-frame img {
+  animation: red-leaf-image-settle 680ms cubic-bezier(.16,1,.3,1) 80ms both;
+}
+
+.red-leaf-pipeline-card {
+  transition: transform 280ms cubic-bezier(.22,1,.36,1), background-color 280ms ease;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .red-leaf-pipeline-card:hover {
+    transform: translateY(-5px);
+    background: var(--rpg-color-surface);
+  }
+}
+
+@keyframes red-leaf-copy-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes red-leaf-image-settle {
+  from { transform: scale(1.025); filter: brightness(.96); }
+  to { transform: scale(1); filter: brightness(1); }
+}
+
+.journey-memory-backdrop {
+  animation: memory-backdrop-in 220ms ease-out both;
+}
+
+.journey-memory-dialog {
+  transform-origin: 50% 16%;
+  animation: memory-dialog-in 360ms cubic-bezier(.16,1,.3,1) both;
+}
+
+@keyframes memory-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes memory-dialog-in {
+  from { opacity: 0; transform: translateY(18px) scale(.94) rotate(-.35deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+
+.rpg-item-slot {
+  transition-duration: 260ms !important;
+  transition-timing-function: cubic-bezier(.22,1,.36,1) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(rpg-page),
+  ::view-transition-new(rpg-page),
+  ::view-transition-old(project-red-leaf),
+  ::view-transition-new(project-red-leaf) {
+    animation: none !important;
+  }
+
+  .red-leaf-detail-copy,
+  .red-leaf-detail-hero-frame img,
+  .red-leaf-pipeline-card,
+  .journey-memory-backdrop,
+  .journey-memory-dialog {
+    animation: none !important;
+    transition: none !important;
+  }
+}
