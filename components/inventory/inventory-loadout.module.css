@@ -1,0 +1,355 @@
+.shell {
+  display: grid;
+  gap: 28px;
+}
+
+.stage {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  border: 1px solid var(--rpg-color-divider);
+  background:
+    linear-gradient(rgba(17,17,17,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17,17,17,.035) 1px, transparent 1px),
+    var(--rpg-color-soft);
+  background-size: 28px 28px;
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 340px;
+  height: 340px;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(191, 56, 43, .2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 42px rgba(255,255,255,.32), 0 0 0 43px rgba(17,17,17,.05);
+}
+
+.stage::after {
+  content: "PLAYER LOADOUT";
+  position: absolute;
+  left: 18px;
+  top: 16px;
+  font-family: var(--rpg-font-pixel);
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--rpg-color-text-2);
+}
+
+.player {
+  position: absolute;
+  left: 50%;
+  top: 51%;
+  width: min(36%, 230px);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  filter: drop-shadow(8px 12px 0 rgba(17,17,17,.06));
+  transition: transform 420ms var(--motion-ease-emphasized);
+}
+
+.player img {
+  width: 100%;
+  height: auto;
+}
+
+.stage:hover .player {
+  transform: translate(-50%, -52%);
+}
+
+.slot {
+  position: absolute;
+  z-index: 5;
+  display: grid;
+  width: 178px;
+  min-height: 96px;
+  grid-template-columns: 46px 1fr;
+  align-items: center;
+  gap: 11px;
+  border: 1px solid var(--rpg-color-divider);
+  background: rgba(255,253,248,.94);
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 rgba(17,17,17,.06);
+  transition:
+    transform var(--motion-panel) var(--motion-ease-emphasized),
+    border-color var(--motion-panel) ease,
+    box-shadow var(--motion-panel) ease,
+    background-color var(--motion-panel) ease;
+}
+
+.slot:hover,
+.slot:focus-visible {
+  border-color: var(--rpg-color-red);
+  transform: translateY(-4px);
+  box-shadow: 6px 8px 0 rgba(17,17,17,.08);
+  outline: none;
+}
+
+.slotActive {
+  border-color: var(--rpg-color-text);
+  background: var(--rpg-color-surface);
+  box-shadow: 6px 8px 0 rgba(191,56,43,.14);
+}
+
+.slotIcon {
+  display: flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rpg-color-divider);
+  background: var(--rpg-color-soft);
+}
+
+.slotLabel {
+  display: block;
+  font-family: var(--rpg-font-pixel);
+  font-size: 10px;
+  color: var(--rpg-color-text);
+}
+
+.slotMeta {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--rpg-color-text-2);
+}
+
+.slot:nth-of-type(1) { left: 7%; top: 19%; }
+.slot:nth-of-type(2) { right: 7%; top: 22%; }
+.slot:nth-of-type(3) { left: 8%; bottom: 15%; }
+.slot:nth-of-type(4) { right: 8%; bottom: 13%; }
+
+.connector {
+  position: absolute;
+  z-index: 2;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(17,17,17,.18), transparent);
+  transform-origin: left center;
+}
+
+.connectorOne { left: 30%; top: 32%; width: 24%; transform: rotate(20deg); }
+.connectorTwo { left: 55%; top: 34%; width: 22%; transform: rotate(-18deg); }
+.connectorThree { left: 30%; top: 67%; width: 24%; transform: rotate(-18deg); }
+.connectorFour { left: 55%; top: 66%; width: 22%; transform: rotate(16deg); }
+
+.panel {
+  border-top: 1px solid var(--rpg-color-divider);
+  border-bottom: 1px solid var(--rpg-color-divider);
+  padding: 24px 0;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.panelIndex {
+  font-family: var(--rpg-font-pixel);
+  font-size: 10px;
+  color: var(--rpg-color-red);
+}
+
+.panelTitle {
+  margin-top: 6px;
+  font-size: 30px;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -.035em;
+}
+
+.panelDescription {
+  margin-top: 12px;
+  max-width: 620px;
+  color: var(--rpg-color-text-2);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.selectionBar {
+  width: 118px;
+  height: 5px;
+  margin-top: 7px;
+  background: var(--rpg-color-divider);
+  overflow: hidden;
+}
+
+.selectionBar span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--rpg-color-red);
+  transform-origin: left center;
+  animation: fillBar 420ms var(--motion-ease-emphasized) both;
+}
+
+.panelBody {
+  margin-top: 26px;
+  animation: panelIn 360ms var(--motion-ease-emphasized) both;
+}
+
+.sectionLabel {
+  font-family: var(--rpg-font-pixel);
+  font-size: 9px;
+  letter-spacing: .06em;
+  color: var(--rpg-color-text-2);
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.assistList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.assistList span {
+  border: 1px solid var(--rpg-color-divider);
+  background: var(--rpg-color-soft);
+  padding: 7px 9px;
+  color: var(--rpg-color-text-2);
+  font-size: 11px;
+}
+
+.projectLinks {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.projectLink {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--rpg-color-divider);
+  color: var(--rpg-color-text-2);
+  font-size: 13px;
+  transition: color var(--motion-interaction) ease, padding var(--motion-interaction) var(--motion-ease-standard);
+}
+
+.projectLink:hover,
+.projectLink:focus-visible {
+  color: var(--rpg-color-red);
+  padding-left: 6px;
+  outline: none;
+}
+
+.specialSection {
+  margin-top: 34px;
+  border-top: 1px solid var(--rpg-color-divider);
+  padding-top: 24px;
+}
+
+.specialGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@keyframes fillBar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes panelIn {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    grid-template-columns: minmax(0, 1.03fr) minmax(360px, .97fr);
+    align-items: start;
+    gap: 42px;
+  }
+
+  .panel {
+    position: sticky;
+    top: 92px;
+  }
+}
+
+@media (max-width: 767px) {
+  .stage {
+    min-height: 560px;
+  }
+
+  .player {
+    top: 49%;
+    width: 170px;
+  }
+
+  .slot {
+    width: 148px;
+    min-height: 86px;
+    grid-template-columns: 38px 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .slotIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .slot:nth-of-type(1) { left: 4%; top: 13%; }
+  .slot:nth-of-type(2) { right: 4%; top: 16%; }
+  .slot:nth-of-type(3) { left: 4%; bottom: 12%; }
+  .slot:nth-of-type(4) { right: 4%; bottom: 10%; }
+
+  .items {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .specialGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .stage {
+    min-height: 600px;
+  }
+
+  .slot {
+    width: 132px;
+  }
+
+  .slotLabel {
+    font-size: 8px;
+  }
+
+  .slotMeta {
+    font-size: 10px;
+  }
+
+  .items,
+  .specialGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player,
+  .slot,
+  .selectionBar span,
+  .panelBody,
+  .projectLink {
+    animation: none;
+    transition: none;
+  }
+}
