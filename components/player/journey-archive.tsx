@@ -24,30 +24,18 @@ function clampProgress(value: number) {
   return Math.min(1, Math.max(0, value));
 }
 
-function getRoutePoint(progress: number) {
-  const scaled = clampProgress(progress) * (NODE_POINTS.length - 1);
-  const index = Math.min(Math.floor(scaled), NODE_POINTS.length - 2);
-  const local = scaled - index;
-  const start = NODE_POINTS[index];
-  const end = NODE_POINTS[index + 1];
-
-  return {
-    x: start.x + (end.x - start.x) * local,
-    y: start.y + (end.y - start.y) * local,
-  };
-}
-
 export function JourneyArchive() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [modalIndex, setModalIndex] = useState<number | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [exploreProgress, setExploreProgress] = useState(0);
+  const [playerPoint, setPlayerPoint] = useState({ x: NODE_POINTS[0].x, y: NODE_POINTS[0].y });
   const routeRef = useRef<HTMLDivElement | null>(null);
+  const activePathRef = useRef<SVGPathElement | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const restoreFocusRef = useRef(false);
 
   const routeProgress = Math.max(scrollProgress, exploreProgress);
-  const playerPoint = getRoutePoint(routeProgress);
 
   useEffect(() => {
     const route = routeRef.current;
@@ -80,6 +68,15 @@ export function JourneyArchive() {
       window.removeEventListener("resize", requestUpdate);
     };
   }, []);
+
+  useEffect(() => {
+    const path = activePathRef.current;
+    if (!path) return;
+
+    const totalLength = path.getTotalLength();
+    const point = path.getPointAtLength(totalLength * clampProgress(routeProgress));
+    setPlayerPoint({ x: point.x, y: point.y });
+  }, [routeProgress]);
 
   const selectMemory = useCallback((index: number) => {
     setSelectedIndex(index);
@@ -138,6 +135,7 @@ export function JourneyArchive() {
           <svg className={styles.routeSvg} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <path className={styles.routeBase} d={ROUTE_PATH} />
             <path
+              ref={activePathRef}
               className={styles.routeActive}
               d={ROUTE_PATH}
               pathLength={1}
