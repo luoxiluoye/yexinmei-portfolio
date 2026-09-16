@@ -8,14 +8,15 @@ import { PixelIcon } from "@/components/ui/pixel-icon";
 import { markAchievementProgress, unlockAchievement } from "@/lib/rpg-events";
 
 export function JourneyArchive() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState(4);
+  const [modalIndex, setModalIndex] = useState<number | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
   const restoreFocusRef = useRef(false);
 
   const openMemory = useCallback((index: number, trigger: HTMLButtonElement) => {
     restoreFocusRef.current = false;
     lastTriggerRef.current = trigger;
-    setActiveIndex(index);
+    setModalIndex(index);
 
     unlockAchievement({
       id: "memory-hunter",
@@ -31,11 +32,11 @@ export function JourneyArchive() {
 
   const closeMemory = useCallback(() => {
     restoreFocusRef.current = true;
-    setActiveIndex(null);
+    setModalIndex(null);
   }, []);
 
   useEffect(() => {
-    if (activeIndex !== null || !restoreFocusRef.current) return;
+    if (modalIndex !== null || !restoreFocusRef.current) return;
 
     restoreFocusRef.current = false;
     const frame = window.requestAnimationFrame(() => {
@@ -43,103 +44,115 @@ export function JourneyArchive() {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activeIndex]);
+  }, [modalIndex]);
 
   const move = useCallback((delta: number) => {
-    setActiveIndex((current) => {
+    setModalIndex((current) => {
       if (current === null) return null;
-      return (current + delta + memories.length) % memories.length;
+      const next = (current + delta + memories.length) % memories.length;
+      setSelectedIndex(next);
+      return next;
     });
   }, []);
 
-  const active = activeIndex === null ? null : memories[activeIndex];
+  const active = memories[selectedIndex];
+  const modalMemory = modalIndex === null ? null : memories[modalIndex];
 
   return (
-    <div className="flex h-full w-full min-h-0 min-w-0 max-w-full flex-1 flex-col">
-      <div className="relative flex min-h-0 w-full min-w-0 max-w-full flex-1 flex-col border border-divider bg-soft px-3 py-4 lg:px-4 lg:py-5">
-        <div className="flex min-h-0 flex-1 items-center">
-          <div className="w-full min-w-0">
-            <div className="no-scrollbar w-full min-w-0 max-w-full overflow-x-auto pb-1 snap-x snap-mandatory lg:snap-none">
-              <div className="relative min-w-[620px] lg:min-w-0">
-                <div
-                  aria-hidden="true"
-                  className="absolute left-[6%] right-[6%] top-[22px] h-[2px] bg-divider lg:top-[46px]"
-                />
-                <ol className="relative z-10 grid grid-cols-7 gap-2">
-                  {memories.map((memory, index) => {
-                    const isNow = memory.current;
-                    return (
-                      <li key={memory.title} className="min-w-0 snap-center text-center lg:snap-align-none">
-                        <button
-                          type="button"
-                          onClick={(event) => openMemory(index, event.currentTarget)}
-                          className="group relative mx-auto flex min-h-[86px] w-full cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-soft lg:min-h-[110px] lg:pt-6"
-                          aria-haspopup="dialog"
-                          aria-label={`打开 ${memory.title} 的记忆档案`}
-                        >
-                          <span className="pointer-events-none absolute inset-x-0 top-0 hidden h-5 items-center justify-center whitespace-nowrap font-pixel text-[8px] leading-5 text-accent opacity-0 transition-opacity duration-100 group-hover:opacity-100 group-focus-visible:opacity-100 lg:flex">
-                            OPEN MEMORY
-                          </span>
-                          <span
-                            className={[
-                              "relative flex h-10 w-10 items-center justify-center border-2 font-pixel text-[9px] transition-[transform,box-shadow,background-color,color,border-color] duration-100 group-hover:-translate-x-px group-hover:-translate-y-px group-hover:shadow-[2px_2px_0_rgba(17,17,17,.12)]",
-                              isNow
-                                ? "border-foreground bg-foreground text-white group-hover:border-accent"
-                                : "border-border bg-paper text-accent group-hover:border-accent",
-                            ].join(" ")}
-                          >
-                            {String(index + 1).padStart(2, "0")}
-                          </span>
-                          <p
-                            className={[
-                              "mt-3 max-w-[76px] text-[12px] font-medium leading-[18px]",
-                              isNow ? "font-pixel text-[11px]" : "",
-                            ].join(" ")}
-                          >
-                            {memory.title}
-                          </p>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ol>
-              </div>
-            </div>
-
-            <div className="mt-2 flex items-center justify-center gap-2 lg:hidden">
-              <PixelIcon
-                assetId="player.journeySwipeLeft"
-                decorative
-                width={16}
-                height={16}
-                className="h-4 w-4"
-              />
-              <p className="text-center font-pixel text-[8px] tracking-[0.03em] text-muted">
-                SWIPE TO EXPLORE · TAP TO OPEN
-              </p>
-              <PixelIcon
-                assetId="player.journeySwipeLeft"
-                decorative
-                width={16}
-                height={16}
-                className="h-4 w-4"
-                style={{ transform: "scaleX(-1)" }}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 border-t border-divider pt-3 font-pixel text-[9px] text-muted lg:mt-5">
-          <span>START</span>
-          <span className="text-center">MEDIA · CONTENT · COMMUNITY</span>
-          <span className="text-foreground">07 · NOW</span>
+    <div className="min-w-0">
+      <div className="no-scrollbar overflow-x-auto pb-2">
+        <div className="relative min-w-[680px]">
+          <div aria-hidden="true" className="absolute left-[6%] right-[6%] top-5 h-px bg-divider" />
+          <ol className="relative z-10 grid grid-cols-7 gap-2">
+            {memories.map((memory, index) => {
+              const selected = index === selectedIndex;
+              return (
+                <li key={memory.title} className="min-w-0 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedIndex(index)}
+                    className="group flex w-full cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    aria-pressed={selected}
+                    aria-label={`查看 ${memory.title}`}
+                  >
+                    <span
+                      className={[
+                        "flex h-10 w-10 items-center justify-center border-2 font-pixel text-[9px] transition-[transform,border-color,background-color,color] duration-100 group-hover:-translate-y-px",
+                        selected
+                          ? "border-foreground bg-foreground text-white"
+                          : "border-divider bg-background text-muted group-hover:border-accent group-hover:text-accent",
+                      ].join(" ")}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={[
+                        "mt-3 max-w-[86px] text-[12px] leading-[18px]",
+                        selected ? "font-semibold text-foreground" : "text-muted",
+                      ].join(" ")}
+                    >
+                      {memory.title}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
 
-      {active && activeIndex !== null ? (
+      <article className="mt-6 grid gap-6 border-y border-divider py-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 lg:py-8">
+        <div className="flex items-start gap-4 lg:block">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center border border-divider bg-soft lg:h-16 lg:w-16">
+            <PixelIcon assetId={active.icon} decorative width={46} height={46} className="h-10 w-10" />
+          </div>
+          <div className="min-w-0 lg:mt-5">
+            <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">{String(selectedIndex + 1).padStart(2, "0")}</p>
+            <p className="mt-1 font-pixel text-[10px] text-muted">{active.time}</p>
+            {active.current ? (
+              <span className="mt-3 inline-flex border border-accent px-2 py-1 font-pixel text-[8px] text-accent">CURRENT</span>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="min-w-0">
+          <h3 className="text-[26px] font-semibold tracking-[-0.02em] lg:text-[32px]">{active.title}</h3>
+          <div className="mt-4 max-w-[760px] space-y-2 text-[15px] leading-7 text-muted">
+            {active.summary.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {active.abilities.map((ability) => (
+              <span key={ability.title} className="border border-divider bg-soft px-3 py-2 text-[12px] text-muted">
+                <strong className="font-medium text-foreground">{ability.title}</strong>
+                <span className="mx-1.5 text-divider">/</span>
+                {ability.detail}
+              </span>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={(event) => openMemory(selectedIndex, event.currentTarget)}
+            className="mt-6 inline-flex min-h-10 cursor-pointer items-center border-b border-foreground bg-transparent px-0 font-pixel text-[10px] transition-colors hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          >
+            打开完整档案 →
+          </button>
+        </div>
+      </article>
+
+      <div className="mt-3 flex items-center justify-between font-pixel text-[8px] tracking-[0.06em] text-muted">
+        <span>START / MEDIA</span>
+        <span>CONTENT · COMMUNITY · BUILD</span>
+        <span>NOW / 07</span>
+      </div>
+
+      {modalMemory && modalIndex !== null ? (
         <JourneyMemoryModal
-          memory={active}
-          index={activeIndex}
+          memory={modalMemory}
+          index={modalIndex}
           total={memories.length}
           onClose={closeMemory}
           onPrev={() => move(-1)}
@@ -149,4 +162,3 @@ export function JourneyArchive() {
     </div>
   );
 }
-
