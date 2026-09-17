@@ -1,165 +1,163 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "next-view-transitions";
 
+import type { AssetId } from "@/lib/assets";
 import { contact } from "@/data/contact";
 import { profile } from "@/data/profile";
+
+import { CharacterScene } from "@/components/scenes/character-scene";
+import { PixelButton } from "@/components/ui/pixel-button";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
+const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
+  email: "items.mail",
+  phone: "ui.contactPhone",
+  wechat: "ui.heart",
+  resume: "items.notebook",
+};
+
+const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
+  email: "求职 / 合作 / 内容交流",
+  phone: "求职沟通可直接电话联系",
+  wechat: "点击按钮复制微信号",
+  resume: "添加微信 luoxiluoye，备注「简历」即可",
+};
+
 export default function ContactPage() {
-  const [copied, setCopied] = useState(false);
+  const [copiedTarget, setCopiedTarget] = useState<"wechat" | "resume" | null>(null);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
-  const phone = contact.items.find((item) => item.type === "phone")?.value ?? "";
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
 
-  async function copyWechat() {
+  async function copyWechat(target: "wechat" | "resume" = "wechat") {
     if (!navigator.clipboard) {
       throw new Error("Clipboard API unavailable");
     }
 
     await navigator.clipboard.writeText(wechat);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    setCopiedTarget(target);
+    window.setTimeout(() => setCopiedTarget(null), 1600);
   }
 
   return (
-    <main className="site-container pb-12 pt-5 lg:pb-14 lg:pt-8">
-      <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
-        <div>
-          <p className="font-pixel text-[10px] text-accent">07 / CONTACT</p>
-          <h1 className="mt-2 font-pixel-zh text-[38px] leading-none lg:text-[48px]">联系我</h1>
-          <p className="mt-3 max-w-2xl text-[13px] leading-6 text-muted">
-            求职沟通、项目合作和内容交流都可以直接发消息。联系方式只保留在下面这个终端里。
+    <main className="site-container py-5 lg:py-8">
+      <section className="mx-auto grid max-w-[1080px] items-center gap-4 lg:grid-cols-[44fr_56fr] lg:gap-6">
+        <div className="order-2 lg:order-1">
+          <p className="font-pixel text-[12px] text-muted">07. CONTACT</p>
+          <h1 className="rpg-page-title mt-2">{contact.heading}</h1>
+          <p className="mt-4 max-w-[42ch] text-[15px] leading-[26px] text-muted">
+            {contact.bubble}
           </p>
+          <p className="mt-4 font-pixel text-[10px] text-accent">MAILBOX OPEN · PLAYER ONLINE</p>
+
+          <div className="mt-5 flex flex-wrap gap-2">
+            {profile.resumePath ? (
+              <PixelButton href={profile.resumePath} variant="primary">
+                DOWNLOAD RESUME ↓
+              </PixelButton>
+            ) : (
+              <PixelButton variant="primary" onClick={() => copyWechat("resume")}>
+                加微信索取简历
+              </PixelButton>
+            )}
+            <PixelButton href={`mailto:${email}`} variant="secondary">
+              EMAIL ME →
+            </PixelButton>
+            <PixelButton variant="secondary" onClick={() => copyWechat("wechat")}>
+              {copiedTarget === "wechat" ? "WECHAT COPIED ✓" : "COPY WECHAT"}
+            </PixelButton>
+          </div>
+
+          {profile.resumePath ? (
+            <p className="mt-2 font-pixel text-[9px] text-muted">
+              PDF · UPDATED {contact.resumeUpdated}
+            </p>
+          ) : (
+            <p className="mt-2 text-[11px] leading-5 text-muted">
+              暂未公开 PDF · 微信备注「简历」即可索取
+            </p>
+          )}
         </div>
-        <div className="flex items-center gap-3 border border-divider bg-soft px-3 py-2">
-          <PixelIcon assetId="items.mail" decorative width={30} height={30} />
-          <div>
-            <span className="block font-pixel text-[12px] text-accent">CHANNEL OPEN</span>
-            <span className="text-[10px] text-muted">PLAYER ONLINE</span>
-          </div>
+
+        <div className="order-1 lg:order-2">
+          <CharacterScene variant="contact" bubbleText="欢迎来找我聊聊 :)" />
         </div>
-      </header>
-
-      <section className="grid gap-4 lg:grid-cols-[0.72fr_1.28fr] lg:items-stretch lg:gap-5">
-        <PixelPanel eyebrow="PLAYER STATUS" title="CURRENT QUEST" accent className="h-full">
-          <h2 className="text-[22px] font-semibold leading-8 tracking-[-0.02em]">
-            寻找能继续做内容、产品和 AI 实践的机会。
-          </h2>
-          <p className="mt-3 text-[13px] leading-6 text-muted">
-            方向以内容运营、产品运营、AI 产品运营和品牌传播为主，成都优先，也关注其他合适机会。
-          </p>
-
-          <div className="mt-5 grid grid-cols-2 gap-px border border-divider bg-divider">
-            <ContactMeta label="BASE" value="成都" />
-            <ContactMeta label="GRAD" value="2027" />
-            <ContactMeta label="FOCUS" value="运营 / AI" />
-            <ContactMeta label="STATUS" value="OPEN" accent />
-          </div>
-
-          <div className="mt-5 grid gap-2">
-            <Link href="/quests" className="flex min-h-10 items-center justify-between border border-divider bg-soft px-3 font-pixel text-[9px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent">
-              VIEW QUESTS <span>→</span>
-            </Link>
-            <Link href="/player" className="flex min-h-10 items-center justify-between border border-divider bg-paper px-3 font-pixel text-[9px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent">
-              PLAYER FILE <span>→</span>
-            </Link>
-          </div>
-        </PixelPanel>
-
-        <section className="overflow-hidden border-2 border-border bg-[#1e201d] text-[#f7f2e7] shadow-[6px_6px_0_rgba(17,17,17,.08)]" aria-labelledby="contact-terminal-title">
-          <div className="flex min-h-11 items-center justify-between border-b border-white/10 px-4">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 animate-pulse bg-accent" />
-              <span className="font-pixel text-[9px] tracking-[0.08em]">CONTACT TERMINAL</span>
-            </div>
-            <span className="font-pixel text-[8px] text-white/40">READY</span>
-          </div>
-
-          <div className="relative p-5 sm:p-7 lg:p-8">
-            <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(255,255,255,.08)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.08)_1px,transparent_1px)] [background-size:28px_28px]" />
-            <div className="relative z-10">
-              <p className="font-pixel text-[9px] text-[#d96854]">MESSAGE CHANNELS</p>
-              <h2 id="contact-terminal-title" className="mt-3 font-pixel text-[17px] leading-7 sm:text-[20px]">CHOOSE ONE CHANNEL.</h2>
-
-              <div className="mt-6 divide-y divide-white/10 border-y border-white/10">
-                <TerminalRow command="EMAIL" value={email} href={`mailto:${email}`} />
-                <TerminalRow command="WECHAT" value={wechat} onClick={copyWechat} copied={copied} />
-                <TerminalRow command="PHONE" value={phone} href={`tel:${phone}`} />
-                {profile.resumePath ? <TerminalRow command="RESUME" value="DOWNLOAD PDF" href={profile.resumePath} /> : null}
-              </div>
-
-              <div className="mt-7 flex items-end justify-between gap-5">
-                <div>
-                  <p className="font-pixel text-[9px] text-white/40">SYSTEM NOTE</p>
-                  <p className="mt-2 max-w-[430px] text-[12px] leading-6 text-white/68">
-                    邮件可以直接发送；微信点击后会复制微信号；电话可直接拨打。
-                  </p>
-                </div>
-                <PixelIcon assetId="cat.peek" decorative width={84} height={84} className="h-auto w-[68px] shrink-0 opacity-90 sm:w-[84px]" />
-              </div>
-
-              <p className="mt-6 font-pixel text-[9px] text-[#d96854]">
-                READY TO TALK<span className="ml-1 inline-block animate-pulse">_</span>
-              </p>
-            </div>
-          </div>
-        </section>
       </section>
 
-      {copied ? (
-        <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[10px] text-white lg:bottom-6">
-          WECHAT COPIED · 微信号已复制
+      <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
+        {contact.items.map((item, index) => {
+          const isWechat = item.type === "wechat";
+          const isResume = item.type === "resume";
+          const href =
+            item.type === "email"
+              ? `mailto:${item.value}`
+              : item.type === "phone"
+                ? `tel:${item.value}`
+                : isResume && profile.resumePath
+                  ? profile.resumePath
+                  : undefined;
+
+          return (
+            <PixelPanel
+              key={item.type}
+              eyebrow={`0${index + 1}`}
+              title={item.label}
+              accent={index === 0}
+              className="h-full"
+              contentClassName="flex min-h-[190px] flex-col p-4 lg:p-5"
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-divider bg-soft">
+                  <PixelIcon
+                    assetId={assetByType[item.type]}
+                    decorative
+                    width={48}
+                    height={48}
+                    className="h-12 w-12"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="break-all text-[14px] font-semibold leading-5">
+                    {isResume && profile.resumePath ? "PDF RESUME" : item.value}
+                  </p>
+                  <p className="mt-2 text-[12px] leading-5 text-muted">{hintByType[item.type]}</p>
+                </div>
+              </div>
+
+              <div className="mt-auto pt-4">
+                {isWechat ? (
+                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("wechat")}>
+                    {copiedTarget === "wechat" ? "已复制微信号 ✓" : "复制微信号"}
+                  </PixelButton>
+                ) : isResume && !profile.resumePath ? (
+                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("resume")}>
+                    {copiedTarget === "resume" ? "已复制微信号 ✓" : "加微信索取简历"}
+                  </PixelButton>
+                ) : (
+                  <PixelButton
+                    href={href}
+                    variant={index === 0 ? "primary" : "secondary"}
+                    className="w-full"
+                  >
+                    {item.type === "email"
+                      ? "发送邮件"
+                      : item.type === "phone"
+                        ? "拨打电话"
+                        : "DOWNLOAD RESUME ↓"}
+                  </PixelButton>
+                )}
+              </div>
+            </PixelPanel>
+          );
+        })}
+      </section>
+
+      {copiedTarget && (
+        <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
+          {copiedTarget === "resume" ? "WECHAT COPIED · 备注「简历」" : "WECHAT COPIED · 微信号已复制"}
         </div>
-      ) : null}
+      )}
     </main>
-  );
-}
-
-function ContactMeta({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
-  return (
-    <div className="bg-background px-3 py-3">
-      <p className="font-pixel text-[8px] text-muted">{label}</p>
-      <p className={accent ? "mt-1 font-pixel text-[10px] text-accent" : "mt-1 font-pixel text-[10px]"}>{value}</p>
-    </div>
-  );
-}
-
-function TerminalRow({
-  command,
-  value,
-  href,
-  onClick,
-  copied = false,
-}: {
-  command: string;
-  value: string;
-  href?: string;
-  onClick?: () => void;
-  copied?: boolean;
-}) {
-  const content = (
-    <>
-      <span className="font-pixel text-[9px] text-[#d96854]">&gt; {command}</span>
-      <span className="min-w-0 break-all text-right text-[12px] text-white/78 sm:text-[13px]">
-        {copied ? "COPIED! ✓" : value}
-      </span>
-    </>
-  );
-
-  if (href) {
-    return (
-      <a href={href} className="grid min-h-14 grid-cols-[86px_1fr] items-center gap-4 px-1 transition-colors hover:bg-white/5">
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <button type="button" onClick={onClick} className="grid min-h-14 w-full grid-cols-[86px_1fr] items-center gap-4 px-1 text-left transition-colors hover:bg-white/5">
-      {content}
-    </button>
   );
 }
