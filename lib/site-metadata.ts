@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://yexinmei-portfolio.vercel.app";
+export const SITE_URL = "https://luoyexinmei.top";
 const OG_IMAGE = "/opengraph-image";
 
 type PageMetadataInput = {
@@ -48,4 +48,3 @@ export function buildPageMetadata({
     },
   };
 }
-
