@@ -9,12 +9,7 @@ const questFilters = ["ALL", "CONTENT", "COMMUNITY", "GROWTH", "CREATIVE"] as co
 type QuestFilter = (typeof questFilters)[number];
 
 const filterSlugs: Record<Exclude<QuestFilter, "ALL">, string[]> = {
-  CONTENT: [
-    "zhihu-auto-consumer-tech",
-    "global-content",
-    "tech-you-houhua",
-    "inspiration-studio",
-  ],
+  CONTENT: ["zhihu-auto-consumer-tech", "global-content", "tech-you-houhua", "inspiration-studio"],
   COMMUNITY: ["zhihu-auto-consumer-tech"],
   GROWTH: ["zhihu-auto-consumer-tech", "ccd-business"],
   CREATIVE: ["tech-you-houhua", "visual-storytelling", "inspiration-studio"],
@@ -31,9 +26,9 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
 
   return (
     <>
-      <div className="mb-4 border-y border-divider py-3">
+      <div className="mb-3 border-y border-divider py-2.5">
         <div className="no-scrollbar -mx-4 overflow-x-auto px-4 lg:mx-0 lg:overflow-visible lg:px-0">
-          <div className="flex min-w-max gap-2 lg:flex-wrap">
+          <div className="flex min-w-max gap-1.5 lg:flex-wrap">
             {questFilters.map((category) => {
               const active = activeCategory === category;
 
@@ -44,7 +39,7 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
                   aria-pressed={active}
                   onClick={() => setActiveCategory(category)}
                   className={[
-                    "min-h-11 border-2 px-3 font-pixel text-[12px] transition-[background-color,color,border-color,transform]",
+                    "min-h-9 border px-2.5 font-pixel text-[10px] transition-[background-color,color,border-color,transform] hover:-translate-y-px",
                     active
                       ? "border-border bg-foreground text-white"
                       : "border-divider bg-soft text-foreground hover:border-accent hover:text-accent",
@@ -58,12 +53,12 @@ export function QuestExplorer({ quests }: { quests: Quest[] }) {
         </div>
       </div>
 
-      <div className="mb-4 flex items-center justify-between font-pixel text-[11px] text-muted">
+      <div className="mb-3 flex items-center justify-between font-pixel text-[10px] text-muted">
         <span>AREA: {activeCategory}</span>
         <span>{filteredQuests.length} FOUND</span>
       </div>
 
-      <div key={activeCategory} className="project-archive-grid grid gap-4 md:grid-cols-2">
+      <div key={activeCategory} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {filteredQuests.map((quest) => (
           <QuestCard key={quest.slug} quest={quest} />
         ))}
