@@ -15,7 +15,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { SiteFooter } from "@/components/layout/site-footer";
 
-const siteUrl = "https://yexinmei-portfolio.vercel.app";
+const siteUrl = "https://luoyexinmei.top";
 
 const pixelFont = Pixelify_Sans({
   subsets: ["latin"],
