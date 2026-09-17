@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 import { JournalExplorer } from "@/components/journal/journal-explorer";
+import { PixelIcon } from "@/components/ui/pixel-icon";
 import { journalSeed } from "@/data/journal";
 
 export const metadata: Metadata = {
   title: "写作与观察",
-  description: "罗叶馨梅的写作、摄影、内容观察与 AI 工作流记录。",
+  description: "罗叶馨梅的写作、摄影、内容观察与个人项目记录。",
 };
 
 const categoryCounts = journalSeed.reduce(
@@ -22,54 +23,45 @@ const categoryCounts = journalSeed.reduce(
 
 export default function JournalPage() {
   return (
-    <main className="site-container pb-12 pt-6 lg:pb-16 lg:pt-10">
-      <header className="border-b border-divider pb-8 lg:pb-10">
-        <p className="font-pixel text-[11px] tracking-[0.08em] text-accent">06 / JOURNAL</p>
-        <div className="mt-3 grid gap-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-end lg:gap-12">
+    <main className="site-container pb-12 pt-5 lg:pb-14 lg:pt-8">
+      <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
+        <div>
+          <p className="font-pixel text-[10px] text-accent">06 / JOURNAL</p>
+          <h1 className="mt-2 font-pixel-zh text-[38px] leading-none lg:text-[48px]">写作与观察</h1>
+          <p className="mt-3 max-w-2xl text-[13px] leading-6 text-muted">
+            项目页放结果，这里只留观察、照片和过程记录。每篇从一个具体问题开始。
+          </p>
+        </div>
+        <div className="flex items-center gap-3 border border-divider bg-soft px-3 py-2">
+          <PixelIcon assetId="items.notebook" decorative width={30} height={30} />
           <div>
-            <h1 className="text-[42px] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[52px] lg:text-[64px]">
-              FIELD NOTES
-            </h1>
-            <p className="mt-3 font-pixel text-[10px] tracking-[0.08em] text-muted">
-              TECH · PHOTO · SIDE PROJECTS
-            </p>
-          </div>
-          <div>
-            <p className="max-w-[700px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
-              这里记录我怎样看科技热点、怎样拍下一些瞬间，也记录 AI 工具和个人项目背后的取舍。每一篇都从一个具体问题开始。
-            </p>
-            <div className="mt-5 grid grid-cols-3 border-y border-divider">
-              <JournalStat label="TECH" value={categoryCounts["TECH NOTES"]} />
-              <JournalStat label="PHOTO" value={categoryCounts["PHOTO NOTES"]} bordered />
-              <JournalStat label="SIDE PROJECT" value={categoryCounts["SIDE PROJECT LOG"]} bordered />
-            </div>
+            <span className="block font-pixel text-[12px]">{String(journalSeed.length).padStart(2, "0")} NOTES</span>
+            <span className="text-[10px] text-muted">FIELD NOTES · GROWING</span>
           </div>
         </div>
       </header>
 
-      <section className="py-9 lg:py-14" aria-label="写作与观察列表">
-        <JournalExplorer />
+      <section className="mb-5 grid gap-px border border-divider bg-divider sm:grid-cols-3" aria-label="手记分类统计">
+        <JournalStat label="TECH NOTES" value={categoryCounts["TECH NOTES"]} icon="ui.sparkle" />
+        <JournalStat label="PHOTO NOTES" value={categoryCounts["PHOTO NOTES"]} icon="items.camera" />
+        <JournalStat label="SIDE PROJECT LOG" value={categoryCounts["SIDE PROJECT LOG"]} icon="items.key" />
       </section>
 
-      <section className="grid gap-6 border-t border-divider py-8 lg:grid-cols-[1fr_auto] lg:items-center lg:py-10">
-        <div>
-          <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">DIGITAL GARDEN</p>
-          <h2 className="mt-2 text-[25px] font-semibold tracking-[-0.025em]">持续记录正在形成的判断。</h2>
-          <p className="mt-3 max-w-[720px] text-[13px] leading-6 text-muted">
-            写作、照片和小项目会继续长在这里。它们也会和项目页互相连接，让过程、方法和结果能够被一起看到。
-          </p>
-        </div>
-        <span className="font-pixel text-[10px] text-muted">{String(journalSeed.length).padStart(2, "0")} NOTES · GROWING...</span>
+      <section aria-label="写作与观察列表">
+        <JournalExplorer />
       </section>
     </main>
   );
 }
 
-function JournalStat({ label, value, bordered = false }: { label: string; value: number; bordered?: boolean }) {
+function JournalStat({ label, value, icon }: { label: string; value: number; icon: "ui.sparkle" | "items.camera" | "items.key" }) {
   return (
-    <div className={bordered ? "border-l border-divider px-3 py-3" : "px-3 py-3"}>
-      <p className="font-pixel text-[8px] text-muted">{label}</p>
-      <p className="mt-1 font-pixel text-[14px] text-foreground">{String(value).padStart(2, "0")}</p>
+    <div className="flex items-center gap-3 bg-background px-3 py-3">
+      <PixelIcon assetId={icon} decorative width={26} height={26} />
+      <div>
+        <p className="font-pixel text-[8px] text-muted">{label}</p>
+        <p className="mt-0.5 font-pixel text-[14px] text-foreground">{String(value).padStart(2, "0")}</p>
+      </div>
     </div>
   );
 }
