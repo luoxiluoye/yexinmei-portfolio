@@ -1,39 +1,24 @@
-import { skillGroups } from "@/data/home";
+import { skills } from "@/data/skills";
 
 import { PixelButton } from "@/components/ui/pixel-button";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
+import type { AssetId } from "@/lib/assets";
 
-const groupIcons = ["items.notebook", "ui.sparkle", "items.camera"] as const;
+const abilityIcons: AssetId[] = ["items.notebook", "ui.heart", "ui.sparkle", "items.camera"];
 
 export function SkillsPreview() {
   return (
-    <PixelPanel eyebrow="INVENTORY" title="SKILLS" accent interactive className="h-full">
-      <div className="space-y-3.5">
-        {skillGroups.map((group, index) => (
-          <div key={group.title} className="group/skill">
-            <div className="mb-2 flex items-center gap-2.5">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center">
-                <PixelIcon
-                  assetId={groupIcons[index]}
-                  decorative
-                  width={28}
-                  height={28}
-                  className="transition-transform duration-100 group-hover/skill:-translate-y-px"
-                />
-              </div>
-              <span className="font-pixel text-[11px]">{group.title}</span>
-            </div>
-
-            <div className="flex flex-wrap gap-1.5">
-              {group.items.slice(0, 4).map((skill) => (
-                <span
-                  key={skill}
-                  className="border border-divider bg-soft px-2 py-1 text-[11px] leading-4 transition-colors hover:border-border hover:bg-paper"
-                >
-                  {skill}
-                </span>
-              ))}
+    <PixelPanel eyebrow="INVENTORY" title="ABILITY SETS" accent interactive className="h-full">
+      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+        {skills.abilities.map((ability, index) => (
+          <div key={ability.key} className="grid grid-cols-[32px_1fr] items-center gap-2.5 border-b border-divider pb-2.5 last:border-0 last:pb-0">
+            <span className="flex h-8 w-8 items-center justify-center bg-soft">
+              <PixelIcon assetId={abilityIcons[index]} decorative width={25} height={25} />
+            </span>
+            <div className="min-w-0">
+              <span className="block truncate font-pixel text-[10px]">{ability.title}</span>
+              <span className="mt-0.5 block truncate text-[10px] text-muted">{ability.subtitle}</span>
             </div>
           </div>
         ))}
