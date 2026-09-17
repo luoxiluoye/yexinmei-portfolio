@@ -1,5 +1,4 @@
 import { quests } from "@/data/quests";
-import { skills } from "@/data/skills";
 
 export const homeContent = {
   eyebrow: "HELLO! WELCOME TO MY WORLD!",
@@ -31,9 +30,3 @@ const homeQuestSlugs = [
 export const homeQuests = homeQuestSlugs
   .map((slug) => quests.find((quest) => quest.slug === slug))
   .filter((quest): quest is NonNullable<typeof quest> => Boolean(quest));
-
-export const skillGroups = [
-  { title: "CONTENT", items: ["内容策划", "社区运营", "新品运营", "用户洞察"] },
-  { title: "AI / PRODUCT", items: [...skills.aiAssist.slice(0, 3), "互动叙事"] },
-  { title: "TOOLS", items: skills.tools.slice(0, 4).map((item) => item.name) },
-];
