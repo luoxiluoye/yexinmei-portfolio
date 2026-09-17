@@ -1,81 +1,74 @@
-"use client";
-
-import { HomeWorld } from "@/components/home/home-world";
-
-const proofSignals = [
-  {
-    label: "CURRENT",
-    value: "知乎 · 数码 / 新品运营",
-    detail: "社区内容、消费电子与新品",
-  },
-  {
-    label: "BUILT FROM 0→1",
-    value: "赤页 RED LEAF",
-    detail: "AI 互动叙事产品 · 可在线体验",
-  },
-  {
-    label: "RESULT",
-    value: "20W+ GMV",
-    detail: "CCD 个人项目 · 内容获客与经营",
-  },
-  {
-    label: "BACKGROUND",
-    value: "电子科技大学 · 2027",
-    detail: "新闻与传播硕士",
-  },
-] as const;
+import { homeContent } from "@/data/home";
+import { DataBadges } from "@/components/home/data-badges";
+import { PixelButton } from "@/components/ui/pixel-button";
+import { CharacterScene } from "@/components/scenes/character-scene";
 
 export function HeroSection() {
   return (
-    <section className="studio-hero" data-motion="calm" aria-labelledby="home-title">
-      <div className="studio-hero-meta">
-        <span className="studio-kicker">
-          YEXINMEI LUO <span className="studio-meta-slash">/</span> PERSONAL PORTFOLIO
-        </span>
-      </div>
-
-      <div className="studio-hero-layout">
-        <div className="studio-hero-copy">
-          <p className="studio-introduction">
-            <span className="studio-intro-cross" aria-hidden="true">✳</span>
-            你好，我是罗叶馨梅
+    <section className="site-container pt-4 lg:pt-8">
+      <div className="grid gap-4 lg:grid-cols-[45fr_55fr] lg:items-center lg:gap-5">
+        <div className="order-1 py-2 lg:py-4">
+          <p className="font-pixel text-[11px] text-muted lg:text-[12px]">
+            {homeContent.eyebrow}
           </p>
 
-          <h1 id="home-title" className="studio-headline">
-            <span className="block">把好奇，</span>
-            <span className="block text-accent">变成作品。</span>
+          <h1 className="mt-3">
+            <span className="font-pixel-zh block text-[clamp(48px,12vw,60px)] leading-[1.02] tracking-[-0.01em] lg:text-[68px]">
+              {homeContent.titleZh}
+              <span className="ml-2 align-top font-pixel text-[0.30em] text-accent">♥</span>
+            </span>
+            <span className="mt-1.5 block font-pixel text-[16px] uppercase tracking-[-0.02em] text-muted lg:text-[19px]">
+              {homeContent.titleEn}
+            </span>
           </h1>
 
-          <p className="studio-hero-role">
-            内容运营 <span>×</span> AI 产品 <span>×</span> 科技内容
-          </p>
-          <p className="studio-hero-description">
-            电子科技大学新闻与传播硕士，现做知乎数码 / 新品运营。
-            <br className="studio-desktop-break" />
-            做内容、研究用户，也把 AI 想法做成真正可以使用的产品。
+          <div className="mt-4 inline-grid max-w-full grid-cols-[auto_minmax(0,1fr)] border-2 border-border bg-paper shadow-[2px_2px_0_rgba(17,17,17,.10)]">
+            <span className="flex items-center bg-foreground px-2.5 py-2 font-pixel text-[10px] leading-none text-white lg:px-3 lg:text-[11px]">
+              CLASS
+            </span>
+            <span className="min-w-0 px-3 py-1.5 font-pixel text-[10px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[11px]">
+              {homeContent.keywords.join(" · ")}
+            </span>
+          </div>
+
+          <p className="mt-3 text-[13px] font-semibold text-foreground lg:text-[14px]">
+            {homeContent.directionZh}
           </p>
 
-          <div className="studio-hero-actions">
-            <a href="#flagship-project" className="studio-button studio-button-primary">
-              先看代表作 <span aria-hidden="true">↓</span>
-            </a>
-            <a href="#selected-work" className="studio-button studio-button-quiet">
-              看其他项目 <span aria-hidden="true">→</span>
-            </a>
+          <p className="mt-3 max-w-[560px] text-[15px] leading-[26px] text-muted lg:text-[16px]">
+            {homeContent.intro}
+          </p>
+
+          <div className="mt-4 flex max-w-[560px] items-center gap-2 border border-divider bg-soft px-3 py-2.5">
+            <span className="h-2 w-2 shrink-0 bg-accent" aria-hidden="true" />
+            <span className="font-pixel text-[9px] text-muted">NOW PLAYING</span>
+            <span className="min-w-0 truncate text-[12px] font-medium">知乎数码 / 新品运营</span>
+          </div>
+
+          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
+            <PixelButton href="/quests/red-leaf" variant="primary" className="w-full sm:w-auto">
+              MAIN QUEST · 赤页 →
+            </PixelButton>
+            <PixelButton href="/quests" variant="secondary" className="w-full sm:w-auto">
+              查看任务
+            </PixelButton>
+            <PixelButton href="/player" variant="ghost" className="w-full sm:w-auto">
+              关于我
+            </PixelButton>
+          </div>
+
+          <div className="mt-4 hidden max-w-[560px] lg:block">
+            <DataBadges />
           </div>
         </div>
 
-        <HomeWorld />
+        <div className="order-2">
+          <CharacterScene variant="home" bubbleText={homeContent.bubble} />
+        </div>
       </div>
 
-      <div className="home-proof-grid" aria-label="核心经历与结果">
-        {proofSignals.map((signal) => (
-          <div key={signal.label} className="home-proof-item">
-            <span className="home-proof-label">{signal.label}</span>
-            <strong className="home-proof-value">{signal.value}</strong>
-            <span className="home-proof-detail">{signal.detail}</span>
-          </div>
-        ))}
+      <div className="mt-4 lg:hidden">
+        <DataBadges />
       </div>
     </section>
   );
