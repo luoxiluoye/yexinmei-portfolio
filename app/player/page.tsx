@@ -5,104 +5,99 @@ import { FunFactsInspect } from "@/components/player/fun-facts-inspect";
 import { JourneyArchive } from "@/components/player/journey-archive";
 import { PlayerSnapshot } from "@/components/player/player-snapshot";
 import { XPBar } from "@/components/ui/xp-bar";
+import { PixelIcon } from "@/components/ui/pixel-icon";
 import { profile } from "@/data/profile";
 
 export const metadata: Metadata = {
   title: "关于我",
-  description: "罗叶馨梅的个人经历、成长路径与内容、产品和 AI 实践。",
+  description: "罗叶馨梅的成长路径、个人经历与生活侧面。",
 };
 
 export default function PlayerPage() {
   return (
-    <main className="site-container pb-12 pt-6 lg:pb-16 lg:pt-10">
-      <section className="grid items-center gap-8 border-b border-divider pb-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-12 lg:pb-14">
-        <div className="min-w-0 lg:pr-2">
-          <p className="font-pixel text-[11px] tracking-[0.08em] text-accent">02 / PLAYER</p>
-          <h1 className="mt-4 text-[42px] font-semibold leading-[1.06] tracking-[-0.04em] sm:text-[52px] lg:text-[64px]">
-            罗叶馨梅
-          </h1>
-          <p className="mt-2 font-pixel text-[12px] tracking-[0.12em] text-muted">YEXINMEI LUO</p>
+    <main className="site-container pb-12 pt-5 lg:pb-14 lg:pt-8">
+      <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
+        <div>
+          <p className="font-pixel text-[10px] text-accent">02 / PLAYER FILE</p>
+          <h1 className="mt-2 font-pixel-zh text-[38px] leading-none lg:text-[48px]">罗叶馨梅</h1>
+          <p className="mt-3 max-w-2xl text-[13px] leading-6 text-muted">
+            这里记录我的成长路径和生活侧面。项目在 QUESTS，能力与工具在 INVENTORY。
+          </p>
+        </div>
+        <div className="flex items-center gap-3 border border-divider bg-soft px-3 py-2">
+          <PixelIcon assetId="character.avatar" decorative width={30} height={30} />
+          <div>
+            <span className="block font-pixel text-[12px]">YEXINMEI LUO</span>
+            <span className="text-[10px] text-muted">CHENGDU · 2027</span>
+          </div>
+        </div>
+      </header>
 
-          <p className="mt-7 text-[20px] font-semibold leading-8 lg:text-[24px]">内容 × 产品 × AI</p>
-          <p className="mt-4 max-w-[600px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">
-            从广播电视编导到新闻与传播，再到社区内容、新品运营与 AI 产品实践。我喜欢研究一件事为什么会让人停下来，也喜欢把一个想法真正做成可以被使用、被体验的东西。
+      <section className="grid items-center gap-5 lg:grid-cols-[0.86fr_1.14fr] lg:gap-8" aria-labelledby="player-intro">
+        <div className="min-w-0 border-2 border-border bg-paper p-5 lg:p-6">
+          <p className="font-pixel text-[9px] text-accent">PLAYER PROFILE</p>
+          <h2 id="player-intro" className="mt-3 text-[24px] font-semibold leading-8 tracking-[-0.02em] lg:text-[30px]">
+            从编导、新闻传播，一路走到内容与互联网。
+          </h2>
+          <p className="mt-4 text-[14px] leading-7 text-muted">
+            本科读广播电视编导，后来到电子科技大学读新闻与传播。做过传统媒体、国际传播、新媒体和社区内容，也一直喜欢摄影、科技和新工具。
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[13px] leading-6 text-muted">
-            <span>成都</span>
-            <span>电子科技大学 · 新闻与传播硕士</span>
-            <span>内容运营 / AI 产品 / 科技内容</span>
+          <dl className="mt-5 grid gap-px border border-divider bg-divider sm:grid-cols-3">
+            <PlayerMeta label="BASE" value="成都" />
+            <PlayerMeta label="SCHOOL" value="电子科技大学" />
+            <PlayerMeta label="GRAD" value="2027" />
+          </dl>
+
+          <div className="mt-5 max-w-[300px]">
+            <XPBar level={profile.xp.level} current={profile.xp.current} max={profile.xp.max} label="PLAYER XP" />
           </div>
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              href="/quests"
-              className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-foreground px-4 font-pixel text-[11px] text-white transition-[transform,border-color,background-color] duration-100 hover:-translate-y-px hover:border-accent hover:bg-accent"
-            >
-              看我的项目 →
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Link href="/quests" className="inline-flex min-h-10 items-center border-2 border-border bg-foreground px-3 font-pixel text-[9px] text-white hover:border-accent hover:bg-accent">
+              VIEW QUESTS →
             </Link>
-            <Link
-              href="/contact"
-              className="inline-flex min-h-11 items-center justify-center border-2 border-border bg-paper px-4 font-pixel text-[11px] transition-[transform,border-color,color] duration-100 hover:-translate-y-px hover:border-accent hover:text-accent"
-            >
-              联系我 ↗
+            <Link href="/inventory" className="inline-flex min-h-10 items-center border border-border bg-paper px-3 font-pixel text-[9px] hover:border-accent hover:text-accent">
+              OPEN INVENTORY →
             </Link>
-          </div>
-
-          <div className="mt-8 max-w-[290px] border-t border-divider pt-4 opacity-75">
-            <XPBar
-              level={profile.xp.level}
-              current={profile.xp.current}
-              max={profile.xp.max}
-              label="SIDE QUEST XP"
-            />
           </div>
         </div>
 
-        <div className="min-w-0">
-          <PlayerSnapshot />
-        </div>
+        <PlayerSnapshot />
       </section>
 
-      <section className="py-10 lg:py-14" aria-labelledby="journey-heading">
-        <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <section className="border-t border-divider py-8 lg:py-10" aria-labelledby="journey-heading">
+        <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
-            <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">JOURNEY / 01—07</p>
-            <h2 id="journey-heading" className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">
-              一路做过的事
-            </h2>
+            <p className="font-pixel text-[9px] text-accent">JOURNEY / 01—07</p>
+            <h2 id="journey-heading" className="mt-1.5 text-[26px] font-semibold tracking-[-0.03em] lg:text-[32px]">一路怎么走到这里</h2>
           </div>
-          <p className="max-w-[420px] text-[13px] leading-6 text-muted sm:text-right">
-            向下滚动会逐步解锁路径，也可以直接点选节点查看经历，并打开完整档案。
+          <p className="max-w-[430px] text-[12px] leading-5 text-muted sm:text-right">
+            点节点看完整经历。这里保留时间线，不再重复项目详情和技能清单。
           </p>
         </div>
         <JourneyArchive />
       </section>
 
-      <section className="grid gap-10 border-t border-divider py-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14 lg:py-14">
-        <div>
-          <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">A LITTLE MORE</p>
-          <h2 className="mt-2 text-[28px] font-semibold tracking-[-0.03em] lg:text-[34px]">我在意什么</h2>
-          <div className="mt-5 max-w-[620px] space-y-4 text-[15px] leading-7 text-muted">
-            <p>
-              我做过传统媒体、国际传播、新媒体和社区内容，也一直在折腾自己的项目。工作之外会写科技内容、摄影、研究新工具，也会把灵感做成真正能跑起来的小产品。
-            </p>
-            <p>
-              到现在我仍然很喜欢观察：什么内容会让人停下来，什么体验会让人愿意继续，以及一个想法怎样从“有意思”变成“真的有人用”。
-            </p>
+      <section className="border-t border-divider py-8 lg:py-10" aria-labelledby="player-facts-heading">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div>
+            <p className="font-pixel text-[9px] text-accent">SIDE QUESTS</p>
+            <h2 id="player-facts-heading" className="mt-1.5 text-[26px] font-semibold tracking-[-0.03em] lg:text-[32px]">一些更像我的小事</h2>
           </div>
+          <span className="hidden font-pixel text-[9px] text-muted sm:block">INSPECT ITEM →</span>
         </div>
-
-        <div>
-          <div className="mb-5 flex items-end justify-between gap-4">
-            <div>
-              <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">SIDE QUESTS</p>
-              <h2 className="mt-2 text-[28px] font-semibold tracking-[-0.03em] lg:text-[34px]">一些关于我的小事</h2>
-            </div>
-          </div>
-          <FunFactsInspect />
-        </div>
+        <FunFactsInspect />
       </section>
     </main>
+  );
+}
+
+function PlayerMeta({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-background px-3 py-3">
+      <dt className="font-pixel text-[8px] text-muted">{label}</dt>
+      <dd className="mt-1 truncate text-[11px] font-medium">{value}</dd>
+    </div>
   );
 }
