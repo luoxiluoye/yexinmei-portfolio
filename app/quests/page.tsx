@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import { OwnedChannels } from "@/components/quests/owned-channels";
 import { QuestExplorer } from "@/components/quests/quest-explorer";
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { PixelPanel } from "@/components/ui/pixel-panel";
 import { quests } from "@/data/quests";
 
 export const metadata: Metadata = {
@@ -14,125 +15,88 @@ export const metadata: Metadata = {
 
 export default function QuestsPage() {
   return (
-    <main className="site-container project-archive" id="main-content">
-      <header className="project-archive-header">
+    <main className="site-container py-5 lg:py-8" id="main-content">
+      <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
         <div>
-          <p className="project-archive-eyebrow font-pixel"><span>01 /</span> PROJECTS & PRACTICE</p>
-          <h1>项目与实践<span aria-hidden="true">✳</span></h1>
-          <p className="project-archive-intro">
-            这里记录做过的项目、正在探索的方向，以及一些从兴趣出发的 Side Quests。
+          <p className="font-pixel text-[10px] text-accent">01 / QUEST BOARD</p>
+          <h1 className="mt-2 font-pixel-zh text-[38px] leading-none lg:text-[48px]">项目与实践</h1>
+          <p className="mt-3 max-w-2xl text-[13px] leading-6 text-muted">
+            主线、支线和一些从兴趣开始的任务。想快速看就扫任务板，想看细节再进入对应 Case File。
           </p>
         </div>
-        <div className="project-archive-counter" aria-label="项目仍在持续增加">
-          <PixelIcon assetId="items.notebook" decorative width={52} height={52} />
-          <div><span className="font-pixel">06+</span><span>段探索，持续发生。</span></div>
+        <div className="flex items-center gap-3 border border-divider bg-soft px-3 py-2">
+          <PixelIcon assetId="items.notebook" decorative width={30} height={30} />
+          <div>
+            <span className="block font-pixel text-[13px]">07 QUESTS</span>
+            <span className="text-[10px] text-muted">持续更新中</span>
+          </div>
         </div>
       </header>
 
-      <section
-        className="relative mb-12 overflow-hidden bg-[#0b0c0e] text-white lg:mb-16"
-        aria-labelledby="featured-quest-title"
+      <PixelPanel
+        eyebrow="MAIN QUEST · AI PRODUCT"
+        title="赤页 RED LEAF"
+        accent
+        interactive
+        className="mb-5"
+        contentClassName="p-3 lg:p-4"
+        rightSlot={<span className="font-pixel text-[9px] text-accent">0→1 / PLAYABLE</span>}
       >
-        <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rotate-12 border-[28px] border-[#ef3340]/15" aria-hidden="true" />
-        <div className="pointer-events-none absolute bottom-0 left-[43%] h-px w-[46%] bg-gradient-to-r from-[#ef3340] via-[#ef3340]/40 to-transparent" aria-hidden="true" />
-
-        <div className="relative grid gap-8 px-6 py-8 sm:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center lg:gap-12 lg:px-10 lg:py-12 xl:px-12">
-          <div className="max-w-[560px]">
-            <div className="flex items-center gap-3">
-              <span className="h-2 w-2 bg-[#ef3340]" aria-hidden="true" />
-              <p className="font-pixel text-[9px] tracking-[0.12em] text-[#ff5963]">FEATURED QUEST / 00</p>
-            </div>
-
-            <h2
-              id="featured-quest-title"
-              className="mt-5 text-[40px] font-semibold leading-[0.96] tracking-[-0.045em] sm:text-[48px] lg:text-[56px] xl:text-[62px]"
-              style={{ viewTransitionName: "red-leaf-title" }}
-            >
-              赤页 <span className="text-[#ff424b]">RED LEAF</span>
-            </h2>
-            <p className="mt-5 max-w-[500px] text-[20px] font-semibold leading-8 tracking-[-0.02em] sm:text-[22px] lg:text-[24px] lg:leading-9">
-              把知乎里的故事，变成可以走进去玩的世界。
-            </p>
-            <p className="mt-5 max-w-[520px] text-[14px] leading-7 text-white/62 lg:text-[15px]">
-              从 0 到 1 完成的 AI 互动叙事产品。把知乎故事、盐选内容或回答解析成人物、场景、剧情分支、玩家选择与多结局，再生成一款真正可以玩的文字冒险游戏。
+        <div className="grid gap-4 lg:grid-cols-[1fr_360px] lg:items-center">
+          <div className="min-w-0">
+            <p className="text-[17px] font-bold leading-6 lg:text-[19px]">把知乎里的故事，变成可以走进去玩的世界。</p>
+            <p className="mt-2 max-w-2xl text-[12px] leading-5 text-muted">
+              独立完成的 AI 互动叙事产品。故事进入系统后，会被解析成人物、线索与剧情分支，再生成可以直接游玩的文字冒险。
             </p>
 
-            <div className="mt-7 grid grid-cols-3 border-y border-white/12 py-5">
+            <div className="mt-3 grid grid-cols-3 border-y border-divider py-2.5">
               <Metric value="≈ 5 MIN" label="生成一局" />
-              <Metric value="3,608" label="资源文件" />
-              <Metric value="8.75 GiB" label="资源体量" />
+              <Metric value="50" label="决策位置" />
+              <Metric value="28" label="结局" />
             </div>
 
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="/quests/red-leaf"
-                className="inline-flex min-h-11 items-center justify-center bg-white px-4 font-pixel text-[9px] text-[#0b0c0e] transition-[transform,background-color,color] duration-100 hover:-translate-y-px hover:bg-[#ff424b] hover:text-white"
-              >
-                查看完整案例 →
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Link href="/quests/red-leaf" className="inline-flex min-h-9 items-center border-2 border-border bg-foreground px-3 font-pixel text-[9px] text-white transition-[transform,background-color] hover:-translate-y-px hover:bg-accent">
+                ENTER CASE FILE →
               </Link>
-              <a
-                href="https://zhihu.hegelsalon.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex min-h-11 items-center justify-center border border-white/25 px-4 font-pixel text-[9px] text-white transition-[transform,border-color,color] duration-100 hover:-translate-y-px hover:border-[#ff424b] hover:text-[#ff5963]"
-              >
-                在线体验 ↗
+              <a href="https://zhihu.hegelsalon.com/" target="_blank" rel="noreferrer" className="inline-flex min-h-9 items-center border border-border bg-paper px-3 font-pixel text-[9px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent">
+                PLAY ONLINE ↗
               </a>
             </div>
           </div>
 
-          <div className="relative lg:pl-2">
-            <div className="absolute -bottom-3 -right-3 h-full w-full bg-[#ef3340] opacity-70" aria-hidden="true" />
-            <Link
-              href="/quests/red-leaf"
-              aria-label="查看赤页 RED LEAF 完整案例"
-              className="group relative block overflow-hidden border border-white/15 bg-[#111317] shadow-[0_30px_80px_rgba(0,0,0,.35)] transition-transform duration-150 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff424b] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0b0c0e]"
-              style={{ viewTransitionName: "red-leaf-hero" }}
-            >
-              <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 bg-[#ff424b]" />
-                  <span className="font-pixel text-[8px] tracking-[0.09em] text-white/72">RED LEAF / REAL PRODUCT</span>
-                </div>
-                <span className="font-pixel text-[8px] text-white/32">知乎故事书库</span>
-              </div>
-
-              <div className="relative overflow-hidden bg-[#111317]">
-                <Image
-                  src="/assets/projects/red-leaf/library.webp"
-                  alt="赤页 RED LEAF 知乎故事书库真实产品界面"
-                  width={900}
-                  height={469}
-                  sizes="(max-width: 1023px) 100vw, 58vw"
-                  className="h-auto w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.012]"
-                  priority
-                />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
-                <div className="pointer-events-none absolute right-4 top-4 translate-y-1 bg-[#ff424b] px-3 py-2 font-pixel text-[8px] text-white opacity-0 transition-[opacity,transform] duration-150 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-                  查看案例 →
-                </div>
-                <div className="pointer-events-none absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4">
-                  <div>
-                    <p className="font-pixel text-[8px] text-[#ff5963]">REAL PRODUCT SCREENSHOT</p>
-                    <p className="mt-1 text-[15px] font-medium text-white sm:text-[18px]">知乎故事书库 · 《重生周》</p>
-                  </div>
-                  <span className="hidden font-pixel text-[8px] text-white/45 sm:block">50 决策位置 · 28 个结局</span>
-                </div>
-              </div>
-            </Link>
-            <p className="mt-4 text-right font-pixel text-[7px] tracking-[0.08em] text-muted">点击产品画面，查看完整案例 →</p>
-          </div>
+          <Link
+            href="/quests/red-leaf"
+            className="group relative block overflow-hidden border-2 border-border bg-[#111317]"
+            aria-label="查看赤页 RED LEAF 完整案例"
+            style={{ viewTransitionName: "red-leaf-hero" }}
+          >
+            <div className="flex h-8 items-center justify-between border-b border-white/10 px-3 text-white">
+              <span className="font-pixel text-[8px] text-[#ff5963]">REAL PRODUCT</span>
+              <span className="font-pixel text-[7px] text-white/45">《重生周》</span>
+            </div>
+            <Image
+              src="/assets/projects/red-leaf/library.webp"
+              alt="赤页 RED LEAF 真实产品界面"
+              width={900}
+              height={469}
+              sizes="(max-width: 1023px) 100vw, 360px"
+              className="h-auto w-full object-cover object-top transition-transform duration-150 group-hover:scale-[1.015]"
+              priority
+            />
+          </Link>
         </div>
-      </section>
+      </PixelPanel>
 
       <OwnedChannels />
 
-      <section className="project-archive-explorer" aria-label="筛选与浏览其他项目">
-        <div className="mb-5 flex items-end justify-between gap-4">
+      <section aria-labelledby="other-quests-title">
+        <div className="mb-3 flex items-end justify-between gap-4">
           <div>
-            <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">OTHER QUESTS</p>
-            <h2 className="mt-2 text-[26px] font-semibold tracking-[-0.03em]">其他项目</h2>
+            <p className="font-pixel text-[9px] text-accent">SIDE QUESTS</p>
+            <h2 id="other-quests-title" className="mt-1 text-[22px] font-bold">其他任务</h2>
           </div>
+          <span className="font-pixel text-[9px] text-muted">SELECT A QUEST →</span>
         </div>
         <QuestExplorer quests={quests} />
       </section>
@@ -142,9 +106,9 @@ export default function QuestsPage() {
 
 function Metric({ value, label }: { value: string; label: string }) {
   return (
-    <div className="min-w-0 px-2 first:pl-0 last:pr-0 sm:px-4">
-      <p className="font-pixel text-[11px] text-white sm:text-[13px]">{value}</p>
-      <p className="mt-1 text-[10px] leading-4 text-white/35">{label}</p>
+    <div className="min-w-0 border-r border-divider px-2 first:pl-0 last:border-r-0 last:pr-0 sm:px-3">
+      <p className="font-pixel text-[11px] text-foreground">{value}</p>
+      <p className="mt-0.5 text-[9px] text-muted">{label}</p>
     </div>
   );
 }
