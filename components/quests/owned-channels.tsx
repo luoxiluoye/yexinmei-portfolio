@@ -1,93 +1,57 @@
-import Image from "next/image";
+import { PixelIcon } from "@/components/ui/pixel-icon";
+import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const accounts = [
   {
-    platform: "小红书账号",
+    platform: "XIAOHONGSHU",
     name: "叶子会变成树",
     href: "https://www.xiaohongshu.com/user/profile/5a788cf511be1052dbfc6085",
-    image: "/assets/projects/personal-social/xiaohongshu.webp",
-    alt: "小红书账号「叶子会变成树」主页截图",
-    summary: "近 1 个月冷启动：账号上线不足 1 个月实现 0→500 粉，累计 6500+ 赞藏；独立完成选题、素材筛选、剪辑、字幕、标题与封面包装。",
-    metrics: [
-      { value: "522", label: "粉丝" },
-      { value: "6,712", label: "获赞与收藏" },
-    ],
+    icon: "ui.heart" as const,
+    note: "近 1 个月冷启动",
+    metrics: ["522 粉丝", "6,712 赞藏"],
   },
   {
-    platform: "知乎账号",
+    platform: "ZHIHU",
     name: "昔棗",
     href: "https://www.zhihu.com/people/luo-ye-xin-mei",
-    image: "/assets/projects/personal-social/zhihu.webp",
-    alt: "知乎账号「昔棗」主页截图",
-    summary: null,
-    metrics: [
-      { value: "1,348", label: "关注者" },
-      { value: "1,575", label: "获得赞同" },
-      { value: "775", label: "获得收藏" },
-    ],
+    icon: "ui.speechBubble" as const,
+    note: "个人内容账号",
+    metrics: ["1,348 关注者", "1,575 赞同", "775 收藏"],
   },
 ] as const;
 
 export function OwnedChannels() {
   return (
-    <section className="mb-12 border-y border-divider py-10 lg:mb-16 lg:py-14" aria-labelledby="personal-social-title">
-      <div className="mb-6">
-        <p className="font-pixel text-[9px] tracking-[0.1em] text-accent">PERSONAL SOCIAL MEDIA</p>
-        <h2 id="personal-social-title" className="mt-2 text-[30px] font-semibold tracking-[-0.035em] lg:text-[38px]">
-          个人新媒体运营
-        </h2>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
+    <PixelPanel
+      eyebrow="SIDE CHANNELS"
+      title="个人账号"
+      rightSlot={<span className="font-pixel text-[10px] text-muted">02</span>}
+      className="mb-5"
+      contentClassName="p-3 lg:p-4"
+    >
+      <div className="grid gap-2 lg:grid-cols-2">
         {accounts.map((account) => (
           <a
             key={account.platform}
             href={account.href}
             target="_blank"
             rel="noreferrer"
-            className="group overflow-hidden border-2 border-border bg-paper transition-[transform,border-color,box-shadow] duration-150 hover:-translate-y-1 hover:border-accent hover:shadow-[7px_7px_0_rgba(17,17,17,.10)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="group grid grid-cols-[36px_1fr_auto] items-center gap-3 border border-divider bg-soft px-3 py-2.5 transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-paper"
           >
-            <div className="relative aspect-[2/1] overflow-hidden border-b border-divider bg-white">
-              <Image
-                src={account.image}
-                alt={account.alt}
-                fill
-                sizes="(max-width: 1023px) 100vw, 50vw"
-                className="object-contain"
-              />
+            <PixelIcon assetId={account.icon} decorative width={28} height={28} />
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-pixel text-[9px] text-accent">{account.platform}</span>
+                <strong className="truncate text-[13px]">{account.name}</strong>
+              </div>
+              <p className="mt-1 truncate text-[10px] text-muted">
+                {account.note} · {account.metrics.join(" · ")}
+              </p>
             </div>
-
-            <div className="p-5 lg:p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">{account.platform}</p>
-                  <h3 className="mt-2 text-[26px] font-semibold tracking-[-0.03em] lg:text-[30px]">{account.name}</h3>
-                </div>
-                <span className="font-pixel text-[14px] text-muted transition-[transform,color] duration-150 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-accent" aria-hidden="true">
-                  ↗
-                </span>
-              </div>
-
-              {account.summary ? (
-                <p className="mt-4 max-w-[620px] text-[13px] leading-6 text-muted">{account.summary}</p>
-              ) : null}
-
-              <div className="mt-5 flex flex-wrap gap-x-8 gap-y-4 border-t border-divider pt-5">
-                {account.metrics.map((metric) => (
-                  <div key={metric.label}>
-                    <p className="font-pixel text-[15px] lg:text-[17px]">{metric.value}</p>
-                    <p className="mt-1 text-[11px] text-muted">{metric.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-5 border-t border-divider pt-4 text-right">
-                <span className="font-pixel text-[8px] text-foreground group-hover:text-accent">打开主页 ↗</span>
-              </div>
-            </div>
+            <span className="font-pixel text-[11px] transition-[transform,color] group-hover:translate-x-1 group-hover:text-accent" aria-hidden="true">↗</span>
           </a>
         ))}
       </div>
-    </section>
+    </PixelPanel>
   );
 }
