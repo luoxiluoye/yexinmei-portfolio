@@ -11,14 +11,22 @@ import { PixelButton } from "@/components/ui/pixel-button";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
-const assetByType: Record<(typeof contact.items)[number]["type"], AssetId> = {
+type ContactCardType = "email" | "phone" | "wechat" | "resume";
+
+type ContactCard = {
+  type: ContactCardType;
+  label: string;
+  value: string;
+};
+
+const assetByType: Record<ContactCardType, AssetId> = {
   email: "items.mail",
   phone: "ui.contactPhone",
   wechat: "ui.heart",
   resume: "items.notebook",
 };
 
-const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
+const hintByType: Record<ContactCardType, string> = {
   email: "求职 / 合作 / 内容交流",
   phone: "求职沟通可直接电话联系",
   wechat: "点击按钮复制微信号",
@@ -28,7 +36,19 @@ const hintByType: Record<(typeof contact.items)[number]["type"], string> = {
 export default function ContactPage() {
   const [copiedTarget, setCopiedTarget] = useState<"wechat" | "resume" | null>(null);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
+  const phone = contact.items.find((item) => item.type === "phone")?.value ?? "";
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
+
+  const contactCards: ContactCard[] = [
+    { type: "email", label: "EMAIL", value: email },
+    { type: "phone", label: "PHONE", value: phone },
+    { type: "wechat", label: "WECHAT", value: wechat },
+    {
+      type: "resume",
+      label: "RESUME",
+      value: profile.resumePath ? "PDF RESUME" : "微信索取简历",
+    },
+  ];
 
   async function copyWechat(target: "wechat" | "resume" = "wechat") {
     if (!navigator.clipboard) {
@@ -86,7 +106,7 @@ export default function ContactPage() {
       </section>
 
       <section className="mx-auto mt-5 grid max-w-[1120px] gap-4 pb-8 sm:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:pb-0">
-        {contact.items.map((item, index) => {
+        {contactCards.map((item, index) => {
           const isWechat = item.type === "wechat";
           const isResume = item.type === "resume";
           const href =
@@ -118,9 +138,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="break-all text-[14px] font-semibold leading-5">
-                    {isResume && profile.resumePath ? "PDF RESUME" : item.value}
-                  </p>
+                  <p className="break-all text-[14px] font-semibold leading-5">{item.value}</p>
                   <p className="mt-2 text-[12px] leading-5 text-muted">{hintByType[item.type]}</p>
                 </div>
               </div>
