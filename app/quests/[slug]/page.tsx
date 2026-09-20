@@ -1,3 +1,4 @@
+import { PhotographyArchive } from "@/components/quests/photography-archive";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -72,6 +73,7 @@ export default async function QuestPage({ params }: QuestPageProps) {
       <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
         <article className="min-w-0">
           <QuestMeta quest={quest} />
+          {slug === "visual-storytelling" && <PhotographyArchive />}
 
           <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
             <QuestContext quest={quest} index={2} />

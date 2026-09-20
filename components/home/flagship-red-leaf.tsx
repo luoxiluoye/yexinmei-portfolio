@@ -1,4 +1,5 @@
-import Image from "next/image";
+import { RealImage } from "@/components/media/real-image";
+import { redLeafGallery } from "@/lib/real-assets";
 import { Link } from "next-view-transitions";
 
 import { ScrollReveal } from "@/components/home/scroll-reveal";
@@ -86,14 +87,7 @@ export function FlagshipRedLeaf() {
                 <span className="font-pixel text-[8px] text-white/45">STORY → PLAYABLE WORLD</span>
               </div>
               <div className="relative overflow-hidden bg-[#111317]">
-                <Image
-                  src="/assets/projects/red-leaf/library.webp"
-                  alt="赤页 RED LEAF 知乎故事书库真实产品界面"
-                  width={900}
-                  height={469}
-                  sizes="(max-width: 1023px) 100vw, 58vw"
-                  className="h-auto w-full object-cover object-top"
-                />
+                <RealImage asset={redLeafGallery[1]} sizes="(max-width: 1023px) 90vw, 640px" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#090a0c] via-[#090a0c]/55 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-4 text-white">
                   <div>

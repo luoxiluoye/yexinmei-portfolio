@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { RealGallery } from "@/components/media/real-gallery";
+import { redLeafGallery } from "@/lib/real-assets";
 import { Link } from "next-view-transitions";
 
 export const metadata: Metadata = {
@@ -53,17 +54,7 @@ export default function RedLeafPage() {
           </div>
         </div>
 
-        <ProductFrame label="RED LEAF / 知乎故事书库" transitionName="red-leaf-hero" hero>
-          <Image
-            src="/assets/projects/red-leaf/library.webp"
-            alt="赤页 RED LEAF 知乎故事书库真实产品界面"
-            width={900}
-            height={469}
-            sizes="(max-width: 1023px) 100vw, 58vw"
-            className="h-auto w-full object-cover object-top"
-            priority
-          />
-        </ProductFrame>
+        <RealGallery images={redLeafGallery} visibleIndices={[0]} layout="single" priority />
       </section>
 
       <section className="py-10 lg:py-14">
@@ -80,6 +71,13 @@ export default function RedLeafPage() {
         </div>
       </section>
 
+      <section className="border-t border-divider py-8" aria-labelledby="product-archive">
+        <p className="font-pixel text-[10px] text-accent">PRODUCT ARCHIVE / 02—05</p>
+        <h2 id="product-archive" className="mb-5 mt-2 text-[26px] font-semibold">从故事书库，到每一次选择</h2>
+        <p className="mb-5 text-[13px] text-muted">点击查看完整界面，可切换图片或按原始尺寸阅读。</p>
+        <RealGallery images={redLeafGallery} visibleIndices={[1, 2, 3, 4]} />
+      </section>
+
       <section className="grid gap-8 border-y border-divider py-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12 lg:py-14">
         <div>
           <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">COMPANION UX</p>
@@ -90,16 +88,7 @@ export default function RedLeafPage() {
         </div>
 
         <div>
-          <ProductFrame label="FEATURED STORY / 《重生周》">
-            <Image
-              src="/assets/projects/red-leaf/story-modal.webp"
-              alt="赤页 RED LEAF《重生周》故事介绍真实产品界面"
-              width={900}
-              height={478}
-              sizes="(max-width: 1023px) 100vw, 62vw"
-              className="h-auto w-full object-cover object-top"
-            />
-          </ProductFrame>
+
           <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="max-w-[620px]">
               <p className="font-pixel text-[9px] tracking-[0.08em] text-accent">FEATURED STORY</p>
@@ -128,16 +117,7 @@ export default function RedLeafPage() {
           </p>
         </div>
 
-        <ProductFrame label="GAMEPLAY / 最后几颗安眠药">
-          <Image
-            src="/assets/projects/red-leaf/gameplay.webp"
-            alt="赤页 RED LEAF《重生周》文字冒险游玩真实界面"
-            width={900}
-            height={472}
-            sizes="100vw"
-            className="h-auto w-full object-cover object-top"
-          />
-        </ProductFrame>
+
       </section>
 
       <section className="border-t border-divider py-10 lg:py-14">
@@ -163,34 +143,6 @@ export default function RedLeafPage() {
         </a>
       </section>
     </main>
-  );
-}
-
-function ProductFrame({
-  label,
-  children,
-  transitionName,
-  hero = false,
-}: {
-  label: string;
-  children: React.ReactNode;
-  transitionName?: string;
-  hero?: boolean;
-}) {
-  return (
-    <div
-      className={[
-        "overflow-hidden border-2 border-border bg-[#0b0c0e] shadow-[8px_8px_0_rgba(17,17,17,.08)]",
-        hero ? "red-leaf-detail-hero-frame" : "",
-      ].join(" ")}
-      style={transitionName ? { viewTransitionName: transitionName } : undefined}
-    >
-      <div className="flex min-h-10 items-center justify-between border-b border-white/10 px-4 text-white">
-        <span className="font-pixel text-[8px] tracking-[0.08em] text-white/72">{label}</span>
-        <span className="h-2 w-2 bg-[#ff424b]" aria-hidden="true" />
-      </div>
-      <div className="bg-[#111317]">{children}</div>
-    </div>
   );
 }
 

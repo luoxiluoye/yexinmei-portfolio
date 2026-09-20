@@ -1,3 +1,5 @@
+import { RealGallery } from "@/components/media/real-gallery";
+import { playerMemoryRoll } from "@/lib/real-assets";
 import type { Metadata } from "next";
 import { Link } from "next-view-transitions";
 
@@ -64,6 +66,14 @@ export default function PlayerPage() {
         </div>
 
         <PlayerSnapshot />
+      </section>
+
+      <section className="my-5 border-2 border-border bg-paper p-3 lg:p-4" aria-labelledby="photo-archive">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="photo-archive" className="font-pixel text-[10px] text-accent">PLAYER PHOTO ARCHIVE</h2>
+          <p className="text-[11px] text-muted">一张本人照片，和四张我拍的人像。点击翻看，手机可横滑。</p>
+        </div>
+        <RealGallery images={playerMemoryRoll} layout="roll" />
       </section>
 
       <section className="border-t border-divider py-8 lg:py-10" aria-labelledby="journey-heading">

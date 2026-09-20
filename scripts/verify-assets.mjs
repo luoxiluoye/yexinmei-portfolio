@@ -125,3 +125,38 @@ if (missing.length) {
 
 console.log(`Asset QA Total: ${officialResult.found + playerResult.found}/${officialTotal + playerExpected.length} PASS.`);
 
+
+// Verify original-media integrity and dimensions against the delivered manifest.
+const realAssets = JSON.parse(fs.readFileSync(path.resolve("lib/real-assets.json"), "utf8"));
+function imageDimensions(bytes) {
+  if (bytes.subarray(0, 8).equals(pngSignature)) return [bytes.readUInt32BE(16), bytes.readUInt32BE(20)];
+  if (bytes[0] !== 0xff || bytes[1] !== 0xd8) throw new Error("Invalid original image signature");
+  let offset = 2;
+  while (offset < bytes.length) {
+    if (bytes[offset++] !== 0xff) continue;
+    while (bytes[offset] === 0xff) offset++;
+    const marker = bytes[offset++];
+    if (marker === 0xd9 || marker === 0xda) break;
+    const size = bytes.readUInt16BE(offset);
+    if ([0xc0, 0xc1, 0xc2].includes(marker)) return [bytes.readUInt16BE(offset + 5), bytes.readUInt16BE(offset + 3)];
+    offset += size;
+  }
+  throw new Error("Missing JPEG dimensions");
+}
+for (const asset of realAssets) {
+  const bytes = fs.readFileSync(path.join(process.cwd(), "public", asset.src));
+  const [width, height] = imageDimensions(bytes);
+  if (width !== asset.width || height !== asset.height || bytes.length !== asset.bytes) {
+    throw new Error(`Original-media mismatch: ${asset.src}`);
+  }
+}
+for (const dir of ["app", "components"]) {
+  for (const file of fs.readdirSync(dir, { recursive: true })) {
+    if (!/\.(tsx?|css)$/.test(file)) continue;
+    const source = fs.readFileSync(path.join(dir, file), "utf8");
+    if (/\/assets\/projects\/(?:red-leaf\/(?:library|gameplay|story-modal)|personal-social\/(?:xiaohongshu|zhihu))\.webp/.test(source)) {
+      throw new Error(`Legacy low-resolution reference: ${dir}/${file}`);
+    }
+  }
+}
+console.log(`Real Asset QA: ${realAssets.length}/${realAssets.length} originals, dimensions and bytes PASS; no legacy screenshot references.`);

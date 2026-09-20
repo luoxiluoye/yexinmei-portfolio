@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { RealImage } from "@/components/media/real-image";
+import { redLeafGallery } from "@/lib/real-assets";
 import { Link } from "next-view-transitions";
 
 import { OwnedChannels } from "@/components/quests/owned-channels";
@@ -75,15 +76,7 @@ export default function QuestsPage() {
               <span className="font-pixel text-[8px] text-[#ff5963]">REAL PRODUCT</span>
               <span className="font-pixel text-[7px] text-white/45">《重生周》</span>
             </div>
-            <Image
-              src="/assets/projects/red-leaf/library.webp"
-              alt="赤页 RED LEAF 真实产品界面"
-              width={900}
-              height={469}
-              sizes="(max-width: 1023px) 100vw, 360px"
-              className="h-auto w-full object-cover object-top transition-transform duration-150 group-hover:scale-[1.015]"
-              priority
-            />
+            <RealImage asset={redLeafGallery[0]} sizes="(max-width: 1023px) 320px, 360px" className="h-[110px]! w-full object-contain" priority />
           </Link>
         </div>
       </PixelPanel>

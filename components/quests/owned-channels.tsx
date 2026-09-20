@@ -1,4 +1,5 @@
-import { PixelIcon } from "@/components/ui/pixel-icon";
+import { RealGallery } from "@/components/media/real-gallery";
+import { socialProof } from "@/lib/real-assets";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const accounts = [
@@ -6,7 +7,7 @@ const accounts = [
     platform: "XIAOHONGSHU",
     name: "叶子会变成树",
     href: "https://www.xiaohongshu.com/user/profile/5a788cf511be1052dbfc6085",
-    icon: "ui.heart" as const,
+    image: socialProof.xiaohongshu,
     note: "近 1 个月冷启动",
     metrics: ["522 粉丝", "6,712 赞藏"],
   },
@@ -14,7 +15,7 @@ const accounts = [
     platform: "ZHIHU",
     name: "昔棗",
     href: "https://www.zhihu.com/people/luo-ye-xin-mei",
-    icon: "ui.speechBubble" as const,
+    image: socialProof.zhihu,
     note: "个人内容账号",
     metrics: ["1,348 关注者", "1,575 赞同", "775 收藏"],
   },
@@ -31,25 +32,15 @@ export function OwnedChannels() {
     >
       <div className="grid gap-2 lg:grid-cols-2">
         {accounts.map((account) => (
-          <a
-            key={account.platform}
-            href={account.href}
-            target="_blank"
-            rel="noreferrer"
-            className="group grid grid-cols-[36px_1fr_auto] items-center gap-3 border border-divider bg-soft px-3 py-2.5 transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-paper"
-          >
-            <PixelIcon assetId={account.icon} decorative width={28} height={28} />
+          <article key={account.platform} className="grid grid-cols-[100px_minmax(0,1fr)] items-center gap-3 border border-divider bg-soft p-2.5">
+            <RealGallery images={[account.image]} layout="thumb" />
             <div className="min-w-0">
-              <div className="flex items-baseline gap-2">
-                <span className="font-pixel text-[9px] text-accent">{account.platform}</span>
-                <strong className="truncate text-[13px]">{account.name}</strong>
-              </div>
-              <p className="mt-1 truncate text-[10px] text-muted">
-                {account.note} · {account.metrics.join(" · ")}
-              </p>
+              <p className="font-pixel text-[8px] text-accent">{account.platform}</p>
+              <strong className="mt-1 block text-[13px]">{account.name}</strong>
+              <p className="mt-1 text-[11px] leading-5 text-muted">{account.metrics.join(" · ")}</p>
+              <a href={account.href} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-9 items-center text-[11px] font-semibold hover:text-accent">打开主页 ↗</a>
             </div>
-            <span className="font-pixel text-[11px] transition-[transform,color] group-hover:translate-x-1 group-hover:text-accent" aria-hidden="true">↗</span>
-          </a>
+          </article>
         ))}
       </div>
     </PixelPanel>

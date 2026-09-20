@@ -1,3 +1,5 @@
+import { RealGallery } from "@/components/media/real-gallery";
+import { photoProjects } from "@/lib/real-assets";
 import { PixelIcon } from "@/components/ui/pixel-icon";
 
 const coverBySlug = {
@@ -77,6 +79,11 @@ type ProjectCoverProps = {
 };
 
 export function ProjectCover({ slug, code, variant = "card", className = "" }: ProjectCoverProps) {
+  if (slug === "visual-storytelling") return (
+    <div className="photo-cover border-2 border-border bg-soft p-2" aria-label="摄影作品精选">
+      <RealGallery images={[photoProjects[0].images[0], photoProjects[2].images[0], photoProjects[3].images[0]]} />
+    </div>
+  );
   const cover = coverBySlug[slug as keyof typeof coverBySlug] ?? coverBySlug["zhihu-auto-consumer-tech"];
 
   return (

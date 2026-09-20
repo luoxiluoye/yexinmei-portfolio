@@ -1,3 +1,5 @@
+import { RealImage } from "@/components/media/real-image";
+import { photographyCover } from "@/lib/real-assets";
 import { Link } from "next-view-transitions";
 
 import type { Quest } from "@/types/quest";
@@ -45,6 +47,10 @@ export function QuestCard({ quest }: { quest: Quest }) {
           <PixelTag variant={statusVariant(quest.status)}>{quest.status}</PixelTag>
         </div>
 
+        {quest.slug === "visual-storytelling" && <div className="mt-3 flex h-[90px] items-center gap-3 border border-divider bg-soft">
+          <RealImage asset={photographyCover} sizes="112px" className="h-full! w-[112px]! object-cover!" />
+          <span className="font-pixel text-[8px] leading-5 text-muted">REAL PHOTOS<br />5 COLLECTIONS</span>
+        </div>}
         <p className="mt-3 line-clamp-2 text-[12px] leading-5 text-muted">{quest.subtitle}</p>
 
         <div className="mt-auto flex items-end justify-between gap-3 border-t border-divider pt-3">

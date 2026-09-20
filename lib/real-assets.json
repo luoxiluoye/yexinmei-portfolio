@@ -1,0 +1,412 @@
+[
+  {
+    "src": "/assets/photos/happy-mahua/still-01.jpeg",
+    "alt": "开心麻花《捞金晚宴》官方剧照 · 01",
+    "caption": "开心麻花《捞金晚宴》官方剧照 · 01",
+    "category": "STAGE",
+    "width": 864,
+    "height": 577,
+    "kind": "photo",
+    "bytes": 230525
+  },
+  {
+    "src": "/assets/photos/happy-mahua/still-02.jpeg",
+    "alt": "开心麻花《捞金晚宴》官方剧照 · 02",
+    "caption": "开心麻花《捞金晚宴》官方剧照 · 02",
+    "category": "STAGE",
+    "width": 864,
+    "height": 486,
+    "kind": "photo",
+    "bytes": 118663
+  },
+  {
+    "src": "/assets/photos/happy-mahua/still-03.jpeg",
+    "alt": "开心麻花《捞金晚宴》官方剧照 · 03",
+    "caption": "开心麻花《捞金晚宴》官方剧照 · 03",
+    "category": "STAGE",
+    "width": 864,
+    "height": 486,
+    "kind": "photo",
+    "bytes": 210710
+  },
+  {
+    "src": "/assets/photos/happy-mahua/still-04.jpeg",
+    "alt": "开心麻花《捞金晚宴》官方剧照 · 04",
+    "caption": "开心麻花《捞金晚宴》官方剧照 · 04",
+    "category": "STAGE",
+    "width": 864,
+    "height": 486,
+    "kind": "photo",
+    "bytes": 112921
+  },
+  {
+    "src": "/assets/photos/meituan-product/product-01.jpeg",
+    "alt": "美团商家产品拍摄 · 01",
+    "caption": "美团商家产品拍摄 · 01",
+    "category": "COMMERCIAL",
+    "width": 753,
+    "height": 1129,
+    "kind": "photo",
+    "bytes": 308075
+  },
+  {
+    "src": "/assets/photos/meituan-product/product-02.jpeg",
+    "alt": "美团商家产品拍摄 · 02",
+    "caption": "美团商家产品拍摄 · 02",
+    "category": "COMMERCIAL",
+    "width": 720,
+    "height": 480,
+    "kind": "photo",
+    "bytes": 104332
+  },
+  {
+    "src": "/assets/photos/meituan-product/product-03.jpeg",
+    "alt": "美团商家产品拍摄 · 03",
+    "caption": "美团商家产品拍摄 · 03",
+    "category": "COMMERCIAL",
+    "width": 1129,
+    "height": 753,
+    "kind": "photo",
+    "bytes": 232458
+  },
+  {
+    "src": "/assets/photos/meituan-product/product-04.jpeg",
+    "alt": "美团商家产品拍摄 · 04",
+    "caption": "美团商家产品拍摄 · 04",
+    "category": "COMMERCIAL",
+    "width": 1129,
+    "height": 753,
+    "kind": "photo",
+    "bytes": 264164
+  },
+  {
+    "src": "/assets/photos/meituan-product/product-05.jpeg",
+    "alt": "美团商家产品拍摄 · 05",
+    "caption": "美团商家产品拍摄 · 05",
+    "category": "COMMERCIAL",
+    "width": 1129,
+    "height": 753,
+    "kind": "photo",
+    "bytes": 351717
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-01.jpeg",
+    "alt": "人像摄影 · 01",
+    "caption": "人像摄影 · 01",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 72361
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-02.jpeg",
+    "alt": "人像摄影 · 02",
+    "caption": "人像摄影 · 02",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 89943
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-03.jpeg",
+    "alt": "人像摄影 · 03",
+    "caption": "人像摄影 · 03",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 80775
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-04.jpeg",
+    "alt": "人像摄影 · 04",
+    "caption": "人像摄影 · 04",
+    "category": "PORTRAIT",
+    "width": 345,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 84038
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-05.jpeg",
+    "alt": "人像摄影 · 05",
+    "caption": "人像摄影 · 05",
+    "category": "PORTRAIT",
+    "width": 342,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 100171
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-06.jpeg",
+    "alt": "人像摄影 · 06",
+    "caption": "人像摄影 · 06",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 50340
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-07.jpeg",
+    "alt": "人像摄影 · 07",
+    "caption": "人像摄影 · 07",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 56206
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-08.jpeg",
+    "alt": "人像摄影 · 08",
+    "caption": "人像摄影 · 08",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 46681
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-09.jpeg",
+    "alt": "人像摄影 · 09",
+    "caption": "人像摄影 · 09",
+    "category": "PORTRAIT",
+    "width": 324,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 66848
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-10.jpeg",
+    "alt": "人像摄影 · 10",
+    "caption": "人像摄影 · 10",
+    "category": "PORTRAIT",
+    "width": 432,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 61289
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-11.jpeg",
+    "alt": "人像摄影 · 11",
+    "caption": "人像摄影 · 11",
+    "category": "PORTRAIT",
+    "width": 432,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 58042
+  },
+  {
+    "src": "/assets/photos/portrait/portrait-12.jpeg",
+    "alt": "人像摄影 · 12",
+    "caption": "人像摄影 · 12",
+    "category": "PORTRAIT",
+    "width": 432,
+    "height": 576,
+    "kind": "photo",
+    "bytes": 87772
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-01.jpeg",
+    "alt": "余超颖 2024 巡演成都站图片直播入口",
+    "caption": "余超颖 2024 巡演成都站图片直播入口",
+    "category": "LIVE",
+    "width": 698,
+    "height": 960,
+    "kind": "screenshot",
+    "bytes": 114822
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-02.jpeg",
+    "alt": "余超颖 2024 巡演海报",
+    "caption": "余超颖 2024 巡演海报",
+    "category": "LIVE",
+    "width": 540,
+    "height": 960,
+    "kind": "screenshot",
+    "bytes": 61145
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-03.jpeg",
+    "alt": "余超颖巡演现场双人合影",
+    "caption": "余超颖巡演现场双人合影",
+    "category": "LIVE",
+    "width": 768,
+    "height": 432,
+    "kind": "photo",
+    "bytes": 69055
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-04.jpeg",
+    "alt": "余超颖巡演现场双人合影",
+    "caption": "余超颖巡演现场双人合影",
+    "category": "LIVE",
+    "width": 768,
+    "height": 432,
+    "kind": "photo",
+    "bytes": 79953
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-05.jpeg",
+    "alt": "余超颖巡演现场双人合影",
+    "caption": "余超颖巡演现场双人合影",
+    "category": "LIVE",
+    "width": 768,
+    "height": 432,
+    "kind": "photo",
+    "bytes": 62696
+  },
+  {
+    "src": "/assets/photos/yu-chaoying-concert/concert-06.jpeg",
+    "alt": "余超颖巡演现场集体合影",
+    "caption": "余超颖巡演现场集体合影",
+    "category": "LIVE",
+    "width": 768,
+    "height": 433,
+    "kind": "photo",
+    "bytes": 132879
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-01.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 01",
+    "caption": "自如毕业宣发广告牌项目 · 01",
+    "category": "CAMPAIGN",
+    "width": 1402,
+    "height": 935,
+    "kind": "photo",
+    "bytes": 418702
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-02.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 02",
+    "caption": "自如毕业宣发广告牌项目 · 02",
+    "category": "CAMPAIGN",
+    "width": 1402,
+    "height": 935,
+    "kind": "photo",
+    "bytes": 611236
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-03.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 03",
+    "caption": "自如毕业宣发广告牌项目 · 03",
+    "category": "CAMPAIGN",
+    "width": 1229,
+    "height": 820,
+    "kind": "photo",
+    "bytes": 417228
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-04.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 04",
+    "caption": "自如毕业宣发广告牌项目 · 04",
+    "category": "CAMPAIGN",
+    "width": 1229,
+    "height": 820,
+    "kind": "photo",
+    "bytes": 477658
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-05.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 05",
+    "caption": "自如毕业宣发广告牌项目 · 05",
+    "category": "CAMPAIGN",
+    "width": 1229,
+    "height": 820,
+    "kind": "photo",
+    "bytes": 542668
+  },
+  {
+    "src": "/assets/photos/ziroom-campaign/campaign-06.jpeg",
+    "alt": "自如毕业宣发广告牌项目 · 06",
+    "caption": "自如毕业宣发广告牌项目 · 06",
+    "category": "CAMPAIGN",
+    "width": 1229,
+    "height": 820,
+    "kind": "photo",
+    "bytes": 719625
+  },
+  {
+    "src": "/assets/portraits/profile-from-portfolio.jpeg",
+    "alt": "罗叶馨梅 · 个人照片",
+    "caption": "罗叶馨梅 · 个人照片",
+    "category": "PLAYER",
+    "width": 567,
+    "height": 850,
+    "kind": "photo",
+    "bytes": 209608
+  },
+  {
+    "src": "/assets/projects/personal-social/xiaohongshu/profile-hires.png",
+    "alt": "小红书「叶子会变成树」真实主页 · hires",
+    "caption": "小红书「叶子会变成树」真实主页 · hires",
+    "category": "SOCIAL",
+    "width": 2048,
+    "height": 1223,
+    "kind": "screenshot",
+    "bytes": 2664901
+  },
+  {
+    "src": "/assets/projects/personal-social/zhihu/profile-hires.png",
+    "alt": "知乎「昔棗」真实主页 · hires",
+    "caption": "知乎「昔棗」真实主页 · hires",
+    "category": "SOCIAL",
+    "width": 2048,
+    "height": 1020,
+    "kind": "screenshot",
+    "bytes": 2159447
+  },
+  {
+    "src": "/assets/projects/red-leaf/gameplay-choice-hires.png",
+    "alt": "《重生周》50 个决策位置与分支选择",
+    "caption": "《重生周》50 个决策位置与分支选择",
+    "category": "PRODUCT",
+    "width": 2048,
+    "height": 1075,
+    "kind": "screenshot",
+    "bytes": 2352873
+  },
+  {
+    "src": "/assets/projects/red-leaf/gameplay-scene-hires.png",
+    "alt": "实际游戏画面与叙事体验",
+    "caption": "实际游戏画面与叙事体验",
+    "category": "PRODUCT",
+    "width": 2048,
+    "height": 1076,
+    "kind": "screenshot",
+    "bytes": 2427382
+  },
+  {
+    "src": "/assets/projects/red-leaf/landing-hero-hires.png",
+    "alt": "赤页整体视觉与产品入口",
+    "caption": "赤页整体视觉与产品入口",
+    "category": "PRODUCT",
+    "width": 2048,
+    "height": 1073,
+    "kind": "screenshot",
+    "bytes": 3505683
+  },
+  {
+    "src": "/assets/projects/red-leaf/library-hires.png",
+    "alt": "从知乎内容进入故事书库",
+    "caption": "从知乎内容进入故事书库",
+    "category": "PRODUCT",
+    "width": 2048,
+    "height": 1062,
+    "kind": "screenshot",
+    "bytes": 2047632
+  },
+  {
+    "src": "/assets/projects/red-leaf/story-modal-hires.png",
+    "alt": "《重生周》故事信息与进入前的设定",
+    "caption": "《重生周》故事信息与进入前的设定",
+    "category": "PRODUCT",
+    "width": 2048,
+    "height": 1068,
+    "kind": "screenshot",
+    "bytes": 2388111
+  }
+]

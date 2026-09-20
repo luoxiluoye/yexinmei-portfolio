@@ -1,3 +1,4 @@
+@import "../styles/real-media.css";
 @import "tailwindcss";
 @import "../styles/design-tokens.css";
 @import "../styles/studio.css";

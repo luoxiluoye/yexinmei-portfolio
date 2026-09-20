@@ -107,3 +107,6 @@ export type AssetId = keyof typeof ASSET_REGISTRY;
 export function getAsset(assetId: AssetId): string {
   return ASSET_REGISTRY[assetId];
 }
+
+// Real media is registered separately from the pixel illustration pack.
+export { realAssets, redLeafGallery, socialProof, photoProjects, playerMemoryRoll } from "./real-assets";
