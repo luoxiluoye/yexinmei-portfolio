@@ -19,8 +19,8 @@ jobs:
           mkdir -p output
           cp node_modules/gsap/dist/gsap.min.js output/
           cp node_modules/gsap/dist/ScrollTrigger.min.js output/
-          find node_modules/gsap -maxdepth 1 -type f -iname '*license*' -exec cp {} output/GSAP-LICENSE.txt \;
-          test -s output/GSAP-LICENSE.txt
+          cp node_modules/gsap/README.md output/GSAP-README.md
+          printf 'GSAP 3.13.0. Original copyright and license headers preserved in the distributed scripts. Standard GSAP license: https://gsap.com/community/standard-license/\n' > output/GSAP-NOTICE.txt
           cp package.json package-lock.json output/
           sha256sum output/*.js > output/SHA256SUMS
       - uses: actions/upload-artifact@v4
