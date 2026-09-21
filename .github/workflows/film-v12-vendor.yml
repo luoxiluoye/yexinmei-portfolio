@@ -1,0 +1,30 @@
+name: Film V12 motion runtime
+on:
+  push:
+    branches: [chatgpt/film-v12-motion-runtime]
+    paths: [.github/workflows/film-v12-vendor.yml]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Fetch pinned browser libraries
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/runtime-build"
+          cd "$GITHUB_WORKSPACE/runtime-build"
+          printf '{"private":true}\n' > package.json
+          npm install --ignore-scripts --save-exact gsap@3.13.0
+          mkdir -p output
+          cp node_modules/gsap/dist/gsap.min.js output/
+          cp node_modules/gsap/dist/ScrollTrigger.min.js output/
+          cp node_modules/gsap/LICENSE output/GSAP-LICENSE.txt
+          cp package.json package-lock.json output/
+          sha256sum output/*.js > output/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: film-v12-motion-runtime
+          path: runtime-build/output/
+          retention-days: 7
+          if-no-files-found: error
