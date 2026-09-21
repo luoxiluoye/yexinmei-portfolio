@@ -39,7 +39,7 @@ export function FunFactsInspect() {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {facts.map((fact) => (
-        <article key={fact.title} className="group min-h-[150px] border border-divider bg-soft p-3 transition-[transform,border-color,background-color] hover:-translate-y-px hover:border-accent hover:bg-paper">
+        <article key={fact.title} className="min-h-[150px] border border-divider bg-soft p-3">
           <div className="flex items-start justify-between gap-3">
             <span className="flex h-11 w-11 items-center justify-center bg-paper">
               <PixelIcon assetId={fact.icon} decorative width={38} height={38} className="h-auto max-h-9 w-auto max-w-9" />

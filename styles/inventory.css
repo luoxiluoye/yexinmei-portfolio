@@ -1,0 +1,53 @@
+.inventory-loadout { display:grid; gap:28px; }
+.ability-workbench { padding:0; }
+.ability-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; padding:0 20px; border-bottom:1px solid var(--rpg-color-divider); }
+.ability-tabs button { display:flex; justify-content:center; align-items:center; gap:9px; min-height:56px; margin-bottom:-1px; padding:10px 12px; border-bottom:2px solid transparent; background:transparent; color:var(--rpg-color-text-2); font-size:14px; transition:background-color 120ms,color 120ms; }
+.ability-tabs button[aria-selected="true"] { border-bottom-color:var(--rpg-color-red); background:var(--rpg-color-soft); color:var(--rpg-color-text); font-weight:600; }
+.ability-tabs button:focus-visible { outline-offset:-4px; }
+.ability-panel { padding:24px; }
+.ability-panel:focus-visible { outline:2px solid var(--rpg-color-red); outline-offset:-4px; }
+.ability-panel__intro h3 { font-size:19px; font-weight:600; line-height:1.5; }
+.ability-panel__intro p { margin-top:6px; font-size:14px; line-height:1.8; color:var(--rpg-color-text-2); }
+.ability-methods { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px; margin-top:24px; }
+.ability-methods > div { border-left:2px solid var(--rpg-color-divider); padding-left:14px; }
+.ability-methods dt { font-size:14px; font-weight:600; line-height:1.6; }
+.ability-methods dd { max-width:26em; margin-top:6px; font-size:13px; line-height:1.8; color:var(--rpg-color-text-2); }
+.ability-evidence { margin-top:24px; padding-top:16px; border-top:1px solid var(--rpg-color-divider); }
+.ability-evidence > p { font-size:12px; color:var(--rpg-color-text-2); }
+.ability-evidence > div { display:flex; flex-wrap:wrap; gap:4px 24px; margin-top:4px; }
+.ability-project-link { display:inline-flex; align-items:center; justify-content:space-between; gap:16px; min-height:44px; font-size:13px; text-decoration:underline; text-decoration-color:var(--rpg-color-divider); text-underline-offset:5px; transition:color 120ms,text-decoration-color 120ms; }
+.ability-project-link > span:last-child { color:var(--rpg-color-red); }
+.ability-project-link:active { color:var(--rpg-color-red); }
+.toolbox-list { display:grid; grid-template-columns:180px minmax(0,1fr); gap:32px; padding-block:24px; border-block:1px solid var(--rpg-color-divider); }
+.toolbox-list header > p:first-child { font-size:10px; line-height:1.6; color:var(--rpg-color-text-2); }
+.toolbox-list h2 { margin-top:5px; font-size:18px; font-weight:600; }
+.toolbox-list header > p:last-child { margin-top:8px; font-size:12px; color:var(--rpg-color-text-2); }
+.toolbox-list dl { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px 28px; }
+.toolbox-list dl > div { min-width:0; padding-bottom:12px; border-bottom:1px solid var(--rpg-color-divider); }
+.toolbox-list dt { font-size:14px; font-weight:500; line-height:1.6; }
+.toolbox-list dd { margin-top:5px; font-size:12px; line-height:1.6; color:var(--rpg-color-text-2); }
+.inventory-next { margin-top:24px; display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:32px; align-items:start; }
+.inventory-next__link { display:inline-flex; align-items:center; min-height:44px; gap:16px; font-size:14px; text-decoration:underline; text-decoration-color:var(--rpg-color-divider); text-underline-offset:5px; }
+.inventory-next__copy { margin-top:8px; max-width:32em; font-size:13px; line-height:1.8; color:var(--rpg-color-text-2); }
+.inventory-next > div:last-child > div { margin-top:0; border-top:0; padding-top:0; }
+@media(hover:hover) and (pointer:fine) {
+ .ability-tabs button:hover { background:var(--rpg-color-soft); color:var(--rpg-color-text); }
+ .ability-project-link:hover, .inventory-next__link:hover { color:var(--rpg-color-red); text-decoration-color:currentColor; }
+}
+@media(max-width:1023px) {
+ .toolbox-list { grid-template-columns:150px minmax(0,1fr); gap:24px; }
+ .toolbox-list dl { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:639px) {
+ .ability-tabs { padding-inline:8px; }
+ .ability-tabs button { flex-direction:column; gap:4px; padding:10px 2px; min-height:70px; font-size:12px; }
+ .ability-panel { padding:20px 16px; }
+ .ability-panel__intro h3 { font-size:17px; }
+ .ability-methods { grid-template-columns:minmax(0,1fr); gap:14px; margin-top:20px; }
+ .ability-methods dd { margin-top:3px; }
+ .ability-evidence > div { display:grid; gap:0; }
+ .ability-project-link { justify-content:space-between; }
+ .toolbox-list { grid-template-columns:minmax(0,1fr); gap:20px; padding-block:22px; }
+ .toolbox-list dl { gap:16px 20px; }
+ .inventory-next { grid-template-columns:minmax(0,1fr); gap:24px; }
+}

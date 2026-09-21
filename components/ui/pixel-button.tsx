@@ -20,11 +20,11 @@ type PixelButtonProps = {
 
 const variantStyles: Record<PixelButtonVariant, string> = {
   primary:
-    "border-border bg-foreground text-white hover:border-accent hover:bg-accent",
+    "border-border bg-foreground text-white pointer-fine:hover:border-accent pointer-fine:hover:bg-accent",
   secondary:
-    "border-divider bg-paper text-foreground hover:border-accent hover:text-accent",
+    "border-divider bg-paper text-foreground pointer-fine:hover:border-accent pointer-fine:hover:text-accent",
   ghost:
-    "border-transparent bg-transparent text-foreground hover:border-border hover:bg-soft",
+    "border-transparent bg-transparent text-foreground pointer-fine:hover:border-border pointer-fine:hover:bg-soft",
 };
 
 const sizeStyles: Record<PixelButtonSize, string> = {
@@ -47,8 +47,7 @@ export function PixelButton({
   const styles = cn(
     "inline-flex items-center justify-center gap-2 border font-body font-medium tracking-[0.01em]",
     "transition-[transform,background-color,border-color,color] duration-100",
-    "hover:-translate-x-px hover:-translate-y-px",
-    "active:translate-x-px active:translate-y-px",
+    "active:translate-y-px",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     "disabled:pointer-events-none disabled:border-divider disabled:bg-soft disabled:text-muted disabled:opacity-70",
     variantStyles[variant],
@@ -76,4 +75,3 @@ export function PixelButton({
     </button>
   );
 }
-

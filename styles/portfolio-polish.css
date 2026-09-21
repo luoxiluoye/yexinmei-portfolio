@@ -14,6 +14,12 @@
 .home-intro { padding-bottom:12px; }
 .home-facts { border-block:1px solid var(--rpg-color-divider); }
 .home-fact + .home-fact { border-left:1px solid var(--rpg-color-divider); }
+.portfolio-status > div { border-right:1px solid rgb(255 255 255 / 20%); }
+.portfolio-status > div:last-child { border-right:0; }
+@media(max-width:767px) {
+ .portfolio-status > div:nth-child(even) { border-right:0; }
+ .portfolio-status > div:nth-child(n+3) { border-top:1px solid rgb(255 255 255 / 20%); }
+}
 .case-file__body { border:0; background:transparent; padding-inline:0; }
 .case-file__body > section { padding-block:28px; }
 .case-file__body h2 { font-size:18px; }

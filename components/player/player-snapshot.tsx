@@ -6,7 +6,7 @@ export function PlayerSnapshot() {
   return (
     <section
       aria-label="PLAYER SNAPSHOT"
-      className="group relative isolate aspect-[4/3] w-full overflow-hidden bg-background transition-transform duration-150 hover:-translate-y-px lg:min-h-[360px] lg:max-h-[430px]"
+      className="relative isolate aspect-[4/3] w-full overflow-hidden bg-background lg:min-h-[360px] lg:max-h-[430px]"
     >
       <div className="absolute inset-0 z-0 bg-background" aria-hidden="true" />
 
@@ -45,7 +45,7 @@ export function PlayerSnapshot() {
         alt="HELLO!"
         width={200}
         height={133}
-        className="absolute left-[10%] top-[27%] z-[3] w-[28%] transition-transform duration-150 group-hover:-translate-y-0.5 sm:w-[25%] lg:w-[23%] [image-rendering:pixelated]"
+        className="absolute left-[10%] top-[27%] z-[3] w-[28%] sm:w-[25%] lg:w-[23%] [image-rendering:pixelated]"
       />
 
       <Image

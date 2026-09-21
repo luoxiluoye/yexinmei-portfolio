@@ -12,6 +12,8 @@ import { PixelIcon } from "@/components/ui/pixel-icon";
 import { PixelPanel } from "@/components/ui/pixel-panel";
 
 type ContactCardType = "email" | "phone" | "wechat" | "resume";
+type CopyState = "idle" | "copying" | "success" | "error";
+type CopyOrigin = "hero" | "wechat" | "resume";
 
 type ContactCard = {
   type: ContactCardType;
@@ -34,8 +36,9 @@ const hintByType: Record<ContactCardType, string> = {
 };
 
 export default function ContactPage() {
-  const [copyError, setCopyError] = useState("");
-  const [copiedTarget, setCopiedTarget] = useState<"wechat" | "resume" | null>(null);
+  const [copyState, setCopyState] = useState<CopyState>("idle");
+  const [copyOrigin, setCopyOrigin] = useState<CopyOrigin>("hero");
+  const [copyForResume, setCopyForResume] = useState(false);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
   const phone = contact.items.find((item) => item.type === "phone")?.value ?? "";
   const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
@@ -51,16 +54,22 @@ export default function ContactPage() {
     },
   ];
 
-  async function copyWechat(target: "wechat" | "resume" = "wechat") {
+  async function copyWechat(origin: CopyOrigin, forResume = false) {
+    if (copyState === "copying") return;
+    setCopyOrigin(origin);
+    setCopyForResume(forResume);
+    setCopyState("copying");
     try {
       await navigator.clipboard.writeText(wechat);
-      setCopyError("");
-      setCopiedTarget(target);
-      window.setTimeout(() => setCopiedTarget(null), 1800);
+      setCopyState("success");
     } catch {
-      setCopyError(`无法自动复制，请手动复制微信号：${wechat}`);
+      setCopyState("error");
     }
   }
+
+  const copyLabel = (origin: CopyOrigin) => copyOrigin === origin && copyState === "copying"
+    ? "正在复制…"
+    : copyOrigin === origin && copyState === "success" ? "已复制微信号 ✓" : "复制微信号";
 
   return (
     <main id="main-content" className="site-container portfolio-page py-5 lg:py-8">
@@ -79,26 +88,26 @@ export default function ContactPage() {
                 下载简历 ↓
               </PixelButton>
             ) : (
-              <PixelButton variant="primary" onClick={() => copyWechat("resume")}>
-                加微信索取简历
+              <PixelButton variant="primary" disabled={copyState === "copying"} onClick={() => copyWechat("hero", true)}>
+                {copyLabel("hero")}
               </PixelButton>
             )}
             <PixelButton href={`mailto:${email}`} variant="secondary">
               发送邮件 →
             </PixelButton>
-            <PixelButton variant="secondary" onClick={() => copyWechat("wechat")}>
-              {copiedTarget === "wechat" ? "已复制微信 ✓" : "复制微信号"}
-            </PixelButton>
+            {profile.resumePath && <PixelButton variant="secondary" disabled={copyState === "copying"} onClick={() => copyWechat("hero")}>
+              {copyLabel("hero")}
+            </PixelButton>}
           </div>
 
-          <p role="status" aria-live="polite" className="mt-2 min-h-5 text-[12px] text-muted">{copyError || (copiedTarget ? "微信号已复制，可以粘贴到微信搜索。" : "")}</p>
+          <CopyFeedback state={copyOrigin === "hero" ? copyState : "idle"} wechat={wechat} forResume={copyForResume} />
           {profile.resumePath ? (
             <p className="mt-2 font-pixel text-[9px] text-muted">
               PDF · UPDATED {contact.resumeUpdated}
             </p>
           ) : (
             <p className="mt-2 text-[11px] leading-5 text-muted">
-              暂未公开 PDF · 微信备注「简历」即可索取
+              复制后可在微信联系我；如需简历，添加好友时备注「简历」。
             </p>
           )}
         </div>
@@ -128,7 +137,7 @@ export default function ContactPage() {
               title={item.label}
               accent={index === 0}
               className="h-full"
-              contentClassName="flex min-h-[190px] flex-col p-4 lg:p-5"
+              contentClassName="flex min-h-[220px] flex-col p-4 lg:p-5"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-[56px] w-[56px] shrink-0 items-center justify-center border border-divider bg-soft">
@@ -148,12 +157,12 @@ export default function ContactPage() {
 
               <div className="mt-auto pt-4">
                 {isWechat ? (
-                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("wechat")}>
-                    {copiedTarget === "wechat" ? "已复制微信号 ✓" : "复制微信号"}
+                  <PixelButton variant="secondary" className="w-full" disabled={copyState === "copying"} onClick={() => copyWechat("wechat")}>
+                    {copyLabel("wechat")}
                   </PixelButton>
                 ) : isResume && !profile.resumePath ? (
-                  <PixelButton variant="secondary" className="w-full" onClick={() => copyWechat("resume")}>
-                    {copiedTarget === "resume" ? "已复制微信号 ✓" : "加微信索取简历"}
+                  <PixelButton variant="secondary" className="w-full" disabled={copyState === "copying"} onClick={() => copyWechat("resume", true)}>
+                    {copyLabel("resume")}
                   </PixelButton>
                 ) : (
                   <PixelButton
@@ -168,17 +177,30 @@ export default function ContactPage() {
                         : "下载简历 ↓"}
                   </PixelButton>
                 )}
+                <CopyFeedback state={copyOrigin === item.type ? copyState : "idle"} wechat={wechat} forResume={isResume} />
               </div>
             </PixelPanel>
           );
         })}
       </section>
 
-      {copiedTarget && (
-        <div className="fixed bottom-[calc(var(--rpg-bottom-tab-height)+16px)] left-1/2 z-[70] -translate-x-1/2 border-2 border-border bg-foreground px-4 py-2 font-pixel text-[11px] text-white lg:bottom-6">
-          {copiedTarget === "resume" ? "WECHAT COPIED · 备注「简历」" : "WECHAT COPIED · 微信号已复制"}
-        </div>
-      )}
     </main>
   );
+}
+
+function CopyFeedback({ state, wechat, forResume }: { state: CopyState; wechat: string; forResume: boolean }) {
+  return <div className="mt-2">
+    <p role="status" aria-live="polite" aria-atomic="true" className="min-h-5 text-[12px] leading-5 text-muted">
+      {state === "copying" ? "正在复制微信号…" : state === "success"
+        ? `微信号已复制，可以粘贴到微信搜索。${forResume ? "添加好友时备注「简历」即可索取。" : ""}`
+        : state === "error" ? "无法自动复制，请选择下方微信号手动复制。" : ""}
+    </p>
+    {state === "error" && <input
+      aria-label="微信号，可手动复制"
+      value={wechat}
+      readOnly
+      onFocus={(event) => event.currentTarget.select()}
+      className="mt-2 min-h-11 w-full select-text border border-divider bg-paper px-3 text-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+    />}
+  </div>;
 }

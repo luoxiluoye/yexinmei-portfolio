@@ -10,8 +10,6 @@ type PixelPanelProps = {
   rightSlot?: ReactNode;
   accent?: boolean;
   catPeek?: boolean;
-  windowChrome?: boolean;
-  interactive?: boolean;
   className?: string;
   surfaceClassName?: string;
   contentClassName?: string;
@@ -24,20 +22,12 @@ export function PixelPanel({
   rightSlot,
   accent = false,
   catPeek = false,
-  windowChrome = true,
-  interactive = false,
   className,
   surfaceClassName,
   contentClassName,
 }: PixelPanelProps) {
   return (
-    <section
-      className={cn(
-        "pixel-cut-frame portfolio-panel",
-        interactive && "rpg-window-interactive group",
-        className
-      )}
-    >
+    <section className={cn("pixel-cut-frame portfolio-panel", className)}>
       <div className={cn("pixel-cut-surface relative", surfaceClassName)}>
         {accent && (
           <span
@@ -71,16 +61,7 @@ export function PixelPanel({
               )}
             </div>
 
-            {rightSlot ? (
-              <div className="shrink-0">{rightSlot}</div>
-            ) : windowChrome ? (
-              <span
-                aria-hidden="true"
-                className="hidden shrink-0 font-pixel text-[10px] tracking-[0.24em] text-divider lg:block"
-              >
-                ···
-              </span>
-            ) : null}
+            {rightSlot && <div className="shrink-0">{rightSlot}</div>}
           </div>
         )}
 
@@ -89,4 +70,3 @@ export function PixelPanel({
     </section>
   );
 }
-

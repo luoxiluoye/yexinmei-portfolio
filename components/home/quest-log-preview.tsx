@@ -28,7 +28,6 @@ export function QuestLogPreview() {
       eyebrow="QUEST LOG"
       title="正在进行的任务"
       rightSlot={<span className="font-pixel text-[11px] text-muted">05</span>}
-      interactive
       className="h-full"
     >
       <Link

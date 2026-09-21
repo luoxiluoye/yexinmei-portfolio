@@ -54,15 +54,6 @@
   .red-leaf-stage:hover img { transform: scale(1.025); }
 }
 
-.red-leaf-metric {
-  transition: transform var(--motion-panel) var(--motion-ease-standard), color var(--motion-panel) ease;
-}
-
-@media (hover:hover) and (pointer:fine) {
-  .red-leaf-metric:hover { transform: translateY(-3px); }
-  .red-leaf-metric:hover p:first-child { color: var(--rpg-color-red); }
-}
-
 /* Project list motion. */
 .project-archive-card {
   transition: transform var(--motion-panel) var(--motion-ease-standard), box-shadow var(--motion-panel) var(--motion-ease-standard);

@@ -17,14 +17,14 @@ export function StatusBar({ items, className }: StatusBarProps) {
   return (
     <div
       className={cn(
-        "no-scrollbar flex min-h-[var(--rpg-status-height-mobile)] overflow-x-auto border-2 border-border bg-foreground text-white lg:grid lg:min-h-[var(--rpg-status-height)] lg:grid-cols-4 lg:overflow-visible",
+        "portfolio-status grid grid-cols-2 border border-border bg-foreground text-white md:grid-cols-4",
         className
       )}
     >
       {items.map((item, index) => (
         <div
           key={`${item.label}-${index}`}
-          className="flex min-w-[132px] shrink-0 items-center gap-2 border-r border-white/20 px-3 font-pixel text-[10px] last:border-r-0 lg:min-w-0 lg:shrink"
+          className="flex min-h-[var(--rpg-status-height-mobile)] min-w-0 items-center gap-2 px-3 font-pixel text-[10px] lg:min-h-[var(--rpg-status-height)]"
         >
           <span className="text-white/55">{item.label}</span>
           <span className={cn("truncate", item.accent ? "text-accent" : "text-white")}>
@@ -35,4 +35,3 @@ export function StatusBar({ items, className }: StatusBarProps) {
     </div>
   );
 }
-

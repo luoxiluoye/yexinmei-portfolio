@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { Link } from "next-view-transitions";
 
 import { InventoryChest } from "@/components/game/inventory-chest";
 import { InventoryLoadout } from "@/components/inventory/inventory-loadout";
 import { StatusBar } from "@/components/ui/status-bar";
-import { PixelIcon } from "@/components/ui/pixel-icon";
 import { skills } from "@/data/skills";
+import "@/styles/inventory.css";
 
 export const metadata: Metadata = {
   title: "技能与工具",
@@ -19,28 +20,19 @@ export default function InventoryPage() {
           <p className="font-pixel text-[10px] text-accent">05 / INVENTORY</p>
           <h1 className="mt-2 font-pixel-zh text-[38px] leading-none lg:text-[48px]">技能与工具</h1>
           <p className="mt-3 max-w-2xl text-[13px] leading-6 text-muted">
-            这里把「我会做什么」和「我用什么做」分开。能力只归类一次，软件工具也只出现一次。
+            从内容判断、用户洞察，到产品与影像，把想法落到实际项目里。
           </p>
-        </div>
-        <div className="flex items-center gap-3 border border-divider bg-soft px-3 py-2">
-          <PixelIcon assetId="items.chest" decorative width={30} height={30} />
-          <div>
-            <span className="block font-pixel text-[13px]">04 SETS</span>
-            <span className="text-[10px] text-muted">{skills.tools.length} TOOLS · 1 SECRET</span>
-          </div>
         </div>
       </header>
 
       <InventoryLoadout />
 
-      <section className="mt-5 grid gap-4 lg:grid-cols-[1fr_320px] lg:items-start">
-        <div className="border-t border-divider pt-4">
-          <p className="font-pixel text-[9px] text-accent">HOW TO READ</p>
-          <p className="mt-2 max-w-[720px] text-[12px] leading-6 text-muted">
-            能力区展示实际做事的方法，TOOLBOX 只记录执行工具。想看这些能力怎样被使用，直接进入对应项目 Case File。
-          </p>
+      <section className="inventory-next" aria-label="继续探索">
+        <div>
+          <Link href="/quests" className="inventory-next__link">去作品里看实际应用 <span aria-hidden="true">→</span></Link>
+          <p className="inventory-next__copy">每一份项目档案里，都有具体的任务、做法和交付成果。</p>
         </div>
-        <div className="border border-divider bg-soft px-4 pb-4">
+        <div>
           <InventoryChest />
         </div>
       </section>

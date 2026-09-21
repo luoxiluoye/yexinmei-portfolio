@@ -37,6 +37,7 @@ export function InventoryChest() {
         onClick={openChest}
         className="rpg-item-slot rpg-item-interactive group flex w-full items-center gap-3 border border-border bg-soft p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         aria-expanded={opened}
+        aria-controls="inventory-chest-result"
       >
         <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-divider bg-paper">
           <PixelIcon assetId="items.chest" decorative width={38} height={38} className="rpg-item-icon" />
@@ -49,13 +50,12 @@ export function InventoryChest() {
         </span>
       </button>
 
-      {fact && (
-        <div className="rpg-achievement-toast mt-3 border-2 border-border bg-paper p-3 shadow-[3px_3px_0_rgba(17,17,17,.10)]">
+      <div id="inventory-chest-result" aria-live="polite" aria-atomic="true">
+        {fact && <div className="rpg-achievement-toast mt-3 border-2 border-border bg-paper p-3 shadow-[3px_3px_0_rgba(17,17,17,.10)]">
           <p className="font-pixel-zh text-[14px] leading-6 text-accent">发现隐藏道具</p>
           <p className="mt-1 text-[13px] leading-6 text-foreground">{fact}</p>
-        </div>
-      )}
+        </div>}
+      </div>
     </div>
   );
 }
-

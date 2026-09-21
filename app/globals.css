@@ -280,7 +280,6 @@ main { view-transition-name: rpg-page; }
 .rpg-command-item[data-disabled="true"] { opacity: .45; }
 
 /* Only controls and cards that really perform an action get movement feedback. */
-.rpg-window-interactive,
 .rpg-stat-card,
 .rpg-item-interactive,
 .rpg-note-interactive {
@@ -292,7 +291,6 @@ main { view-transition-name: rpg-page; }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .rpg-window-interactive:hover,
   .rpg-stat-card:hover,
   .rpg-item-interactive:hover,
   .rpg-note-interactive:hover {
@@ -300,7 +298,6 @@ main { view-transition-name: rpg-page; }
     filter: drop-shadow(4px 4px 0 rgba(17,17,17,.12));
   }
 
-  .rpg-window-interactive:active,
   .rpg-stat-card:active,
   .rpg-item-interactive:active,
   .rpg-note-interactive:active {

@@ -5,6 +5,7 @@ import { Command } from "cmdk";
 import { useTransitionRouter } from "next-view-transitions";
 
 import { PixelIcon } from "@/components/ui/pixel-icon";
+import { contact } from "@/data/contact";
 import { focusSystemTrigger } from "@/lib/system-focus";
 import {
   openSaveFile,
@@ -20,10 +21,14 @@ const quickTravel = [
   { code: "06", label: "CONTACT", subtitle: "找到我", href: "/contact", keywords: ["联系", "微信", "邮箱", "contact"] },
 ] as const;
 
+const wechat = contact.items.find((item) => item.type === "wechat")?.value ?? "";
+type CopyState = "idle" | "copying" | "success" | "error";
+
 export function SystemMenu() {
   const router = useTransitionRouter();
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<CopyState>("idle");
+  const copyAttemptRef = useRef(0);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const wasOpenRef = useRef(false);
 
@@ -84,12 +89,22 @@ export function SystemMenu() {
   }, [open]);
 
   useEffect(() => {
-    if (!open) setCopied(false);
+    if (!open) {
+      copyAttemptRef.current += 1;
+      setCopyState("idle");
+    }
   }, [open]);
 
   const copyWechat = async () => {
-    await navigator.clipboard.writeText("luoxiluoye");
-    setCopied(true);
+    if (copyState === "copying") return;
+    const attempt = ++copyAttemptRef.current;
+    setCopyState("copying");
+    try {
+      await navigator.clipboard.writeText(wechat);
+      if (attempt === copyAttemptRef.current) setCopyState("success");
+    } catch {
+      if (attempt === copyAttemptRef.current) setCopyState("error");
+    }
   };
 
   return (
@@ -101,8 +116,8 @@ export function SystemMenu() {
       className="rpg-command-root"
     >
       <div className="rpg-command-shell pixel-cut-frame">
-        <div className="pixel-cut-surface overflow-hidden bg-paper">
-          <header className="flex items-center justify-between gap-3 border-b border-divider px-4 py-3">
+        <div className="pixel-cut-surface flex max-h-[calc(100dvh-24px)] flex-col overflow-hidden bg-paper sm:max-h-[calc(100dvh-96px)]">
+          <header className="flex shrink-0 items-center justify-between gap-3 border-b border-divider px-4 py-3">
             <div className="flex min-w-0 items-center gap-3">
               <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-divider bg-soft">
                 <PixelIcon assetId="items.chest" decorative width={30} height={30} />
@@ -122,7 +137,7 @@ export function SystemMenu() {
             </button>
           </header>
 
-          <div className="border-b border-divider bg-soft p-3">
+          <div className="shrink-0 border-b border-divider bg-soft p-3">
             <div className="flex items-center gap-2 border-2 border-border bg-paper px-3">
               <span aria-hidden="true" className="font-pixel text-[11px] text-accent">&gt;</span>
               <Command.Input
@@ -134,7 +149,7 @@ export function SystemMenu() {
             </div>
           </div>
 
-          <Command.List className="rpg-command-list no-scrollbar max-h-[min(58vh,420px)] overflow-y-auto p-2">
+          <Command.List className="rpg-command-list no-scrollbar min-h-0 max-h-[min(58vh,420px)] flex-1 overflow-y-auto p-2">
             <Command.Empty className="px-3 py-8 text-center">
               <p className="font-pixel text-[10px] text-accent">NOT FOUND</p>
               <p className="mt-2 text-[12px] text-muted">换个关键词试试。</p>
@@ -181,15 +196,16 @@ export function SystemMenu() {
 
             <Command.Group heading="ACTIONS" className="rpg-command-group">
               <Command.Item
-                value="Copy WeChat luoxiluoye"
+                value={`Copy WeChat ${wechat}`}
                 keywords={["微信", "wechat", "复制"]}
                 onSelect={copyWechat}
+                disabled={copyState === "copying"}
                 className="rpg-command-item"
               >
                 <PixelIcon assetId="ui.heart" decorative width={20} height={20} className="h-5 w-5 shrink-0" />
                 <span className="min-w-0 flex-1">
-                  <span className="block font-pixel text-[10px]">{copied ? "WECHAT COPIED" : "COPY WECHAT"}</span>
-                  <span className="block text-[11px] text-muted">luoxiluoye</span>
+                  <span className="block text-[13px] font-medium">{copyState === "copying" ? "正在复制…" : copyState === "success" ? "已复制微信号 ✓" : "复制微信号"}</span>
+                  <span className="block text-[11px] text-muted">{wechat}</span>
                 </span>
               </Command.Item>
               <Command.Item
@@ -210,7 +226,22 @@ export function SystemMenu() {
             </Command.Group>
           </Command.List>
 
-          <footer className="flex items-center justify-between gap-3 border-t border-divider bg-soft px-4 py-2 font-pixel text-[8px] text-muted">
+          <div className={copyState === "idle" ? "shrink-0 px-4" : "shrink-0 border-t border-divider px-4 py-3"}>
+            <p role="status" aria-live="polite" aria-atomic="true" className="text-[12px] leading-5 text-muted">
+              {copyState === "copying" ? "正在复制微信号…" : copyState === "success" ? "微信号已复制，可以粘贴到微信搜索。" : copyState === "error" ? "无法自动复制，请选择下方微信号手动复制。" : ""}
+            </p>
+            {copyState === "error" && (
+              <input
+                aria-label="微信号，可手动复制"
+                value={wechat}
+                readOnly
+                onFocus={(event) => event.currentTarget.select()}
+                className="mt-2 min-h-11 w-full select-text border border-divider bg-paper px-3 text-[14px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              />
+            )}
+          </div>
+
+          <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-divider bg-soft px-4 py-2 font-pixel text-[8px] text-muted">
             <span>↑↓ SELECT · ENTER OPEN</span>
             <span>⌘K / CTRL K</span>
           </footer>

@@ -95,7 +95,6 @@ export default function PlayerPage() {
             <p className="font-pixel text-[9px] text-accent">SIDE QUESTS</p>
             <h2 id="player-facts-heading" className="mt-1.5 text-[26px] font-semibold tracking-[-0.03em] lg:text-[32px]">一些更像我的小事</h2>
           </div>
-          <span className="hidden font-pixel text-[9px] text-muted sm:block">INSPECT ITEM →</span>
         </div>
         <FunFactsInspect />
       </section>
