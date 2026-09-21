@@ -21,9 +21,9 @@ const variants: Record<PixelTagVariant, string> = {
   default: "border-divider bg-soft text-foreground",
   accent: "border-accent bg-accent text-white",
   dark: "border-border bg-foreground text-white",
-  active: "border-accent bg-accent text-white",
-  ongoing: "border-[#c99c1c] bg-yellow text-foreground",
-  completed: "border-[#5b9558] bg-green text-foreground",
+  active: "border-[#e6b4ae] bg-[#f8e9e5] text-[#96362d]",
+  ongoing: "border-[#dfd0ad] bg-[#f4eedf] text-[#796125]",
+  completed: "border-[#c5d3c2] bg-[#edf2e9] text-[#43633d]",
 };
 
 export function PixelTag({
@@ -45,7 +45,7 @@ export function PixelTag({
           aria-hidden="true"
           className={cn(
             "rpg-blink h-1.5 w-1.5",
-            variant === "accent" || variant === "active"
+            variant === "accent"
               ? "bg-white"
               : "bg-accent"
           )}

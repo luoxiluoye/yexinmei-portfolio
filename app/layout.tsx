@@ -7,6 +7,8 @@ import "@/styles/experience-motion.css";
 import "@/styles/red-leaf-transition.css";
 import "@/styles/home-flow.css";
 import "@/styles/project-cover-system.css";
+import "@/styles/navigation.css";
+import "@/styles/portfolio-polish.css";
 
 import { AchievementToaster } from "@/components/game/achievement-toaster";
 import { SystemMenu } from "@/components/game/system-menu";
@@ -76,6 +78,7 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="zh-CN" className={pixelFont.variable}>
         <body className="pb-[calc(var(--rpg-bottom-tab-height)+env(safe-area-inset-bottom))] lg:pb-0">
+          <a className="skip-to-content" href="#main-content">跳到主要内容</a>
           <Navbar />
           <MobileNav />
           <SystemMenu />

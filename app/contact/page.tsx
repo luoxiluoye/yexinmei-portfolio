@@ -34,6 +34,7 @@ const hintByType: Record<ContactCardType, string> = {
 };
 
 export default function ContactPage() {
+  const [copyError, setCopyError] = useState("");
   const [copiedTarget, setCopiedTarget] = useState<"wechat" | "resume" | null>(null);
   const email = contact.items.find((item) => item.type === "email")?.value ?? "";
   const phone = contact.items.find((item) => item.type === "phone")?.value ?? "";
@@ -51,17 +52,18 @@ export default function ContactPage() {
   ];
 
   async function copyWechat(target: "wechat" | "resume" = "wechat") {
-    if (!navigator.clipboard) {
-      throw new Error("Clipboard API unavailable");
+    try {
+      await navigator.clipboard.writeText(wechat);
+      setCopyError("");
+      setCopiedTarget(target);
+      window.setTimeout(() => setCopiedTarget(null), 1800);
+    } catch {
+      setCopyError(`无法自动复制，请手动复制微信号：${wechat}`);
     }
-
-    await navigator.clipboard.writeText(wechat);
-    setCopiedTarget(target);
-    window.setTimeout(() => setCopiedTarget(null), 1600);
   }
 
   return (
-    <main className="site-container py-5 lg:py-8">
+    <main id="main-content" className="site-container portfolio-page py-5 lg:py-8">
       <section className="mx-auto grid max-w-[1080px] items-center gap-4 lg:grid-cols-[44fr_56fr] lg:gap-6">
         <div className="order-2 lg:order-1">
           <p className="font-pixel text-[12px] text-muted">07. CONTACT</p>
@@ -74,7 +76,7 @@ export default function ContactPage() {
           <div className="mt-5 flex flex-wrap gap-2">
             {profile.resumePath ? (
               <PixelButton href={profile.resumePath} variant="primary">
-                DOWNLOAD RESUME ↓
+                下载简历 ↓
               </PixelButton>
             ) : (
               <PixelButton variant="primary" onClick={() => copyWechat("resume")}>
@@ -82,13 +84,14 @@ export default function ContactPage() {
               </PixelButton>
             )}
             <PixelButton href={`mailto:${email}`} variant="secondary">
-              EMAIL ME →
+              发送邮件 →
             </PixelButton>
             <PixelButton variant="secondary" onClick={() => copyWechat("wechat")}>
-              {copiedTarget === "wechat" ? "WECHAT COPIED ✓" : "COPY WECHAT"}
+              {copiedTarget === "wechat" ? "已复制微信 ✓" : "复制微信号"}
             </PixelButton>
           </div>
 
+          <p role="status" aria-live="polite" className="mt-2 min-h-5 text-[12px] text-muted">{copyError || (copiedTarget ? "微信号已复制，可以粘贴到微信搜索。" : "")}</p>
           {profile.resumePath ? (
             <p className="mt-2 font-pixel text-[9px] text-muted">
               PDF · UPDATED {contact.resumeUpdated}
@@ -162,7 +165,7 @@ export default function ContactPage() {
                       ? "发送邮件"
                       : item.type === "phone"
                         ? "拨打电话"
-                        : "DOWNLOAD RESUME ↓"}
+                        : "下载简历 ↓"}
                   </PixelButton>
                 )}
               </div>

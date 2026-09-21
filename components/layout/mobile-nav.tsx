@@ -5,101 +5,66 @@ import { usePathname } from "next/navigation";
 
 import { profile } from "@/data/profile";
 import { PixelIcon } from "@/components/ui/pixel-icon";
-import { XPBar } from "@/components/ui/xp-bar";
-import { cn } from "@/lib/cn";
+import { mobileNavigationItems, isNavigationActive } from "@/lib/navigation";
 import { openSystemMenu } from "@/lib/rpg-events";
-
-const mobileItems = [
-  { label: "HOME", href: "/", assetId: "ui.heart" as const },
-  { label: "QUESTS", href: "/quests", assetId: "items.sword" as const },
-  { label: "PLAYER", href: "/player", assetId: "character.avatar" as const },
-  { label: "CONTACT", href: "/contact", assetId: "items.mail" as const },
-];
-
-const moreRoutes = ["/inventory", "/journal"];
 
 export function MobileNav() {
   const pathname = usePathname();
-  const moreActive = moreRoutes.some((href) => pathname.startsWith(href));
+  const moreActive = ["/inventory", "/journal"].some((href) => isNavigationActive(pathname, href));
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b-2 border-border bg-background lg:hidden">
-        <div className="flex h-[var(--rpg-mobile-header-height)] items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <PixelIcon assetId="cat.head" decorative width={30} height={30} />
-            <span className="font-pixel text-[16px] leading-none">YEXINMEI LUO</span>
+      <header className="portfolio-mobile-header">
+        <div className="site-container portfolio-mobile-header-inner">
+          <Link href="/" className="portfolio-brand" aria-label={`${profile.nameZh}，返回首页`}>
+            <PixelIcon assetId="cat.head" decorative width={28} height={28} />
+            <span className="portfolio-brand-name">
+              <span>{profile.nameZh}<span aria-hidden="true" className="portfolio-brand-dot">.</span></span>
+              <span className="portfolio-brand-caption">{profile.nameEn}</span>
+            </span>
           </Link>
 
-          <span className="flex items-center gap-1.5 font-pixel text-[10px] text-muted">
-            <span aria-hidden="true" className="h-1.5 w-1.5 bg-accent" />
-            ONLINE
-          </span>
-        </div>
-
-        <div className="flex h-[var(--rpg-mobile-level-height)] items-center justify-between border-t border-divider bg-soft px-4">
-          <span className="font-pixel text-[10px] text-muted">PLAYER STATUS</span>
-          <XPBar
-            compact
-            level={profile.xp.level}
-            current={profile.xp.current}
-            max={profile.xp.max}
-          />
+          <button
+            type="button"
+            className="portfolio-mobile-menu"
+            onClick={openSystemMenu}
+            data-system-trigger
+            aria-haspopup="dialog"
+            aria-label="打开快捷菜单"
+          >
+            <span>菜单</span>
+            <span aria-hidden="true" className="portfolio-menu-glyph"><span /><span /></span>
+          </button>
         </div>
       </header>
 
-      <nav
-        aria-label="Mobile navigation"
-        className="fixed inset-x-0 bottom-0 z-50 border-t-2 border-border bg-foreground pb-[env(safe-area-inset-bottom)] lg:hidden"
-      >
-        <ul className="grid h-[var(--rpg-bottom-tab-height)] grid-cols-5">
-          {mobileItems.map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "relative flex h-full min-h-11 flex-col items-center justify-center gap-1 font-pixel text-[9px] sm:text-[10px]",
-                    active ? "bg-white text-foreground" : "text-white"
-                  )}
-                >
-                  <PixelIcon
-                    assetId={item.assetId}
-                    decorative
-                    width={20}
-                    height={20}
-                    className={cn(!active && "brightness-0 invert")}
-                  />
-                  {item.label}
-                  {active && <span aria-hidden="true" className="absolute inset-x-3 top-0 h-[3px] bg-accent" />}
-                </Link>
-              </li>
-            );
-          })}
+      <nav aria-label="移动端导航" className="portfolio-mobile-nav">
+        <ul>
+          {mobileNavigationItems.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                aria-current={isNavigationActive(pathname, item.href) ? "page" : undefined}
+                className="portfolio-mobile-nav-link"
+              >
+                <PixelIcon assetId={item.assetId} decorative width={20} height={20} />
+                <span>{item.label}</span>
+              </Link>
+            </li>
+          ))}
 
           <li>
             <button
               type="button"
               aria-haspopup="dialog"
-              aria-current={moreActive ? "page" : undefined}
+              aria-label={moreActive ? "更多导航，当前位于工具箱或手记" : "打开更多导航"}
+              data-active={moreActive || undefined}
+              data-system-trigger
               onClick={openSystemMenu}
-              className={cn(
-                "relative flex h-full w-full min-h-11 flex-col items-center justify-center gap-1 font-pixel text-[9px] sm:text-[10px]",
-                moreActive ? "bg-white text-foreground" : "text-white"
-              )}
+              className="portfolio-mobile-nav-link"
             >
-              <PixelIcon
-                assetId="items.chest"
-                decorative
-                width={20}
-                height={20}
-                className={cn(!moreActive && "brightness-0 invert")}
-              />
-              MORE
-              {moreActive && <span aria-hidden="true" className="absolute inset-x-3 top-0 h-[3px] bg-accent" />}
+              <PixelIcon assetId="items.chest" decorative width={20} height={20} />
+              <span>更多</span>
             </button>
           </li>
         </ul>

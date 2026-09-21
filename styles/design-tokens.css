@@ -5,7 +5,7 @@
   --rpg-color-text: #111111;
   --rpg-color-text-2: #606060;
   --rpg-color-border: #1e1e1e;
-  --rpg-color-red: #e74c3c;
+  --rpg-color-red: #be3b32;
   --rpg-color-yellow: #f6c945;
   --rpg-color-green: #7db57a;
   --rpg-color-soft: #f3f0e9;
@@ -16,8 +16,8 @@
   --rpg-text-body: 15px;
   --rpg-line-body: 26px;
   --rpg-text-body-lg: 16px;
-  --rpg-page-title: 50px;
-  --rpg-hero-title: 64px;
+  --rpg-page-title: 42px;
+  --rpg-hero-title: 56px;
   --rpg-panel-title: 17px;
   --rpg-tag-text: 12px;
 
@@ -38,14 +38,14 @@
   --rpg-panel-padding: 20px;
   --rpg-panel-padding-mobile: 16px;
 
-  --rpg-content-max-width: 1320px;
+  --rpg-content-max-width: 1200px;
   --rpg-page-gutter-mobile: 16px;
   --rpg-page-gutter-desktop: 32px;
   --rpg-desktop-grid-gap: 20px;
 
-  --rpg-border-width: 2px;
+  --rpg-border-width: 1px;
   --rpg-border-hairline: 1px;
-  --rpg-pixel-cut: 8px;
+  --rpg-pixel-cut: 6px;
   --rpg-shadow: 3px 3px 0 rgba(17, 17, 17, 0.06);
 
   --rpg-navbar-height: 68px;

@@ -3,80 +3,55 @@
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/cn";
-import { openSystemMenu } from "@/lib/rpg-events";
 import { profile } from "@/data/profile";
+import { navigationItems, isNavigationActive } from "@/lib/navigation";
+import { openSystemMenu } from "@/lib/rpg-events";
 import { PixelIcon } from "@/components/ui/pixel-icon";
-import { XPBar } from "@/components/ui/xp-bar";
-
-const items = [
-  { label: "HOME", href: "/" },
-  { label: "PLAYER", href: "/player" },
-  { label: "QUESTS", href: "/quests" },
-  { label: "INVENTORY", href: "/inventory" },
-  { label: "JOURNAL", href: "/journal" },
-  { label: "CONTACT", href: "/contact" },
-];
 
 export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 hidden bg-background/95 py-2 lg:block">
-      <div className="site-container pixel-cut-frame">
-        <div className="pixel-cut-surface flex h-[48px] items-center justify-between gap-3 px-4 lg:px-5">
-          <Link href="/" className="group flex shrink-0 items-center gap-2" aria-label="返回首页">
-            <PixelIcon assetId="cat.head" decorative width={34} height={34} className="rpg-logo-cat" />
-            <PixelIcon assetId="ui.heart" decorative width={18} height={18} />
-          </Link>
+    <header className="portfolio-desktop-header">
+      <div className="site-container portfolio-desktop-header-inner">
+        <Link href="/" className="portfolio-brand" aria-label={`${profile.nameZh}，返回首页`}>
+          <PixelIcon assetId="cat.head" decorative width={32} height={32} className="rpg-logo-cat" />
+          <span className="portfolio-brand-name">
+            <span>{profile.nameZh}<span aria-hidden="true" className="portfolio-brand-dot">.</span></span>
+            <span className="portfolio-brand-caption">{profile.nameEn}</span>
+          </span>
+        </Link>
 
-          <nav aria-label="Main navigation" className="min-w-0 flex-1">
-            <ul className="flex items-center gap-1">
-              {items.map((item) => {
-                const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+        <nav aria-label="主导航" className="portfolio-desktop-nav">
+          <ul>
+            {navigationItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isNavigationActive(pathname, item.href) ? "page" : undefined}
+                  className="portfolio-desktop-nav-link"
+                >
+                  <span>{item.label}</span>
+                  <span className="portfolio-nav-caption">{item.caption}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={active ? "page" : undefined}
-                      className={cn(
-                        "flex h-[38px] items-center border border-transparent px-3 font-pixel text-[12px] transition-[transform,background-color,border-color,color] hover:-translate-y-px",
-                        active
-                          ? "border-border bg-foreground text-white"
-                          : "text-foreground hover:border-divider hover:bg-soft"
-                      )}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-
-          <button
-            type="button"
-            onClick={openSystemMenu}
-            className="flex h-[34px] shrink-0 items-center gap-2 border border-divider bg-soft px-2.5 font-pixel text-[9px] text-foreground transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            aria-label="打开 System Menu，快捷键 Command K 或 Control K"
-          >
-            <PixelIcon assetId="items.chest" decorative width={18} height={18} />
-            <span>SYSTEM</span>
-            <kbd className="border border-divider bg-paper px-1 py-0.5 text-[8px] text-muted">⌘K</kbd>
-          </button>
-
-          <div className="flex shrink-0 items-center gap-2 border-l border-divider pl-4">
-            <PixelIcon assetId="items.potion" decorative width={20} height={20} />
-            <XPBar
-              compact
-              level={profile.xp.level}
-              current={profile.xp.current}
-              max={profile.xp.max}
-              label="XP"
-            />
-          </div>
-        </div>
+        <button
+          type="button"
+          onClick={openSystemMenu}
+          className="portfolio-system-button"
+          data-system-trigger
+          aria-haspopup="dialog"
+          aria-keyshortcuts="Meta+K Control+K"
+          aria-label="打开快捷菜单，快捷键 Command K 或 Control K"
+        >
+          <PixelIcon assetId="items.chest" decorative width={18} height={18} />
+          <span>快捷菜单</span>
+          <kbd aria-hidden="true">⌘ K</kbd>
+        </button>
       </div>
     </header>
   );

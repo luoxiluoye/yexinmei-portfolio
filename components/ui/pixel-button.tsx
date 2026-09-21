@@ -22,14 +22,14 @@ const variantStyles: Record<PixelButtonVariant, string> = {
   primary:
     "border-border bg-foreground text-white hover:border-accent hover:bg-accent",
   secondary:
-    "border-border bg-paper text-foreground hover:border-accent hover:text-accent",
+    "border-divider bg-paper text-foreground hover:border-accent hover:text-accent",
   ghost:
     "border-transparent bg-transparent text-foreground hover:border-border hover:bg-soft",
 };
 
 const sizeStyles: Record<PixelButtonSize, string> = {
-  sm: "min-h-12 px-3 text-[11px] lg:min-h-11",
-  md: "min-h-12 px-4 text-[12px] lg:min-h-11",
+  sm: "min-h-12 px-3 text-[12px] lg:min-h-11",
+  md: "min-h-12 px-4 text-[13px] lg:min-h-11",
   lg: "min-h-12 px-5 text-[12px] lg:min-h-11",
 };
 
@@ -45,7 +45,7 @@ export function PixelButton({
   ariaLabel,
 }: PixelButtonProps) {
   const styles = cn(
-    "inline-flex items-center justify-center gap-2 border-2 font-pixel uppercase tracking-[0.02em]",
+    "inline-flex items-center justify-center gap-2 border font-body font-medium tracking-[0.01em]",
     "transition-[transform,background-color,border-color,color] duration-100",
     "hover:-translate-x-px hover:-translate-y-px",
     "active:translate-x-px active:translate-y-px",

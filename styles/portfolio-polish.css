@@ -1,0 +1,89 @@
+/* A readable paper-like surface around the existing RPG world. */
+.skip-to-content { position:fixed; top:8px; left:16px; z-index:100; transform:translateY(-150%); background:var(--rpg-color-text); color:white; padding:10px 16px; }
+.skip-to-content:focus { transform:none; }
+:where(a,button):focus-visible { outline:2px solid var(--rpg-color-red); outline-offset:3px; }
+:where(button) { cursor:pointer; }
+.portfolio-page { padding-top:28px; }
+.portfolio-page > header { padding-bottom:24px; margin-bottom:24px; border-bottom:1px solid var(--rpg-color-divider); }
+.portfolio-page h1, .rpg-page-title { font-family:var(--rpg-font-body); font-size:clamp(30px,4vw,42px); font-weight:650; letter-spacing:-.035em; line-height:1.2; }
+.portfolio-page > header > div > p:last-child { font-size:14px; line-height:1.8; }
+.portfolio-panel { --rpg-color-border:#b5afa4; --rpg-pixel-cut:6px; filter:none; }
+.portfolio-panel__header { min-height:58px; padding-block:9px; }
+.portfolio-panel__header p { color:var(--rpg-color-text-2); font-size:10px; letter-spacing:.06em; }
+.portfolio-panel__header h2 { margin-top:1px; }
+.home-intro { padding-bottom:12px; }
+.home-facts { border-block:1px solid var(--rpg-color-divider); }
+.home-fact + .home-fact { border-left:1px solid var(--rpg-color-divider); }
+.case-file__body { border:0; background:transparent; padding-inline:0; }
+.case-file__body > section { padding-block:28px; }
+.case-file__body h2 { font-size:18px; }
+.case-file__body p, .case-file__body li { font-size:14px; line-height:1.9; }
+.case-file__body #case > div > div:last-child { border:1px solid var(--rpg-color-divider); }
+.case-file__layout { grid-template-columns:minmax(0,1fr) 220px; }
+.case-file__hero { padding-bottom:24px; border-bottom:1px solid var(--rpg-color-divider); }
+.case-file__hero .project-cover--detail { border:1px solid var(--rpg-color-divider); box-shadow:none; }
+.case-file__hero .project-cover--detail .project-cover__body { min-height:220px; }
+.case-file__hero .project-cover--detail .project-cover__copy { padding:24px; }
+.case-file__hero .project-cover--detail .project-cover__title strong { font-size:26px; }
+.case-file__hero .project-cover--detail .project-cover__metrics { display:none; }
+.player-summary { border:0; background:transparent; padding-left:0; }
+.player-memory { border:1px solid var(--rpg-color-divider); background:var(--rpg-color-surface); padding:20px; }
+.player-memory h2 { font-family:var(--rpg-font-body); font-size:18px; color:var(--rpg-color-text); font-weight:600; }
+.player-memory > div > p { font-size:12px; }
+.redleaf-case { max-width:1200px; }
+.redleaf-case > section { padding-block:32px; }
+.redleaf-case h2 { font-size:clamp(23px,2.8vw,30px); }
+.redleaf-case .red-leaf-detail-copy > h1 { font-size:clamp(34px,4vw,52px); }
+.redleaf-case .red-leaf-detail-copy > p:nth-of-type(2) { font-size:22px; line-height:1.6; }
+.redleaf-case > section:first-of-type { align-items:center; }
+.redleaf-case .red-leaf-pipeline-card h3 { margin-top:8px; }
+.redleaf-case .red-leaf-pipeline-card { padding:20px; }
+.case-jump-links { display:flex; gap:8px 20px; flex-wrap:wrap; border-block:1px solid var(--rpg-color-divider); padding:8px 0; margin:12px 0 24px; }
+.case-jump-links a { display:inline-flex; align-items:center; min-height:40px; font-size:13px; color:var(--rpg-color-text-2); }
+.case-jump-links a:hover { color:var(--rpg-color-red); }
+.redleaf-case section[id] { scroll-margin-top:100px; }
+@media(max-width:1023px) {
+ .case-file__layout { grid-template-columns:minmax(0,1fr); }
+ .portfolio-page { padding-top:20px; }
+}
+@media(max-width:639px) {
+ .portfolio-page > header { gap:12px; }
+ .player-summary { padding:8px 0; }
+ .player-memory { padding:14px; }
+ .redleaf-case > section { padding-block:24px; }
+ .case-file__hero .project-cover--detail .project-cover__visual { min-height:150px; }
+}
+.photography-archive { margin-block:28px; }
+.photography-archive__heading { display:flex; flex-wrap:wrap; align-items:end; justify-content:space-between; gap:12px; }
+.photo-tabs { display:flex; gap:4px; flex-wrap:wrap; margin-top:20px; padding-bottom:10px; border-bottom:1px solid var(--rpg-color-divider); }
+.photo-tabs button { display:flex; align-items:center; gap:10px; min-height:44px; padding:8px 14px; border:1px solid transparent; font-size:14px; }
+.photo-tabs button span { color:var(--rpg-color-text-2); font-family:var(--rpg-font-pixel); font-size:10px; }
+.photo-tabs button[aria-selected="true"] { background:var(--rpg-color-text); color:white; }
+.photo-tabs button[aria-selected="true"] span { color:#eee9df; }
+.photo-tabs button:hover:not([aria-selected="true"]) { border-color:var(--rpg-color-divider); background:var(--rpg-color-soft); }
+.photo-project { border:0; padding-block:20px 0; }
+.photo-project__intro { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:end; gap:12px; margin-bottom:18px; }
+.photo-project .real-gallery, .photo-project:first-of-type .real-gallery { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.photo-project--portrait .real-gallery { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.photo-project .real-gallery__open--photo { height:auto; aspect-ratio:3/2; padding:0; border:0; background:var(--rpg-color-soft); }
+.photo-project--portrait .real-gallery__open--photo { aspect-ratio:3/5; }
+.photo-project .real-gallery figcaption { font-size:11px; color:var(--rpg-color-text-2); }
+.photo-project .real-gallery figcaption>span { display:none; }
+.real-gallery__open { border:1px solid var(--rpg-color-divider); }
+.real-gallery figcaption { font-size:13px; }
+.real-gallery figcaption>span { font-size:10px; }
+.real-gallery__inspect { background:var(--rpg-color-surface); border:1px solid var(--rpg-color-divider); }
+.player-memory .real-gallery--roll { display:grid; grid-template-columns:1.15fr repeat(4,1fr); gap:16px; padding:2px; }
+.player-memory .real-gallery__open--photo { height:200px; padding:0; border:0; background:transparent; }
+.player-memory .real-gallery figcaption>span { display:none; }
+.player-memory .real-gallery figcaption { font-size:11px; color:var(--rpg-color-text-2); }
+@media(max-width:767px) {
+ .photo-project .real-gallery, .photo-project--portrait .real-gallery { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .photo-tabs button { padding-inline:10px; }
+ .player-memory .real-gallery--roll { display:flex; gap:12px; }
+ .player-memory .real-gallery__item { flex-basis:112px; }
+ .player-memory .real-gallery__open--photo { height:165px; }
+}
+.case-file [id] { scroll-margin-top:96px; }
+@media(min-width:1024px) { .case-file > .case-jump-links { display:none; } }
+@media(max-width:1023px) { .case-file [id] { scroll-margin-top:120px; } }

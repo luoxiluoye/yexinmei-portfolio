@@ -1,11 +1,9 @@
-import { RealImage } from "@/components/media/real-image";
-import { photographyCover } from "@/lib/real-assets";
 import { Link } from "next-view-transitions";
-
-import type { Quest } from "@/types/quest";
-import type { AssetId } from "@/lib/assets";
+import { RealImage } from "@/components/media/real-image";
 import { PixelIcon } from "@/components/ui/pixel-icon";
-import { PixelTag } from "@/components/ui/pixel-tag";
+import { photographyCover } from "@/lib/real-assets";
+import type { AssetId } from "@/lib/assets";
+import type { Quest } from "@/types/quest";
 
 const iconBySlug: Record<string, AssetId> = {
   "zhihu-auto-consumer-tech": "ui.speechBubble",
@@ -16,65 +14,38 @@ const iconBySlug: Record<string, AssetId> = {
   "inspiration-studio": "ui.sparkle",
 };
 
-function statusVariant(status: Quest["status"]) {
-  if (status === "ACTIVE") return "active" as const;
-  if (status === "COMPLETED") return "completed" as const;
-  return "ongoing" as const;
-}
+const statusLabels: Record<Quest["status"], string> = {
+  ACTIVE: "进行中",
+  COMPLETED: "已完成",
+  ONGOING: "持续实践",
+};
 
 export function QuestCard({ quest }: { quest: Quest }) {
   const titleId = `project-title-${quest.slug}`;
   const metric = quest.outcomeMetrics?.[0];
+  const isPhotography = quest.slug === "visual-storytelling";
 
   return (
-    <article className="min-w-0" aria-labelledby={titleId}>
-      <Link
-        href={`/quests/${quest.slug}`}
-        className="group flex h-full min-h-[188px] flex-col border-2 border-border bg-paper p-4 transition-[transform,border-color,box-shadow] duration-100 hover:-translate-y-1 hover:border-accent hover:shadow-[5px_5px_0_rgba(17,17,17,.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        aria-labelledby={titleId}
-        style={{ viewTransitionName: `project-${quest.slug}` }}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-divider bg-soft transition-transform duration-100 group-hover:-translate-y-px">
-              <PixelIcon assetId={iconBySlug[quest.slug] ?? "items.notebook"} decorative width={30} height={30} />
-            </span>
-            <div className="min-w-0">
-              <p className="font-pixel text-[9px] text-muted">{quest.code}</p>
-              <h2 id={titleId} className="mt-1 line-clamp-2 text-[15px] font-bold leading-5">{quest.title}</h2>
-            </div>
-          </div>
-          <PixelTag variant={statusVariant(quest.status)}>{quest.status}</PixelTag>
+    <article className="qb-tile" aria-labelledby={titleId}>
+      <Link href={`/quests/${quest.slug}`} className="qb-tile-link" aria-labelledby={titleId} style={{ viewTransitionName: `project-${quest.slug}` }}>
+        <div className="qb-tile-topline">
+          <span className="qb-tile-code font-pixel">{quest.code}</span>
+          <span className={`qb-status qb-status-${quest.status.toLowerCase()}`}><span aria-hidden="true" />{statusLabels[quest.status]}</span>
         </div>
-
-        {quest.slug === "visual-storytelling" && <div className="mt-3 flex h-[90px] items-center gap-3 border border-divider bg-soft">
-          <RealImage asset={photographyCover} sizes="112px" className="h-full! w-[112px]! object-cover!" />
-          <span className="font-pixel text-[8px] leading-5 text-muted">REAL PHOTOS<br />5 COLLECTIONS</span>
-        </div>}
-        <p className="mt-3 line-clamp-2 text-[12px] leading-5 text-muted">{quest.subtitle}</p>
-
-        <div className="mt-auto flex items-end justify-between gap-3 border-t border-divider pt-3">
-          <div className="min-w-0">
-            {metric ? (
-              <div className="flex items-baseline gap-2">
-                <strong className="font-pixel text-[15px] text-accent">{metric.value}</strong>
-                <span className="truncate text-[10px] text-muted">{metric.label}</span>
-              </div>
-            ) : (
-              <span className="font-pixel text-[9px] text-muted">{quest.period}</span>
-            )}
-            <div className="mt-1.5 flex max-w-[220px] gap-1.5 overflow-hidden">
-              {quest.categories.slice(0, 2).map((category) => (
-                <span key={category} className="shrink-0 border border-divider bg-soft px-1.5 py-0.5 text-[9px] text-muted">
-                  {category}
-                </span>
-              ))}
-            </div>
+        <div className="qb-tile-heading">
+          <PixelIcon assetId={iconBySlug[quest.slug] ?? "items.notebook"} decorative width={25} height={25} />
+          <h3 id={titleId}>{quest.title}</h3>
+        </div>
+        <div className={`qb-tile-body${isPhotography ? " qb-tile-body-photo" : ""}`}>
+          <p>{quest.subtitle}</p>
+          {isPhotography && <div className="qb-tile-photo"><RealImage asset={photographyCover} sizes="104px" /></div>}
+        </div>
+        <div className="qb-tile-footer">
+          <div className="qb-tile-evidence">
+            {metric ? <p><strong className="font-pixel">{metric.value}</strong><span>{metric.label}</span></p> : <p className="qb-tile-period">{quest.period === "NOW" || quest.period === "ONGOING" ? "持续更新中" : quest.period.replace("NOW", "至今")}</p>}
+            <div className="qb-tile-categories">{quest.categories.slice(0, 2).map(category => <span key={category}>{category}</span>)}</div>
           </div>
-
-          <span className="shrink-0 font-pixel text-[10px] text-foreground transition-[transform,color] group-hover:translate-x-1 group-hover:text-accent" aria-hidden="true">
-            ENTER →
-          </span>
+          <span className="qb-tile-action" aria-hidden="true">查看项目 <span>↗</span></span>
         </div>
       </Link>
     </article>

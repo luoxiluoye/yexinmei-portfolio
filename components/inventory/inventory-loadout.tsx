@@ -33,7 +33,7 @@ export function InventoryLoadout() {
   return (
     <div className="space-y-5">
       <section className="grid gap-4 lg:grid-cols-[290px_1fr] lg:gap-5" aria-label="能力装备栏">
-        <PixelPanel eyebrow="ABILITY SLOTS" title="4 DISTINCT SETS" accent className="h-full">
+        <PixelPanel eyebrow="ABILITY SLOTS" title="四项能力" accent className="h-full">
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
             {skills.abilities.map((ability, index) => {
               const active = ability.key === selectedKey;
@@ -80,7 +80,7 @@ export function InventoryLoadout() {
           rightSlot={<span className="font-pixel text-[9px] text-accent">EQUIPPED</span>}
           className="h-full"
         >
-          <p className="max-w-[760px] text-[13px] leading-6 text-muted">{selected.description}</p>
+          <p className="max-w-[760px] text-[14px] leading-7 text-muted">{selected.description}</p>
 
           <div key={selected.key} className="mt-4 grid gap-2 md:grid-cols-3">
             {selected.items.map((item, index) => (
@@ -90,7 +90,7 @@ export function InventoryLoadout() {
                   <span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />
                 </div>
                 <h3 className="mt-2 text-[14px] font-semibold leading-5">{item.name}</h3>
-                <p className="mt-1.5 text-[11px] leading-5 text-muted">{item.note}</p>
+                <p className="mt-1.5 text-[12px] leading-6 text-muted">{item.note}</p>
               </article>
             ))}
           </div>
@@ -102,10 +102,10 @@ export function InventoryLoadout() {
                 <Link
                   key={project.href}
                   href={project.href}
-                  className="group flex min-h-10 items-center justify-between gap-3 border border-divider bg-paper px-3 text-[11px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent"
+                  className="group flex min-h-11 items-center justify-between gap-3 border border-divider bg-paper px-3 text-[12px] transition-[transform,border-color,color] hover:-translate-y-px hover:border-accent hover:text-accent"
                 >
                   <span className="truncate">{project.title}</span>
-                  <span className="shrink-0 font-pixel text-[8px]">OPEN →</span>
+                  <span className="shrink-0 font-pixel text-[8px]">查看 →</span>
                 </Link>
               ))}
             </div>

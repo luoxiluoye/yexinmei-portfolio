@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function PlayerPage() {
   return (
-    <main className="site-container pb-12 pt-5 lg:pb-14 lg:pt-8">
+    <main id="main-content" className="site-container portfolio-page pb-12 pt-5 lg:pb-14 lg:pt-8">
       <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
         <div>
           <p className="font-pixel text-[10px] text-accent">02 / PLAYER FILE</p>
@@ -36,7 +36,7 @@ export default function PlayerPage() {
       </header>
 
       <section className="grid items-center gap-5 lg:grid-cols-[0.86fr_1.14fr] lg:gap-8" aria-labelledby="player-intro">
-        <div className="min-w-0 border-2 border-border bg-paper p-5 lg:p-6">
+        <div className="player-summary min-w-0 p-5 lg:p-6">
           <p className="font-pixel text-[9px] text-accent">PLAYER PROFILE</p>
           <h2 id="player-intro" className="mt-3 text-[24px] font-semibold leading-8 tracking-[-0.02em] lg:text-[30px]">
             从编导、新闻传播，一路走到内容与互联网。
@@ -45,10 +45,10 @@ export default function PlayerPage() {
             本科读广播电视编导，后来到电子科技大学读新闻与传播。做过传统媒体、国际传播、新媒体和社区内容，也一直喜欢摄影、科技和新工具。
           </p>
 
-          <dl className="mt-5 grid gap-px border border-divider bg-divider sm:grid-cols-3">
-            <PlayerMeta label="BASE" value="成都" />
-            <PlayerMeta label="SCHOOL" value="电子科技大学" />
-            <PlayerMeta label="GRAD" value="2027" />
+          <dl className="mt-5 grid gap-px border border-divider bg-divider grid-cols-3">
+            <PlayerMeta label="城市" value="成都" />
+            <PlayerMeta label="学校" value="电子科技大学" />
+            <PlayerMeta label="毕业" value="2027" />
           </dl>
 
           <div className="mt-5 max-w-[300px]">
@@ -56,11 +56,11 @@ export default function PlayerPage() {
           </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
-            <Link href="/quests" className="inline-flex min-h-10 items-center border-2 border-border bg-foreground px-3 font-pixel text-[9px] text-white hover:border-accent hover:bg-accent">
-              VIEW QUESTS →
+            <Link href="/quests" className="inline-flex min-h-11 items-center border border-border bg-foreground px-3 text-[13px] text-white hover:border-accent hover:bg-accent">
+              查看项目 →
             </Link>
-            <Link href="/inventory" className="inline-flex min-h-10 items-center border border-border bg-paper px-3 font-pixel text-[9px] hover:border-accent hover:text-accent">
-              OPEN INVENTORY →
+            <Link href="/inventory" className="inline-flex min-h-11 items-center border border-divider bg-paper px-3 text-[13px] hover:border-accent hover:text-accent">
+              能力与工具 →
             </Link>
           </div>
         </div>
@@ -68,10 +68,10 @@ export default function PlayerPage() {
         <PlayerSnapshot />
       </section>
 
-      <section className="my-5 border-2 border-border bg-paper p-3 lg:p-4" aria-labelledby="photo-archive">
+      <section className="player-memory my-5" aria-labelledby="photo-archive">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="photo-archive" className="font-pixel text-[10px] text-accent">PLAYER PHOTO ARCHIVE</h2>
-          <p className="text-[11px] text-muted">一张本人照片，和四张我拍的人像。点击翻看，手机可横滑。</p>
+          <h2 id="photo-archive" className="font-pixel text-[10px] text-accent">照片里的日常</h2>
+          <p className="text-[11px] text-muted">我自己，和镜头前的人。点击翻看，手机可横滑。</p>
         </div>
         <RealGallery images={playerMemoryRoll} layout="roll" />
       </section>
@@ -106,8 +106,8 @@ export default function PlayerPage() {
 function PlayerMeta({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-background px-3 py-3">
-      <dt className="font-pixel text-[8px] text-muted">{label}</dt>
-      <dd className="mt-1 truncate text-[11px] font-medium">{value}</dd>
+      <dt className="text-[11px] text-muted">{label}</dt>
+      <dd className="mt-1 text-[12px] font-medium">{value}</dd>
     </div>
   );
 }

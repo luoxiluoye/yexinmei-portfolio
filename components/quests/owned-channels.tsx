@@ -1,10 +1,9 @@
 import { RealGallery } from "@/components/media/real-gallery";
 import { socialProof } from "@/lib/real-assets";
-import { PixelPanel } from "@/components/ui/pixel-panel";
 
 const accounts = [
   {
-    platform: "XIAOHONGSHU",
+    platform: "小红书",
     name: "叶子会变成树",
     href: "https://www.xiaohongshu.com/user/profile/5a788cf511be1052dbfc6085",
     image: socialProof.xiaohongshu,
@@ -12,7 +11,7 @@ const accounts = [
     metrics: ["522 粉丝", "6,712 赞藏"],
   },
   {
-    platform: "ZHIHU",
+    platform: "知乎",
     name: "昔棗",
     href: "https://www.zhihu.com/people/luo-ye-xin-mei",
     image: socialProof.zhihu,
@@ -23,26 +22,22 @@ const accounts = [
 
 export function OwnedChannels() {
   return (
-    <PixelPanel
-      eyebrow="SIDE CHANNELS"
-      title="个人账号"
-      rightSlot={<span className="font-pixel text-[10px] text-muted">02</span>}
-      className="mb-5"
-      contentClassName="p-3 lg:p-4"
-    >
-      <div className="grid gap-2 lg:grid-cols-2">
-        {accounts.map((account) => (
-          <article key={account.platform} className="grid grid-cols-[100px_minmax(0,1fr)] items-center gap-3 border border-divider bg-soft p-2.5">
-            <RealGallery images={[account.image]} layout="thumb" />
-            <div className="min-w-0">
-              <p className="font-pixel text-[8px] text-accent">{account.platform}</p>
-              <strong className="mt-1 block text-[13px]">{account.name}</strong>
-              <p className="mt-1 text-[11px] leading-5 text-muted">{account.metrics.join(" · ")}</p>
-              <a href={account.href} target="_blank" rel="noreferrer" className="mt-1 inline-flex min-h-9 items-center text-[11px] font-semibold hover:text-accent">打开主页 ↗</a>
-            </div>
-          </article>
-        ))}
+    <section className="qb-channels" aria-labelledby="owned-channels-title">
+      <div className="qb-section-heading">
+        <div><p className="qb-eyebrow font-pixel">SIDE CHANNELS</p><h2 id="owned-channels-title">也在这里创作</h2></div>
+        <p>个人账号 · 点击截图可放大</p>
       </div>
-    </PixelPanel>
+      <div className="qb-channel-grid">
+        {accounts.map(account => <article key={account.platform} className="qb-channel">
+          <div className="qb-channel-preview"><RealGallery images={[account.image]} layout="thumb" /><span>查看主页截图 ＋</span></div>
+          <div className="qb-channel-copy">
+            <p className="qb-channel-platform">{account.platform}</p>
+            <h3>{account.name}</h3>
+            <p className="qb-channel-metrics">{account.metrics.join(" · ")}</p>
+            <div className="qb-channel-bottom"><span>{account.note}</span><a href={account.href} target="_blank" rel="noreferrer" aria-label={`打开${account.platform}「${account.name}」主页（新窗口）`}>打开主页 ↗</a></div>
+          </div>
+        </article>)}
+      </div>
+    </section>
   );
 }

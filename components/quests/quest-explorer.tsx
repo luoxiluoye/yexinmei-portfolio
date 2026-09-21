@@ -1,12 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-
-import type { Quest } from "@/types/quest";
 import { QuestCard } from "@/components/ui/quest-card";
+import type { Quest } from "@/types/quest";
 
-const questFilters = ["ALL", "CONTENT", "COMMUNITY", "GROWTH", "CREATIVE"] as const;
-type QuestFilter = (typeof questFilters)[number];
+const questFilters = [
+  { id: "ALL", label: "全部" },
+  { id: "CONTENT", label: "内容运营" },
+  { id: "COMMUNITY", label: "社区运营" },
+  { id: "GROWTH", label: "增长实践" },
+  { id: "CREATIVE", label: "创作与影像" },
+] as const;
+type QuestFilter = (typeof questFilters)[number]["id"];
 
 const filterSlugs: Record<Exclude<QuestFilter, "ALL">, string[]> = {
   CONTENT: ["zhihu-auto-consumer-tech", "global-content", "tech-you-houhua", "inspiration-studio"],
@@ -17,52 +22,19 @@ const filterSlugs: Record<Exclude<QuestFilter, "ALL">, string[]> = {
 
 export function QuestExplorer({ quests }: { quests: Quest[] }) {
   const [activeCategory, setActiveCategory] = useState<QuestFilter>("ALL");
+  const filterCounts = useMemo(() => Object.fromEntries(questFilters.map(({ id }) => [id, id === "ALL" ? quests.length : quests.filter(quest => filterSlugs[id].includes(quest.slug)).length])), [quests]);
+  const filteredQuests = useMemo(() => activeCategory === "ALL" ? quests : quests.filter(quest => filterSlugs[activeCategory].includes(quest.slug)), [activeCategory, quests]);
+  const activeLabel = questFilters.find(filter => filter.id === activeCategory)?.label;
 
-  const filteredQuests = useMemo(() => {
-    if (activeCategory === "ALL") return quests;
-    const slugs = filterSlugs[activeCategory];
-    return quests.filter((quest) => slugs.includes(quest.slug));
-  }, [activeCategory, quests]);
-
-  return (
-    <>
-      <div className="mb-3 border-y border-divider py-2.5">
-        <div className="no-scrollbar -mx-4 overflow-x-auto px-4 lg:mx-0 lg:overflow-visible lg:px-0">
-          <div className="flex min-w-max gap-1.5 lg:flex-wrap">
-            {questFilters.map((category) => {
-              const active = activeCategory === category;
-
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={active}
-                  onClick={() => setActiveCategory(category)}
-                  className={[
-                    "min-h-9 border px-2.5 font-pixel text-[10px] transition-[background-color,color,border-color,transform] hover:-translate-y-px",
-                    active
-                      ? "border-border bg-foreground text-white"
-                      : "border-divider bg-soft text-foreground hover:border-accent hover:text-accent",
-                  ].join(" ")}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-3 flex items-center justify-between font-pixel text-[10px] text-muted">
-        <span>AREA: {activeCategory}</span>
-        <span>{filteredQuests.length} FOUND</span>
-      </div>
-
-      <div key={activeCategory} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {filteredQuests.map((quest) => (
-          <QuestCard key={quest.slug} quest={quest} />
-        ))}
-      </div>
-    </>
-  );
+  return <>
+    <div className="qb-filter-list" role="group" aria-label="按项目方向筛选">
+      {questFilters.map(({ id, label }) => <button key={id} type="button" aria-pressed={activeCategory === id} aria-controls="quest-results" onClick={() => setActiveCategory(id)} className={`qb-filter${activeCategory === id ? " is-active" : ""}`}>
+        {label}<span aria-hidden="true">{filterCounts[id]}</span>
+      </button>)}
+    </div>
+    <p className="qb-results-summary" role="status" aria-live="polite" aria-atomic="true">{activeCategory === "ALL" ? "全部项目" : activeLabel}<span aria-hidden="true"> / </span>{filteredQuests.length} 项</p>
+    <div id="quest-results" className="qb-project-grid">
+      {filteredQuests.map(quest => <QuestCard key={quest.slug} quest={quest} />)}
+    </div>
+  </>;
 }

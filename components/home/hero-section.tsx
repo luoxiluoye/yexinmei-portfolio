@@ -5,7 +5,7 @@ import { CharacterScene } from "@/components/scenes/character-scene";
 
 export function HeroSection() {
   return (
-    <section className="site-container pt-4 lg:pt-8">
+    <section className="site-container home-intro pt-4 lg:pt-8">
       <div className="grid gap-4 lg:grid-cols-[45fr_55fr] lg:items-center lg:gap-5">
         <div className="order-1 py-2 lg:py-4">
           <p className="font-pixel text-[11px] text-muted lg:text-[12px]">
@@ -13,7 +13,7 @@ export function HeroSection() {
           </p>
 
           <h1 className="mt-3">
-            <span className="font-pixel-zh block text-[clamp(48px,12vw,60px)] leading-[1.02] tracking-[-0.01em] lg:text-[68px]">
+            <span className="font-pixel-zh block text-[clamp(48px,12vw,60px)] leading-[1.02] tracking-[-0.01em] lg:text-[58px]">
               {homeContent.titleZh}
               <span className="ml-2 align-top font-pixel text-[0.30em] text-accent">♥</span>
             </span>
@@ -22,14 +22,7 @@ export function HeroSection() {
             </span>
           </h1>
 
-          <div className="mt-4 inline-grid max-w-full grid-cols-[auto_minmax(0,1fr)] border-2 border-border bg-paper shadow-[2px_2px_0_rgba(17,17,17,.10)]">
-            <span className="flex items-center bg-foreground px-2.5 py-2 font-pixel text-[10px] leading-none text-white lg:px-3 lg:text-[11px]">
-              CLASS
-            </span>
-            <span className="min-w-0 px-3 py-1.5 font-pixel text-[10px] font-semibold leading-5 text-foreground lg:px-3.5 lg:py-2 lg:text-[11px]">
-              {homeContent.keywords.join(" · ")}
-            </span>
-          </div>
+          <p className="mt-4 font-pixel text-[11px] tracking-[0.06em] text-accent">{homeContent.keywords.join(" / ")}</p>
 
           <p className="mt-3 text-[13px] font-semibold text-foreground lg:text-[14px]">
             {homeContent.directionZh}
@@ -39,20 +32,20 @@ export function HeroSection() {
             {homeContent.intro}
           </p>
 
-          <div className="mt-4 flex max-w-[560px] items-center gap-2 border border-divider bg-soft px-3 py-2.5">
+          <div className="mt-4 flex max-w-[560px] items-center gap-2 py-1.5">
             <span className="h-2 w-2 shrink-0 bg-accent" aria-hidden="true" />
             <span className="font-pixel text-[9px] text-muted">NOW PLAYING</span>
             <span className="min-w-0 truncate text-[12px] font-medium">知乎数码 / 新品运营</span>
           </div>
 
-          <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
-            <PixelButton href="/quests/red-leaf" variant="primary" className="w-full sm:w-auto">
-              MAIN QUEST · 赤页 →
+          <div className="mt-5 flex flex-wrap gap-2">
+            <PixelButton href="/quests/red-leaf" variant="primary" className="flex-1 sm:flex-none">
+              探索赤页 →
             </PixelButton>
-            <PixelButton href="/quests" variant="secondary" className="w-full sm:w-auto">
-              查看任务
+            <PixelButton href="/quests" variant="secondary" className="flex-1 sm:flex-none">
+              全部项目
             </PixelButton>
-            <PixelButton href="/player" variant="ghost" className="w-full sm:w-auto">
+            <PixelButton href="/player" variant="ghost" className="flex-1 sm:flex-none">
               关于我
             </PixelButton>
           </div>

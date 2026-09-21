@@ -5,25 +5,25 @@ const statIcons = ["ui.sparkle", "items.key", "ui.star"] as const;
 
 export function DataBadges() {
   return (
-    <div className="grid grid-cols-3 gap-2.5">
+    <div className="home-facts grid grid-cols-3">
       {homeStats.map((stat, index) => (
         <article
           key={stat.label}
-          className="pixel-cut-frame rpg-stat-card group min-w-0"
+          className="home-fact min-w-0"
         >
-          <div className="pixel-cut-surface flex min-h-[78px] items-center gap-2.5 px-2.5 py-2.5 lg:min-h-[84px] lg:gap-3 lg:px-3">
-            <div className="hidden h-[38px] w-[38px] shrink-0 items-center justify-center sm:flex lg:h-[42px] lg:w-[42px]">
+          <div className="flex min-h-[68px] items-center gap-2 px-2 py-3">
+            <div className="hidden h-[24px] w-[24px] shrink-0 items-center justify-center sm:flex lg:h-[24px] lg:w-[24px]">
               <PixelIcon
                 assetId={statIcons[index]}
                 decorative
-                width={34}
-                height={34}
-                className="rpg-stat-icon h-auto max-h-[36px] w-auto max-w-[40px]"
+                width={24}
+                height={24}
+                className="rpg-stat-icon h-auto max-h-[24px] w-auto max-w-[24px]"
               />
             </div>
 
             <div className="min-w-0">
-              <strong className="block font-pixel text-[22px] font-bold leading-none tracking-[-0.035em] text-accent sm:text-[24px] lg:text-[26px]">
+              <strong className="block font-pixel text-[22px] font-bold leading-none tracking-[-0.035em] text-accent sm:text-[24px] lg:text-[23px]">
                 {stat.value}
               </strong>
               <span className="mt-1.5 block text-[10px] font-medium leading-4 text-foreground/85 lg:text-[11px]">

@@ -4,7 +4,7 @@ import { StatusBar } from "@/components/ui/status-bar";
 
 export default function QuestNotFound() {
   return (
-    <main className="site-container py-8">
+    <main id="main-content" className="site-container py-8">
       <section className="grid min-h-[62vh] items-center gap-6 lg:grid-cols-[42fr_58fr]">
         <div>
           <p className="font-pixel text-[12px] text-accent">QUEST ERROR</p>

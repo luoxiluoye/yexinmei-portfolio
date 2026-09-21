@@ -25,19 +25,19 @@ const questIconBySlug: Record<string, AssetId> = {
 export function QuestLogPreview() {
   return (
     <PixelPanel
-      eyebrow="CURRENT"
-      title="QUEST LOG"
+      eyebrow="QUEST LOG"
+      title="正在进行的任务"
       rightSlot={<span className="font-pixel text-[11px] text-muted">05</span>}
       interactive
       className="h-full"
     >
       <Link
         href="/quests/red-leaf"
-        className="group mb-3 grid grid-cols-[64px_1fr_auto] items-center gap-3 border-2 border-border bg-foreground px-2.5 py-3 text-white transition-[transform,border-color] duration-100 hover:-translate-y-px hover:border-accent"
+        className="group mb-3 grid grid-cols-[64px_1fr_auto] items-center gap-3 border border-divider bg-soft px-2.5 py-3 transition-[transform,border-color] duration-100 hover:-translate-y-px hover:border-accent"
       >
-        <RealImage asset={redLeafGallery[0]} sizes="64px" className="h-10! w-16 object-contain" />
+        <RealImage asset={redLeafGallery[0]} sizes="64px" className="h-12! w-16 object-contain" />
         <div className="min-w-0">
-          <p className="font-pixel text-[9px] leading-4 text-accent">MAIN QUEST · 0→1 AI PRODUCT</p>
+          <p className="font-pixel text-[10px] leading-4 text-accent">MAIN QUEST / AI PRODUCT</p>
           <p className="truncate text-[14px] font-semibold leading-5">赤页 RED LEAF</p>
         </div>
         <span className="font-pixel text-[12px] text-accent" aria-hidden="true">→</span>
@@ -72,7 +72,7 @@ export function QuestLogPreview() {
 
       <Link href="/quests/visual-storytelling" className="mt-3 flex items-center gap-3 border border-divider bg-soft p-2 hover:border-accent">
         <RealImage asset={photographyCover} sizes="64px" className="h-9! w-16! object-cover!" />
-        <span className="text-[11px]">摄影现场 <span className="font-pixel text-[8px] text-muted"> / REAL WORK →</span></span>
+        <span className="text-[13px]">摄影现场 <span className="font-pixel text-[8px] text-muted"> / REAL WORK →</span></span>
       </Link>
       <div className="mt-4">
         <PixelButton href="/quests" variant="secondary" size="sm" className="w-full">

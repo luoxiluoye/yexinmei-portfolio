@@ -115,19 +115,6 @@
 .quest-detail-heading { animation: quest-heading-in var(--motion-section) var(--motion-ease-emphasized) 80ms both; }
 @keyframes quest-heading-in { from {opacity:0;transform:translateY(12px)} to {opacity:1;transform:none} }
 
-@supports (animation-timeline:view()) {
-  main section[id="context"],
-  main section[id="actions"],
-  main section[id="case"],
-  main section[id="outcomes"],
-  main section[id="learnings"] {
-    animation: quest-section-in linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 28%;
-  }
-  @keyframes quest-section-in { from {opacity:.2;transform:translateY(18px)} to {opacity:1;transform:none} }
-}
-
 /* Six distinct project identities. */
 .studio-art-zhihu { background:#e7eadf; }
 .studio-art-zhihu .studio-art-watermark { color:rgba(88,108,73,.09); }

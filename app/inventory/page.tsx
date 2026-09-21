@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function InventoryPage() {
   return (
-    <main className="site-container pb-12 pt-5 lg:pb-14 lg:pt-8">
+    <main id="main-content" className="site-container portfolio-page pb-12 pt-5 lg:pb-14 lg:pt-8">
       <header className="mb-5 flex flex-col justify-between gap-4 border-b-2 border-border pb-5 lg:flex-row lg:items-end">
         <div>
           <p className="font-pixel text-[10px] text-accent">05 / INVENTORY</p>

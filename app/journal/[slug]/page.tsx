@@ -39,7 +39,7 @@ export default async function JournalNotePage({ params }: JournalNotePageProps) 
   const next = journalSeed[(index + 1) % journalSeed.length];
 
   return (
-    <main className="site-container py-4 lg:py-8">
+    <main id="main-content" className="site-container py-4 lg:py-8">
       <JournalReadAchievement />
 
       <div className="sticky top-[calc(var(--rpg-mobile-header-height)+var(--rpg-mobile-level-height))] z-30 -mx-4 mb-4 border-b border-divider bg-background px-4 lg:static lg:mx-0 lg:mb-6 lg:border-0 lg:bg-transparent lg:px-0">

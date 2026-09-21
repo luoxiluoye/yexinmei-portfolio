@@ -19,10 +19,10 @@ const pipeline = [
 
 export default function RedLeafPage() {
   return (
-    <main className="site-container pb-14 pt-6 lg:pb-20 lg:pt-10">
+    <main id="main-content" className="site-container portfolio-page redleaf-case pb-14 pt-6 lg:pb-20 lg:pt-10">
       <div className="mb-8 flex items-center justify-between gap-4">
-        <Link href="/quests" className="font-pixel text-[10px] text-muted transition-colors hover:text-accent">← 返回项目</Link>
-        <a href="https://zhihu.hegelsalon.com/" target="_blank" rel="noreferrer" className="font-pixel text-[10px] text-accent">
+        <Link href="/quests" className="inline-flex min-h-11 items-center text-[13px] text-muted transition-colors hover:text-accent">← 返回项目</Link>
+        <a href="https://zhihu.hegelsalon.com/" target="_blank" rel="noreferrer" className="inline-flex min-h-11 items-center border border-border px-4 text-[13px] text-accent">
           在线体验 ↗
         </a>
       </div>
@@ -57,7 +57,11 @@ export default function RedLeafPage() {
         <RealGallery images={redLeafGallery} visibleIndices={[0]} layout="single" priority />
       </section>
 
-      <section className="py-10 lg:py-14">
+      <nav aria-label="赤页案例目录" className="case-jump-links">
+        <a href="#screenshots">真实界面</a><a href="#workflow">产品流程</a><a href="#contribution">我完成的工作</a>
+      </nav>
+
+      <section id="workflow" className="py-10 lg:py-14">
         <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">HOW IT WORKS</p>
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">一段内容，怎样变成一个可玩的世界</h2>
         <div className="mt-8 grid gap-px border border-divider bg-divider sm:grid-cols-2 lg:grid-cols-3">
@@ -71,11 +75,15 @@ export default function RedLeafPage() {
         </div>
       </section>
 
-      <section className="border-t border-divider py-8" aria-labelledby="product-archive">
+      <section id="screenshots" className="border-t border-divider py-8" aria-labelledby="product-archive">
         <p className="font-pixel text-[10px] text-accent">PRODUCT ARCHIVE / 02—05</p>
         <h2 id="product-archive" className="mb-5 mt-2 text-[26px] font-semibold">从故事书库，到每一次选择</h2>
         <p className="mb-5 text-[13px] text-muted">点击查看完整界面，可切换图片或按原始尺寸阅读。</p>
         <RealGallery images={redLeafGallery} visibleIndices={[1, 2, 3, 4]} />
+        <div className="mt-6 border-l-2 border-accent pl-4">
+          <h3 className="text-[16px] font-semibold">选择会留下后果</h3>
+          <p className="mt-1 text-[14px] leading-7 text-muted">玩家留下的物资、人物信任与剧情线索，会在后续章节继续生效，并持续影响剧情走向。</p>
+        </div>
       </section>
 
       <section className="grid gap-8 border-y border-divider py-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-12 lg:py-14">
@@ -106,21 +114,7 @@ export default function RedLeafPage() {
         </div>
       </section>
 
-      <section className="py-10 lg:py-14">
-        <div className="mb-6 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-          <div>
-            <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">PLAYABLE EXPERIENCE</p>
-            <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">选择会留下后果</h2>
-          </div>
-          <p className="max-w-[520px] text-[13px] leading-6 text-muted sm:text-right">
-            玩家留下的物资、人物信任与剧情线索，会在后续章节继续生效，并持续影响剧情走向。
-          </p>
-        </div>
-
-
-      </section>
-
-      <section className="border-t border-divider py-10 lg:py-14">
+      <section id="contribution" className="border-t border-divider py-10 lg:py-14">
         <p className="font-pixel text-[10px] tracking-[0.08em] text-accent">FROM 0 → 1</p>
         <h2 className="mt-2 text-[30px] font-semibold tracking-[-0.03em] lg:text-[38px]">我完成了什么</h2>
         <p className="mt-5 max-w-[900px] text-[15px] leading-7 text-muted lg:text-[16px] lg:leading-8">

@@ -33,7 +33,7 @@ export function PixelPanel({
   return (
     <section
       className={cn(
-        "pixel-cut-frame",
+        "pixel-cut-frame portfolio-panel",
         interactive && "rpg-window-interactive group",
         className
       )}
@@ -57,7 +57,7 @@ export function PixelPanel({
         )}
 
         {(title || eyebrow || rightSlot) && (
-          <div className="flex min-h-[42px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
+          <div className="portfolio-panel__header flex min-h-[42px] items-center justify-between gap-4 border-b border-divider px-4 lg:px-5">
             <div className="min-w-0">
               {eyebrow && (
                 <p className="font-pixel text-[10px] leading-4 text-accent">
@@ -65,7 +65,7 @@ export function PixelPanel({
                 </p>
               )}
               {title && (
-                <h2 className="truncate font-pixel text-[14px] leading-5 lg:text-[17px]">
+                <h2 className="truncate font-body text-[15px] font-semibold leading-6 lg:text-[17px]">
                   {title}
                 </h2>
               )}

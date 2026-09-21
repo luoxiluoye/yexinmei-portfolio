@@ -44,7 +44,7 @@ export default async function QuestPage({ params }: QuestPageProps) {
   if (!quest) notFound();
 
   return (
-    <main className="site-container py-4 lg:py-8">
+    <main id="main-content" className="site-container portfolio-page case-file py-4 lg:py-8">
       <QuestVisitAchievement slug={slug} />
 
       <div className="sticky top-[calc(var(--rpg-mobile-header-height)+var(--rpg-mobile-level-height))] z-30 -mx-4 mb-3 border-b border-divider bg-background px-4 lg:hidden">
@@ -70,12 +70,18 @@ export default async function QuestPage({ params }: QuestPageProps) {
         <QuestHero quest={quest} />
       </div>
 
-      <section className="mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
+      <nav aria-label="项目章节快捷入口" className="case-jump-links lg:hidden">
+        <a href="#quick-look">项目概览</a>
+        {slug === "visual-storytelling" && <a href="#photography">摄影作品</a>}
+        <a href="#context">项目背景</a><a href="#actions">我的工作</a><a href="#outcomes">结果与收获</a>
+      </nav>
+
+      <section className="case-file__layout mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
         <article className="min-w-0">
           <QuestMeta quest={quest} />
           {slug === "visual-storytelling" && <PhotographyArchive />}
 
-          <div className="mt-4 border-2 border-border bg-paper px-4 lg:px-5">
+          <div className="case-file__body mt-4">
             <QuestContext quest={quest} index={2} />
             <QuestSection id="actions" index={3} label="WHAT I DID" title="我实际做了什么" bullets={quest.actions} />
             {quest.realCase && <QuestRealCaseSection realCase={quest.realCase} index={4} />}
@@ -95,7 +101,7 @@ export default async function QuestPage({ params }: QuestPageProps) {
         </article>
 
         <aside className="hidden lg:block">
-          <QuestDetailSidebar />
+          <QuestDetailSidebar photography={slug === "visual-storytelling"} />
         </aside>
       </section>
     </main>

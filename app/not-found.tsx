@@ -4,7 +4,7 @@ import { StatusBar } from "@/components/ui/status-bar";
 
 export default function NotFound() {
   return (
-    <main className="site-container flex min-h-[calc(100vh-180px)] flex-col justify-center py-8">
+    <main id="main-content" className="site-container flex min-h-[calc(100vh-180px)] flex-col justify-center py-8">
       <section className="grid items-center gap-6 lg:grid-cols-[42fr_58fr] lg:gap-5">
         <div>
           <p className="font-pixel text-[12px] text-muted">08. UNKNOWN AREA</p>

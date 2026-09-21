@@ -21,7 +21,7 @@ const questIconBySlug: Record<string, AssetId> = {
 
 export function QuestHero({ quest }: { quest: Quest }) {
   return (
-    <header className="relative">
+    <header className="case-file__hero relative">
       <div className="flex flex-wrap items-center gap-2">
         <PixelTag variant={getStatusVariant(quest.status)}>{quest.status}</PixelTag>
         {quest.categories.map((category) => (
@@ -51,9 +51,9 @@ export function QuestHero({ quest }: { quest: Quest }) {
         </div>
       </div>
 
-      <div className="mt-7" style={{ viewTransitionName: `project-${quest.slug}` }}>
+      {quest.slug !== "visual-storytelling" && <div className="mt-7" style={{ viewTransitionName: `project-${quest.slug}` }}>
         <ProjectCover slug={quest.slug} code={quest.code} variant="detail" />
-      </div>
+      </div>}
     </header>
   );
 }
