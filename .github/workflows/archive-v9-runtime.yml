@@ -1,0 +1,44 @@
+name: Archive V9 offline runtime
+on:
+  push:
+    branches: [chatgpt/archive-atelier-v9-20260921]
+    paths: [.github/workflows/archive-v9-runtime.yml]
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Prepare isolated build workspace
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/runtime-build"
+          cd "$GITHUB_WORKSPACE/runtime-build"
+          printf '{"private":true,"type":"module"}\n' > package.json
+          npm install --ignore-scripts --save-exact three@0.180.0 cannon-es@0.20.0 esbuild@0.25.10
+      - name: Build browser runtime and collect sources
+        run: |
+          cd "$GITHUB_WORKSPACE/runtime-build"
+          cat > entry.js <<'JS'
+          import * as THREE from 'three';
+          import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+          import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+          import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+          import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+          import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+          import * as CANNON from 'cannon-es';
+          window.ArchiveRuntime = {THREE, GLTFLoader, GLTFExporter, OrbitControls, RoundedBoxGeometry, RoomEnvironment, CANNON};
+          JS
+          mkdir -p output/licenses
+          node node_modules/esbuild/bin/esbuild entry.js --bundle --format=iife --platform=browser --target=es2020 --minify --legal-comments=inline --outfile=output/runtime.js
+          cp node_modules/three/LICENSE output/licenses/three.txt
+          cp node_modules/cannon-es/LICENSE output/licenses/cannon-es.txt
+          cp package.json package-lock.json entry.js output/
+          sha256sum output/runtime.js > output/runtime.sha256
+          tar -czf output/runtime-packages.tgz node_modules/three node_modules/cannon-es
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archive-v9-offline-runtime
+          path: runtime-build/output/
+          retention-days: 7
+          if-no-files-found: error
