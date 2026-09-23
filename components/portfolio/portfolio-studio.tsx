@@ -28,7 +28,6 @@ export function PortfolioStudio() {
       <div className="studio-topbar">
         <Link href="/" className="studio-brand" aria-label="返回个人主页">
           <span>LUO YEXINMEI</span>
-          <span>Creative Portfolio</span>
         </Link>
 
         <nav className="studio-topnav" aria-label="作品集导航">
