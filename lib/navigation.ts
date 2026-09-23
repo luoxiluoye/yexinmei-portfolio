@@ -9,7 +9,7 @@ type NavigationItem = {
 
 export const navigationItems = [
   { label: "首页", caption: "HOME", href: "/", assetId: "ui.heart" },
-  { label: "作品", caption: "QUESTS", href: "/quests", assetId: "items.sword" },
+  { label: "作品集", caption: "PORTFOLIO", href: "/portfolio", assetId: "items.camera" },
   { label: "关于我", caption: "PLAYER", href: "/player", assetId: "character.avatar" },
   { label: "工具箱", caption: "INVENTORY", href: "/inventory", assetId: "items.chest" },
   { label: "手记", caption: "JOURNAL", href: "/journal", assetId: "items.notebook" },
@@ -17,7 +17,7 @@ export const navigationItems = [
 ] as const satisfies readonly NavigationItem[];
 
 export const mobileNavigationItems = navigationItems.filter((item) =>
-  ["/", "/quests", "/player", "/contact"].includes(item.href)
+  ["/", "/portfolio", "/player", "/contact"].includes(item.href)
 );
 
 export function isNavigationActive(pathname: string, href: string) {
