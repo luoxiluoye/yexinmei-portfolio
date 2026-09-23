@@ -2,7 +2,7 @@
 
 import { ContactShadows, Image as DreiImage, RoundedBox, useCursor } from "@react-three/drei";
 import { type ThreeEvent, useFrame } from "@react-three/fiber";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import * as THREE from "three";
 
 export type PortfolioZoneId = "writing" | "photography" | "aigc" | "video";
@@ -131,7 +131,7 @@ function InteractiveZone({
   glow: string;
   hotspot: [number, number, number];
   onSelect: (zone: PortfolioZoneId) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [hovered, setHovered] = useState(false);
   const group = useRef<THREE.Group>(null);
@@ -338,7 +338,7 @@ function PhotoBoard({ onSelect }: { onSelect: StudioSceneProps["onSelect"] }) {
       {placements.map(([x, y, z, w, h, r], index) => (
         <group key={photoAssets[index]} position={[x, y, z]} rotation={[0, 0, r]}>
           <Box position={[0, 0, -0.03]} scale={[w + 0.12, h + 0.16, 0.05]} color="#fffdf8" radius={0.02} />
-          <DreiImage url={photoAssets[index]} scale={[w, h, 1]} toneMapped={false} />
+          <DreiImage url={photoAssets[index]} scale={[w, h]} />
         </group>
       ))}
 
@@ -422,7 +422,7 @@ function MonitorProp({ onSelect }: { onSelect: StudioSceneProps["onSelect"] }) {
       <Box position={[0, 0.12, 0.38]} scale={[2.25, 1.72, 0.5]} color="#e8e0d6" radius={0.2} />
       <Box position={[0, 0.17, 0.66]} scale={[1.82, 1.25, 0.08]} color="#22262e" radius={0.12} />
       <group position={[0, 0.17, 0.72]}>
-        <DreiImage url="/assets/projects/red-leaf/gameplay-scene-hires.png" scale={[1.66, 1.08, 1]} toneMapped={false} />
+        <DreiImage url="/assets/projects/red-leaf/gameplay-scene-hires.png" scale={[1.66, 1.08]} />
         <mesh position={[0, 0, 0.04]}>
           <ringGeometry args={[0.12, 0.18, 32]} />
           <meshBasicMaterial color={COLORS.videoGlow} transparent opacity={0.85} toneMapped={false} />
