@@ -5,8 +5,13 @@ import { SITE_URL } from "@/lib/site-metadata";
 
 const staticRoutes = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
+  { path: "/portfolio", changeFrequency: "weekly", priority: 0.95 },
+  { path: "/portfolio/writing", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/portfolio/photography", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/portfolio/aigc", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/portfolio/video", changeFrequency: "monthly", priority: 0.8 },
   { path: "/player", changeFrequency: "monthly", priority: 0.9 },
-  { path: "/quests", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/quests", changeFrequency: "weekly", priority: 0.85 },
   { path: "/inventory", changeFrequency: "monthly", priority: 0.7 },
   { path: "/journal", changeFrequency: "weekly", priority: 0.8 },
   { path: "/contact", changeFrequency: "monthly", priority: 0.8 },
@@ -31,4 +36,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [...pages, ...questPages];
 }
-
