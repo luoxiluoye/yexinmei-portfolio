@@ -42,8 +42,8 @@ export function HeroSection() {
             <PixelButton href="/quests/red-leaf" variant="primary" className="flex-1 sm:flex-none">
               探索赤页 →
             </PixelButton>
-            <PixelButton href="/quests" variant="secondary" className="flex-1 sm:flex-none">
-              全部项目
+            <PixelButton href="/portfolio" variant="secondary" className="flex-1 sm:flex-none">
+              进入作品集
             </PixelButton>
             <PixelButton href="/player" variant="ghost" className="flex-1 sm:flex-none">
               关于我
