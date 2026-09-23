@@ -1092,7 +1092,6 @@ function PendantLamp() {
         intensity={3.2}
         distance={7}
         color="#ffe3b8"
-        target-position={[0, -2, 0]}
         castShadow
       />
     </group>
