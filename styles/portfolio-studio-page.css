@@ -12,7 +12,11 @@ body:has(.portfolio-studio-page) {
 body:has(.portfolio-studio-page) .portfolio-desktop-header,
 body:has(.portfolio-studio-page) .portfolio-mobile-header,
 body:has(.portfolio-studio-page) .portfolio-mobile-nav,
-body:has(.portfolio-studio-page) .portfolio-footer {
+body:has(.portfolio-studio-page) .portfolio-footer,
+body:has(.portfolio-gallery-page) .portfolio-desktop-header,
+body:has(.portfolio-gallery-page) .portfolio-mobile-header,
+body:has(.portfolio-gallery-page) .portfolio-mobile-nav,
+body:has(.portfolio-gallery-page) .portfolio-footer {
   display: none !important;
 }
 
@@ -35,11 +39,11 @@ body:has(.portfolio-studio-page) .portfolio-footer {
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 5;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  display: flex;
   align-items: start;
+  justify-content: space-between;
   gap: 24px;
-  padding: clamp(22px, 3vw, 42px) clamp(22px, 5vw, 84px);
+  padding: clamp(24px, 3vw, 42px) clamp(28px, 6vw, 104px);
   pointer-events: none;
 }
 
@@ -50,15 +54,15 @@ body:has(.portfolio-studio-page) .portfolio-footer {
 
 .studio-brand {
   width: max-content;
-  color: #33363c;
+  color: #9f433f;
   text-decoration: none;
 }
 
 .studio-brand > span:first-child {
   display: block;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(16px, 1.35vw, 24px);
-  letter-spacing: .015em;
+  font-size: clamp(18px, 1.6vw, 28px);
+  letter-spacing: .018em;
 }
 
 .studio-brand > span:last-child {
@@ -71,14 +75,13 @@ body:has(.portfolio-studio-page) .portfolio-footer {
 }
 
 .studio-topnav {
-  grid-column: 2;
   display: flex;
-  gap: clamp(24px, 4vw, 60px);
+  gap: clamp(28px, 3vw, 48px);
   align-items: center;
-  padding-top: 3px;
-  font-family: Georgia, "Times New Roman", serif;
+  padding-top: 2px;
+  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
-  color: #777b82;
+  color: #62666d;
 }
 
 .studio-topnav a,
@@ -89,7 +92,7 @@ body:has(.portfolio-studio-page) .portfolio-footer {
 }
 
 .studio-topnav span[aria-current="page"] {
-  color: #33363c;
+  color: #a64843;
 }
 
 .studio-topnav span[aria-current="page"]::after {
@@ -100,7 +103,7 @@ body:has(.portfolio-studio-page) .portfolio-footer {
   width: 5px;
   height: 5px;
   border-radius: 999px;
-  background: #a65252;
+  background: #a64843;
   transform: translateX(-50%);
 }
 
@@ -273,12 +276,11 @@ body:has(.portfolio-studio-page) .portfolio-footer {
 
 @media (max-width: 760px) {
   .studio-topbar {
-    grid-template-columns: 1fr auto;
+    display: flex;
     padding: 18px 18px;
   }
 
   .studio-topnav {
-    grid-column: 2;
     gap: 18px;
     font-size: 13px;
   }
