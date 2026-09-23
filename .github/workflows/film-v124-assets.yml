@@ -1,0 +1,32 @@
+name: Export portfolio real-page assets
+on:
+  push:
+    branches: [chatgpt/film-v124-real-pages-20260923]
+    paths: [.github/workflows/film-v124-assets.yml]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: d694990db79d6a9175c5387ce3cea33d28ad2796
+          persist-credentials: false
+      - name: Collect existing files only
+        shell: bash
+        run: |
+          mkdir -p export/red-leaf export/personal-social export/data export/components
+          cp public/assets/projects/red-leaf/*hires.png export/red-leaf/
+          cp -r public/assets/projects/personal-social/. export/personal-social/
+          cp -r data/. export/data/
+          find components -iname '*redleaf*' -o -iname '*red-leaf*' -o -iname '*social*' | while IFS= read -r f; do if [ -f "$f" ]; then cp "$f" export/components/; fi; done
+          find export -type f -print0 | sort -z | xargs -0 sha256sum > export/SHA256SUMS.txt
+          printf 'Repository: luoxiluoye/yexinmei-portfolio\nCommit: d694990db79d6a9175c5387ce3cea33d28ad2796\n' > export/SOURCE.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: film-v124-real-page-assets
+          path: export/
+          retention-days: 7
+          if-no-files-found: error
