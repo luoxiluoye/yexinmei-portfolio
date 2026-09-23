@@ -41,7 +41,7 @@ export function PortfolioStudio() {
         <Canvas
           shadows
           dpr={[1, 1.6]}
-          camera={{ position: [0, 0.6, 13.6], fov: 38, near: 0.1, far: 100 }}
+          camera={{ position: [0, 0.32, 14.9], fov: 36, near: 0.1, far: 100 }}
           gl={{ antialias: true, alpha: false }}
         >
           <Suspense fallback={null}>
@@ -55,11 +55,6 @@ export function PortfolioStudio() {
         <button type="button" onClick={() => openZone("photography")}>摄影作品</button>
         <button type="button" onClick={() => openZone("aigc")}>AIGC 视觉</button>
         <button type="button" onClick={() => openZone("video")}>视频作品</button>
-      </div>
-
-      <div className="studio-corner-note" aria-hidden="true">
-        <span />
-        <span>EXPLORE</span>
       </div>
 
       <div className={`studio-route-wash ${loadingZone ? "is-visible" : ""}`} aria-hidden="true" />
