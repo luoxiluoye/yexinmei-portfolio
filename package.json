@@ -11,21 +11,24 @@
     "assets:install": "node scripts/install-assets.mjs"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.6",
+    "@react-three/fiber": "^9.3.0",
     "cmdk": "^1.1.1",
     "next": "^16.0.0",
     "next-view-transitions": "^0.3.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "sonner": "^2.0.8"
+    "sonner": "^2.0.8",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.180.0",
     "postcss": "^8.0.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }
-
