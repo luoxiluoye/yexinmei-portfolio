@@ -4,6 +4,7 @@ import {Component,Suspense,useEffect,useRef,useState,type ReactNode} from 'react
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 import {StudioScene,type PortfolioZoneId} from './studio-scene';
+import '../../styles/portfolio-interactions.css';
 const routeByZone:Record<PortfolioZoneId,string>={writing:'/portfolio/writing',photography:'/portfolio/photography',aigc:'/portfolio/aigc',video:'/portfolio/video'};
 class SceneBoundary extends Component<{children:ReactNode;onError:()=>void},{failed:boolean}>{
  state={failed:false};static getDerivedStateFromError(){return {failed:true};}componentDidCatch(){this.props.onError();}
@@ -16,8 +17,9 @@ export function PortfolioStudio(){
  function openZone(id:PortfolioZoneId){if(navigating.current)return;navigating.current=true;setSelected(id);const duration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:620;timer.current=setTimeout(()=>router.push(routeByZone[id]),duration);}
  return <section className='studio-shell' aria-label='三维作品集工作台'>
   <header className='studio-topbar'><Link className='studio-brand' href='/' aria-label='罗叶馨梅，返回个人主页'>LUO YEXINMEI<span aria-hidden='true'>●</span></Link><nav className='studio-topnav' aria-label='作品集导航'><Link href='/' aria-label='返回个人主页'>Home</Link><span aria-current='page'>Portfolio</span></nav></header>
-  <div className='studio-canvas-wrap' aria-hidden='true'><SceneBoundary onError={()=>setReady(true)}><Canvas frameloop='demand' shadows dpr={[1,1.5]} camera={{position:[0,3.75,18.3],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}><Suspense fallback={null}><StudioScene selected={selected} onSelect={openZone} onReady={()=>setReady(true)}/></Suspense></Canvas></SceneBoundary></div>
+  <div className='studio-canvas-wrap' aria-hidden='true'><SceneBoundary onError={()=>setReady(true)}><Canvas frameloop='demand' shadows dpr={[1,1.5]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}><Suspense fallback={null}><StudioScene selected={selected} onSelect={openZone} onReady={()=>setReady(true)}/></Suspense></Canvas></SceneBoundary></div>
   {!ready&&<div className='studio-loading' role='status'><span aria-hidden='true'/><p>正在打开作品集</p></div>}
+  <div className='studio-view-controls'><span>拖动旋转 · 点亮区域查看作品</span><button type='button' onClick={()=>window.dispatchEvent(new Event('studio:reset'))} aria-label='恢复工作台正面视角' title='恢复正面视角'><svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.6' aria-hidden='true'><path d='M4 10a8 8 0 1 1 1.7 7.4M4 4v6h6'/></svg><span>恢复视角</span></button></div>
   <nav className='studio-a11y-nav' aria-label='作品分类'><button onClick={()=>openZone('writing')}>文字作品</button><button onClick={()=>openZone('photography')}>摄影作品</button><button onClick={()=>openZone('aigc')}>AIGC 视觉</button><button onClick={()=>openZone('video')}>视频作品</button></nav>
   <div className={`studio-route-wash ${selected?'is-visible':''}`} aria-hidden='true'/>
  </section>;

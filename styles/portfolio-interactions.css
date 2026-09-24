@@ -1,0 +1,8 @@
+.studio-canvas-wrap canvas{touch-action:none;cursor:grab}
+.studio-view-controls{position:absolute;bottom:max(20px,env(safe-area-inset-bottom));right:5.5%;z-index:6;display:flex;align-items:center;gap:16px;color:#756657;font:12px/1.5 'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:.015em}
+.studio-view-controls>span{padding:5px 9px;border-radius:4px;background:rgba(247,242,233,.7)}
+.studio-view-controls button{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid rgba(123,100,72,.22);border-radius:22px;color:#665442;background:rgba(255,251,243,.88);cursor:pointer;transition:background-color 150ms ease,box-shadow 150ms ease}
+.studio-view-controls button:hover{background:#fffcf6;box-shadow:0 3px 16px #83644019}
+.studio-view-controls button:focus-visible{outline:2px solid #a34f38;outline-offset:4px}
+@media(max-width:700px){.studio-view-controls{right:18px;left:18px;justify-content:space-between;gap:8px;font-size:11px}.studio-view-controls button{padding:8px 10px}.studio-view-controls>span{background:transparent;padding:0}}
+@media(prefers-reduced-motion:reduce){.studio-view-controls button{transition:none}}
