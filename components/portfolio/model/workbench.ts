@@ -1,31 +1,26 @@
 import * as T from 'three';
 import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
-
+import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
- '/assets/photos/portrait/portrait-01.jpeg',
- '/assets/photos/happy-mahua/still-02.jpeg',
- '/assets/photos/yu-chaoying-concert/concert-03.jpeg',
- '/assets/photos/portrait/portrait-06.jpeg',
- '/assets/photos/ziroom-campaign/campaign-02.jpeg',
- '/assets/photos/meituan-product/product-02.jpeg',
+ '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
+ '/assets/photos/portrait/portrait-06.jpeg','/assets/photos/ziroom-campaign/campaign-02.jpeg','/assets/photos/meituan-product/product-02.jpeg',
  '/assets/projects/red-leaf/gameplay-scene-hires.png',
 ];
 
-/** Every object is geometry. Artwork images are applied only to paper and display surfaces. */
+/** Solids and curved surfaces, with photographs applied only to prints and the display. */
 export function createWorkbench(images:T.Texture[]){
  const d=new AtelierGeometry(),root=new T.Group();root.name='Yexinmei / creative workbench';
  const furniture=new T.Group();furniture.name='Continuous desk and furniture';root.add(furniture);
  const grain=d.surface();
  const p={
-  ivory:d.physical('#eee6d9',{roughness:.42,clearcoat:.16,bumpMap:grain,bumpScale:.004}),
-  edge:d.mat('#f8f3e9',.39,.04),blue:d.physical('#abc3d4',{roughness:.46,clearcoat:.12}),
-  blueDark:d.mat('#98a7af',.65),back:d.mat('#d0d1cd',.9,0,{bumpMap:grain,bumpScale:.008}),
-  board:d.mat('#e3ded3',.86,0,{bumpMap:grain,bumpScale:.009}),paper:d.mat('#f4f0e6',.87,0,{bumpMap:grain,bumpScale:.003}),
+  ivory:d.physical('#eee6d9',{roughness:.35,clearcoat:.22,bumpMap:grain,bumpScale:.004}),
+  edge:d.mat('#f8f3e9',.39,.04),blue:d.physical('#aec6d9',{roughness:.36,clearcoat:.21}),
+  blueDark:d.mat('#98a7af',.65),back:d.mat('#bfc5c4',.9,0,{bumpMap:grain,bumpScale:.008}),
+  board:d.mat('#e0d8ca',.86,0,{bumpMap:grain,bumpScale:.009}),paper:d.mat('#f4f0e6',.87,0,{bumpMap:grain,bumpScale:.003}),
   pages:d.mat('#e7dfcf',.86),ceramic:d.physical('#eee9df',{roughness:.34,clearcoat:.20,bumpMap:grain,bumpScale:.004}),
   metal:d.mat('#bec2c5',.28,.78),chrome:d.mat('#ccd0d3',.22,.85),darkMetal:d.mat('#4b5155',.38,.65),
   red:d.physical('#ac4d41',{roughness:.35,clearcoat:.28}),black:d.mat('#252729',.66,0,{bumpMap:grain,bumpScale:.006}),
   leather:d.mat('#252724',.8,0,{bumpMap:grain,bumpScale:.012}),
-  leaf:d.mat('#405f27',.73,0,{side:T.DoubleSide}),leaf2:d.mat('#63823a',.73,0,{side:T.DoubleSide}),leaf3:d.mat('#7b913f',.75,0,{side:T.DoubleSide}),
   stem:d.mat('#647143',.85),soil:d.mat('#51483a',.95),seam:d.mat('#c7bbae',.83),
   glass:d.physical('#9fbbca',{transparent:true,opacity:.048,roughness:.20,metalness:0,clearcoat:.5,depthWrite:false}),
  };
@@ -39,7 +34,7 @@ export function createWorkbench(images:T.Texture[]){
   for(const x of [-w/2+.055,w/2-.055])d.box(g,[x,0,-.24],[.11,h,.97],p.ivory,.035);
   for(const y of [-h/2+.055,h/2-.055])d.box(g,[0,y,-.24],[w,.11,.97],p.ivory,.035);
   d.frame(g,[0,0,.237],w,h,.055,.049,p.edge,.13);
-  const glow=d.mat('#fff0d7',.45,0,{emissive:'#ffdaac',emissiveIntensity:.30,toneMapped:false});
+  const glow=d.mat('#fff0d7',.45,0,{emissive:'#ffdaac',emissiveIntensity:.42,toneMapped:false});
   const rim=d.frame(g,[0,0,.276],w+.018,h+.018,.012,.012,glow,.145);rim.userData.noBatch=true;rim.castShadow=false;
   d.cylinder(g,[-w/2+.17,h/2-.17,.32],.036,.04,.036,p.red,[Math.PI/2,0,0],24);
   const hit=d.mesh(g,d.own(new T.BoxGeometry(w,h,1.65)),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),[0,0,.25]);
@@ -49,7 +44,7 @@ export function createWorkbench(images:T.Texture[]){
  function shelf(g:T.Object3D,x:number,y:number,w:number,depth=.84){d.box(g,[x,y,-.04],[w,.095,depth],p.ivory,.035);d.box(g,[x,y-.048,.34],[w-.06,.018,.025],p.edge,.007);}
  function spine(title:string,color:string){return d.canvas((c,w,h)=>{
   c.fillStyle=color;c.fillRect(0,0,w,h);c.strokeStyle='rgba(75,64,52,.13)';c.lineWidth=2;c.strokeRect(12,12,w-24,h-24);
-  c.fillStyle='#635b50';c.textAlign='center';c.font='20px Georgia';c.save();c.translate(w/2,h/2);c.rotate(-Math.PI/2);c.fillText(title,0,6);c.restore();
+  c.fillStyle='#564d43';c.textAlign='center';c.font='29px Georgia';c.save();c.translate(w/2,h/2);c.rotate(-Math.PI/2);c.fillText(title,0,6);c.restore();
   c.fillStyle='rgba(75,64,52,.35)';c.fillRect(w*.3,h*.08,w*.4,2);c.fillRect(w*.3,h*.9,w*.4,2);
  },96,512);}
  function book(parent:T.Object3D,pos:V,w:number,h:number,depth:number,color:string,title:string,lean=0){
@@ -66,34 +61,8 @@ export function createWorkbench(images:T.Texture[]){
   d.box(g,[0,.075,-depth/2+.006],[w,.145,.035],cover,.009);
   for(let i=0;i<8;i++)d.box(g,[0,.029+i*.013,depth/2-.012],[w-.06,.002,.002],p.seam,.0008);return g;
  }
- const leafGeo=(()=>{
-  const nx=12,ny=24,v:number[]=[],uv:number[]=[],idx:number[]=[];
-  for(let j=0;j<=ny;j++){const t=j/ny,width=.37*Math.pow(Math.sin(Math.PI*t),.78)*(1.13-.31*t);
-   for(let i=0;i<=nx;i++){const u=i/nx*2-1;v.push(u*width,t,.065*(1-u*u)*Math.sin(Math.PI*t)+.025*Math.sin(t*4)*u+.055*t*t);uv.push(i/nx,t);}}
-  for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const a=j*(nx+1)+i,b=a+nx+1;idx.push(a,b,a+1,a+1,b,b+1);}
-  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(v,3));geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geo.setIndex(idx);geo.computeVertexNormals();return d.own(geo);
- })();
- function blade(parent:T.Object3D,pos:V,length:number,angle:number,tilt:number,n:number){
-  const g=group(parent,pos,[tilt,(n%5-2)*.18,angle]);g.scale.set(length*.93,length,length);
-  d.mesh(g,leafGeo,[p.leaf,p.leaf2,p.leaf3][n%3]).name='Curved leaf blade';
-  d.tube(g,[[0,0,.004],[0,.26,.055],[0,.57,.08],[0,.88,.06]],.004,p.stem);return g;
- }
- function plant(parent:T.Object3D,pos:V,s=1,trailing=false,seed=0,drop=1){
-  const g=group(parent,pos);g.scale.setScalar(s);g.name=trailing?'Trailing pothos':'Ceramic planter';
-  d.lathe(g,[0,0,0],[[.001,.008],[.165,.008],[.186,.025],[.218,.37],[.22,.405],[.213,.419],[.183,.419],[.175,.395],[.15,.035],[.001,.035]],p.ceramic);
-  d.cylinder(g,[0,.39,0],.18,.18,.014,p.soil);
-  for(let i=0;i<14;i++){
-   const a=i*2.399+seed,r=.08+(i%4)*.085,height=.53+(i%5)*.10,end:V=[Math.cos(a)*r,height,Math.sin(a)*r];
-   d.tube(g,[[0,.35,0],[end[0]*.4,.53,end[2]*.5],end],.008,p.stem);
-   blade(g,end,.32+(i%3)*.042,-a*.6+(i%2?.4:-.4),Math.sin(a)*.5,i);
-  }
-  if(trailing)for(let v=0;v<3;v++){
-   const pts:V[]=[[0,.5,0],[-.23-v*.09,.47,.28],[-.43-v*.09,.06,.35],[-.44+v*.13,-.55*drop,.32],[-.51+v*.12,-1.17*drop,.41],[-.42+v*.1,(-1.72-v*.14)*drop,.35]];
-   d.tube(g,pts,.009,p.stem);const curve=new T.CatmullRomCurve3(pts.map(a=>new T.Vector3(...a)));
-   for(let k=1;k<=13;k++){const t=k/14,q=curve.getPoint(t),sign=k%2?1:-1;blade(g,[q.x,q.y,q.z+.015],.32-.08*t,sign*(.85+.3*Math.sin(k)),.08+Math.sin(k)*.2,k+v);}
-  }
-  return g;
- }
+ // Plant transforms are populated with detailed, reusable foliage in refinement.ts.
+ function plant(parent:T.Object3D,pos:V,s=1,trailing=false){const g=group(parent,pos);g.scale.setScalar(s);g.name=trailing?'Trailing pothos':'Ceramic planter';return g;}
  function bear(parent:T.Object3D,pos:V,s=1){
   const g=group(parent,pos);g.scale.setScalar(s);g.name='Ceramic bear';
   d.ball(g,[0,.29,0],[.195,.235,.153],p.ceramic);d.ball(g,[0,.58,.015],[.181,.164,.146],p.ceramic);
@@ -104,8 +73,7 @@ export function createWorkbench(images:T.Texture[]){
  function print(parent:T.Object3D,pos:V,w:number,h:number,texture:T.Texture,angle=0){const g=group(parent,pos,[0,0,angle]);g.name='Archival print';d.box(g,[0,-.024,0],[w+.085,h+.135,.021],p.paper,.008);plane(g,[0,.012,.016],w,h,d.photoMaterial(texture,w/h));return g;}
  function pin(parent:T.Object3D,pos:V,red=false){d.cylinder(parent,pos,.037,.041,.036,red?p.red:p.edge,[Math.PI/2,0,0],24);}
  function pencilCup(parent:T.Object3D,pos:V,s=1,glass=false){
-  const g=group(parent,pos);g.scale.setScalar(s);
-  const cupMat=glass?d.physical('#d9d3c7',{transparent:true,opacity:.36,roughness:.18,clearcoat:.3,depthWrite:false}):p.ceramic;
+  const g=group(parent,pos);g.scale.setScalar(s);const cupMat=glass?d.physical('#d9d3c7',{transparent:true,opacity:.36,roughness:.18,clearcoat:.3,depthWrite:false}):p.ceramic;
   d.lathe(g,[0,0,0],[[.001,.008],[.14,.008],[.145,.42],[.138,.44],[.12,.44],[.119,.033],[.001,.033]],cupMat);
   for(let i=0;i<6;i++){const x=(i%3-1)*.065,z=(Math.floor(i/3)-.5)*.065,a:V=[x,.06,z],b:V=[x+(i-2.5)*.035,.74+(i%3)*.08,z+.016];d.rod(g,a,b,.013,i===2?p.red:i===4?p.metal:p.black);d.cylinder(g,[b[0],b[1]+.014,b[2]],.002,.013,.06,p.pages,[0,0,-.06],12);}
  }
@@ -140,20 +108,20 @@ export function createWorkbench(images:T.Texture[]){
  d.box(furniture,[0,.245,-.49],[11.6,.48,.65],p.ivory,.045);
 
  const left=alcove('writing',-4.05,2.825,3.16,4.65,p.back);shelf(left,0,.60,2.94);shelf(left,0,-.92,2.94);shelf(left,0,-2.15,2.94);shelf(left,-.77,1.36,1.32,.74);
- plant(left,[-.79,1.42,.00],.68,true,1,1.45);
+ plant(left,[-.79,1.42,.00],.68,true);
  let bx=-.11;for(const [i,w] of [.21,.24,.18,.23].entries()){book(left,[bx,.66,.025],w,1.3-i*.07,.55,['#eee9de','#d5c9ba','#e6dfd2','#f3ebdf'][i],['NOTES','PHOTOGRAPHY','ARCHIVE','01'][i],i===2?-.035:0);bx+=w+.027;}bear(left,[1.13,.66,.02],.85);
  let mx=-1.21;for(let i=0;i<6;i++){const w=.16+(i%2)*.05;book(left,[mx,-.86,.035],w,1.10+(i%3)*.065,.54,['#e6ddce','#d8cfbf','#f1ece2'][i%3],['02','IMAGES','NOTES'][i%3],i===5?-.055:0);mx+=w+.032;}
  const picture=group(left,[.52,-.45,.29],[0,-.04,0]);d.box(picture,[0,0,0],[.55,.76,.048],p.edge,.019);print(picture,[0,0,.034],.46,.63,images[3]);flatBook(left,[.62,-.86,.10],.87,.56,'#e2d6c4');
  d.ball(left,[1.1,-.43,.20],[.235,.235,.235],d.mat('#fff1ce',.78,0,{emissive:'#ffdca0',emissiveIntensity:.6,bumpMap:grain,bumpScale:.022}));d.box(left,[1.1,-.735,.18],[.49,.14,.46],p.ceramic,.025);
  d.box(left,[-.86,-1.84,.045],[1.05,.52,.59],p.ivory,.055);d.box(left,[-.86,-1.556,.045],[1.085,.052,.62],p.edge,.025);d.box(left,[-.86,-1.679,.35],[.32,.041,.012],p.black,.012);
- flatBook(left,[.27,-2.10,.07],1.14,.59,'#d5c8b8');flatBook(left,[.27,-1.935,.07],1.03,.57,'#f0e8dc');plant(left,[1.08,-2.10,.09],.68,true,4,.35);
+ flatBook(left,[.27,-2.10,.07],1.14,.59,'#d5c8b8');flatBook(left,[.27,-1.935,.07],1.03,.57,'#f0e8dc');plant(left,[1.08,-2.10,.09],.68,true);
 
  const center=alcove('photography',-.23,2.825,4.16,4.65,p.board);
  const holes=new T.InstancedMesh(d.own(new T.CircleGeometry(.0125,10)),d.mat('#928779',.95),18*21);holes.position.z=-.648;const matrix=new T.Matrix4();let hi=0;
  for(let y=0;y<21;y++)for(let x=0;x<18;x++){matrix.makeTranslation(-1.86+x*.218,2.12-y*.214,0);holes.setMatrixAt(hi++,matrix);}holes.instanceMatrix.needsUpdate=true;center.add(holes);holes.userData.noBatch=true;
- const papers:[number,number,number,number,number,number][]=[[-1.19,1.14,.90,.82,-.055,0],[-.05,1.4,1.20,.91,.025,2],[1.20,1.05,1.0,.86,-.045,1],[-1.06,.05,.96,1.02,.06,3],[.16,.17,1.04,.81,-.045,4],[1.17,-.1,.85,1.07,-.10,5]];
+ const papers:[number,number,number,number,number,number][]=[[-1.19,1.14,.95,.87,-.050,0],[-.05,1.40,1.24,.95,.020,2],[1.20,1.05,1.0,.86,-.045,1],[-1.06,.02,1.02,1.13,.055,3],[.16,.17,1.04,.81,-.045,4],[1.17,-.15,.91,1.12,-.075,5]];
  for(const [x,y,w,h,a,ix] of papers){print(center,[x,y,-.545+ix*.007],w,h,images[ix],a);pin(center,[x+.015,y+h/2+.052,-.487+ix*.007],ix%2===0);}
- shelf(center,0,-2.12,3.94,.90);plant(center,[-1.64,-2.06,.025],.59,false,3);camera(center,[-.33,-2.06,.05]);
+ shelf(center,0,-2.12,3.94,.90);plant(center,[-1.64,-2.06,.025],.59);camera(center,[-.33,-2.06,.05]);
  for(let i=0;i<4;i++)film(center,.54+i*.18,-2.06,.08,['#ccc9c1','#242628','#c99740','#323434'][i]);pencilCup(center,[1.55,-2.06,.08],.88);
 
  const upper=alcove('aigc',3.99,3.845,3.35,2.61,p.blue);
@@ -162,11 +130,11 @@ export function createWorkbench(images:T.Texture[]){
   c.fillStyle=['#7d93a0','#e2c1a8','#7996a6'][index%3];c.beginPath();c.moveTo(w*.11,h*.92);c.bezierCurveTo(w*.2,h*.32,w*.48,h*.54,w*.59,h*.92);c.fill();c.strokeStyle='rgba(81,87,86,.25)';c.lineWidth=2;c.beginPath();c.moveTo(w*.16,h*.82);c.bezierCurveTo(w*.35,h*.41,w*.51,h*.64,w*.82,h*.7);c.stroke();
  },384,512);return d.mat('#ffffff',.8,0,{map});}
  const artm=[art(0),art(1),art(2)];
- for(let i=0;i<4;i++){const g=group(upper,[-.53+i*.34,.10+i*.025,-.50+i*.12],[0,-.04,(i-1.5)*.04]);d.box(g,[0,0,0],[1.53,1.96,.025],p.paper,.008);plane(g,[0,0,.018],1.44,1.87,artm[i%3]);}
+ for(let i=0;i<4;i++){const g=group(upper,[-.65+i*.34,.06+[.10,.24,-.09,.035][i],-.50+i*.12],[0,-.04,[-.018,-.061,.035,-.025][i]]);d.box(g,[0,0,0],[1.53,1.96,.025],p.paper,.008);plane(g,[0,0,.018],1.44,1.87,artm[i%3]);}
  d.box(upper,[.05,-1.04,-.10],[2.87,.075,.99],p.ivory,.025);for(const x of [-1.37,1.47])d.box(upper,[x,-.69,-.1],[.057,.7,.99],p.ivory,.02);
  const lip=new T.Shape();lip.moveTo(-1.37,-1.0);lip.lineTo(1.47,-1.0);lip.lineTo(1.47,-.50);lip.quadraticCurveTo(1.47,-.38,1.35,-.38);lip.lineTo(.9,-.38);lip.quadraticCurveTo(.82,-.38,.77,-.48);lip.lineTo(.56,-.69);lip.lineTo(-.26,-.69);lip.lineTo(-.45,-.50);lip.quadraticCurveTo(-.52,-.37,-.66,-.37);lip.lineTo(-1.24,-.37);lip.quadraticCurveTo(-1.37,-.37,-1.37,-.5);lip.closePath();
  d.mesh(upper,d.own(new T.ExtrudeGeometry(lip,{depth:.057,bevelEnabled:true,bevelSegments:3,bevelSize:.023,bevelThickness:.018,curveSegments:10})),p.ivory,[0,0,.43]);
- for(let i=0;i<5;i++)book(upper,[-.12+i*.115,-.98,.15],.10,.97+(i%2)*.08,.45,i%2?'#d8cfbf':'#eee6d6','');
+ for(let i=0;i<5;i++)book(upper,[.14+i*.126,-.98,.28],.112,1.14+(i%2)*.04,.45,i%2?'#d8cfbf':'#eee6d6','');
  const small=group(upper,[1.0,-.41,.40]);d.box(small,[0,0,0],[.56,.75,.021],p.paper,.007);plane(small,[0,0,.016],.47,.61,artm[1]);
 
  const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';
@@ -177,7 +145,7 @@ export function createWorkbench(images:T.Texture[]){
  const tri=new T.Shape();tri.moveTo(-.045,-.08);tri.lineTo(.079,0);tri.lineTo(-.045,.08);tri.closePath();d.mesh(tv,d.own(new T.ShapeGeometry(tri)),white,[-.252,.045,.34]);
  for(let i=0;i<2;i++){const y=.44-i*.285;d.torus(tv,[1.035,y,.219],.103,.014,p.darkMetal);d.cylinder(tv,[1.035,y,.228],.083,.083,.07,p.ivory,[Math.PI/2,0,0]);d.box(tv,[1.035,y+.05,.268],[.012,.036,.008],p.darkMetal,.002);}
  for(let i=0;i<14;i++)d.box(tv,[1.03,-.17-i*.032,.216],[.28,.008,.011],p.blueDark,.003);
- for(const x of [-.85,.86])d.box(tv,[x,-.799,-.13],[.25,.14,.43],p.ivory,.052);plant(lower,[-1.39,-.92,.21],.44,false,5);
+ for(const x of [-.85,.86])d.box(tv,[x,-.799,-.13],[.25,.14,.43],p.ivory,.052);plant(lower,[-1.39,-.92,.21],.44);
 
  deskLamp();flatBook(furniture,[-4.38,.01,.78],1.72,.83,'#d1bfa9',-.025);flatBook(furniture,[-4.33,.179,.80],1.64,.78,'#f0e7d8',.012);pencilCup(furniture,[-3.04,.01,.88],.88,true);
  d.box(furniture,[-.20,.020,.85],[4.81,.034,1.61],d.mat('#9baebb',.96,0,{bumpMap:grain,bumpScale:.004}),.014);
@@ -189,11 +157,8 @@ export function createWorkbench(images:T.Texture[]){
  d.box(furniture,[5.16,.041,1.02],[1.0,.067,.71],p.ivory,.027);for(const x of [4.68,5.64])d.box(furniture,[x,.114,1.02],[.04,.12,.69],p.ivory,.014);for(const z of [.69,1.35])d.box(furniture,[5.16,.114,z],[.96,.12,.04],p.ivory,.014);flatBook(furniture,[5.12,.08,1.02],.65,.43,'#d5c8b5');bear(furniture,[5.34,.01,.44],.72);
  const diffuser=group(furniture,[5.91,.015,.82]);d.lathe(diffuser,[0,0,0],[[.001,0],[.115,0],[.125,.02],[.125,.26],[.07,.30],[.06,.36],[.047,.36],[.05,.29],[.105,.24],[.10,.025],[.001,.025]],d.physical('#ccbfac',{roughness:.25,transparent:true,opacity:.48,depthWrite:false}));
  for(let i=0;i<5;i++)d.rod(diffuser,[(i-2)*.015,.13,0],[(i-2)*.05,.88+(i%2)*.09,(i%2-.5)*.08],.006,p.pages);
-
- const chair=group(furniture,[-.14,-.90,2.96]);chair.name='Upholstered cantilever chair';chair.scale.set(1.08,1.1,1);
- const cloth=d.mat('#d8cbbb',.88,0,{bumpMap:grain,bumpScale:.007});d.box(chair,[0,.57,0],[3.02,1.22,.22],cloth,.102,[-.025,0,0]);d.frame(chair,[0,.57,.116],2.93,1.13,.003,.008,p.seam,.13).castShadow=false;d.box(chair,[0,-.31,.52],[3.13,.23,1.61],cloth,.095);
- for(const sign of [-1,1]){d.tube(chair,[[sign*1.37,.40,.15],[sign*1.38,-.47,.13],[sign*1.39,-.64,.38],[sign*1.39,-.64,1.27],[sign*1.39,-.54,1.4],[sign*1.39,.03,1.4],[sign*1.39,.16,1.25],[sign*1.39,.16,.36]],.033,p.chrome);d.box(chair,[sign*1.49,.173,.83],[.26,.155,1.03],cloth,.065);}d.rod(chair,[-1.39,-.02,.134],[1.39,-.02,.134],.029,p.chrome);
- const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';shade(pendant,[0,0,0],.57,d.mat('#879396',.40,.38));d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
+ const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';shade(pendant,[0,0,0],.66,d.mat('#88949a',.30,.46));d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
+ applyStudioRefinement(d,root,furniture,zones,p);
  for(const zone of Object.values(zones))d.batch(zone.group);d.batch(furniture);root.updateMatrixWorld(true);
- return {root,zones,dispose:()=>d.dispose(),geometry:d};
+ return {root,zones,dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
 }
