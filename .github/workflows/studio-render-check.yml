@@ -25,11 +25,14 @@ jobs:
         run: cat node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-client.md | head -120
       - name: Package local modeling review resources
         run: |
-          mkdir -p .studio-qa/results
-          zip -qr .studio-qa/results/model-review-resources.zip components/portfolio styles/portfolio-studio-page.css node_modules/three node_modules/typescript public/assets/photos public/assets/projects/red-leaf/gameplay-scene-hires.png node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-client.md
+          mkdir -p .studio-qa/results .studio-qa/tmp
+          zip -qr .studio-qa/results/model-review-resources.zip components/portfolio styles/portfolio-studio-page.css styles/portfolio-interactions.css node_modules/three node_modules/typescript public/assets/photos public/assets/projects/red-leaf/gameplay-scene-hires.png node_modules/next/dist/docs/01-app/03-api-reference/01-directives/use-client.md
       - run: npm run assets:verify && npm run build
       - run: npm install --no-save playwright@1.55.1 && npx playwright install --with-deps chromium
       - name: Browser render and interaction checks
+        timeout-minutes: 11
+        env:
+          TMPDIR: ${{ github.workspace }}/.studio-qa/tmp
         run: |
           npm run start > .studio-qa/server.log 2>&1 &
           node scripts/qa-studio-model.mjs
