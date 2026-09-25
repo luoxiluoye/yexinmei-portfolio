@@ -1,2 +1,2 @@
-import { PortfolioGallery } from "@/components/portfolio/portfolio-gallery";
-export default function Page() { return <PortfolioGallery category="video" />; }
+import { redirect } from "next/navigation";
+export default function Page() { redirect("/portfolio#video"); }
