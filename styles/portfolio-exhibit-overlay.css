@@ -1,4 +1,5 @@
 .studio-shell.is-exhibiting .studio-canvas-wrap{
+  pointer-events:none;
   filter:blur(9px) brightness(.72) saturate(.78);
   transform:scale(1.022);
 }
