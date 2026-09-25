@@ -5,6 +5,7 @@ export const WORK_IMAGES=[
  '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
  '/assets/photos/portrait/portrait-06.jpeg','/assets/photos/ziroom-campaign/campaign-02.jpeg','/assets/photos/meituan-product/product-02.jpeg',
  '/assets/projects/red-leaf/gameplay-scene-hires.png',
+ '/assets/photos/portrait/yexinmei-frame.jpg',
 ];
 
 /** Solids and curved surfaces, with photographs applied only to prints and the display. */
@@ -111,7 +112,7 @@ export function createWorkbench(images:T.Texture[]){
  plant(left,[-.79,1.42,.00],.68,true);
  let bx=-.11;for(const [i,w] of [.21,.24,.18,.23].entries()){book(left,[bx,.66,.025],w,1.3-i*.07,.55,['#eee9de','#d5c9ba','#e6dfd2','#f3ebdf'][i],['NOTES','PHOTOGRAPHY','ARCHIVE','01'][i],i===2?-.035:0);bx+=w+.027;}bear(left,[1.13,.66,.02],.85);
  let mx=-1.21;for(let i=0;i<6;i++){const w=.16+(i%2)*.05;book(left,[mx,-.86,.035],w,1.10+(i%3)*.065,.54,['#e6ddce','#d8cfbf','#f1ece2'][i%3],['02','IMAGES','NOTES'][i%3],i===5?-.055:0);mx+=w+.032;}
- const picture=group(left,[.52,-.45,.29],[0,-.04,0]);d.box(picture,[0,0,0],[.55,.76,.048],p.edge,.019);print(picture,[0,0,.034],.46,.63,images[3]);flatBook(left,[.62,-.86,.10],.87,.56,'#e2d6c4');
+ const picture=group(left,[.52,-.45,.29],[0,-.04,0]);d.box(picture,[0,0,0],[.55,.76,.048],p.edge,.019);print(picture,[0,0,.034],.46,.63,images[7]);flatBook(left,[.62,-.86,.10],.87,.56,'#e2d6c4');
  d.ball(left,[1.1,-.43,.20],[.235,.235,.235],d.mat('#fff1ce',.78,0,{emissive:'#ffdca0',emissiveIntensity:.6,bumpMap:grain,bumpScale:.022}));d.box(left,[1.1,-.735,.18],[.49,.14,.46],p.ceramic,.025);
  d.box(left,[-.86,-1.84,.045],[1.05,.52,.59],p.ivory,.055);d.box(left,[-.86,-1.556,.045],[1.085,.052,.62],p.edge,.025);d.box(left,[-.86,-1.679,.35],[.32,.041,.012],p.black,.012);
  flatBook(left,[.27,-2.10,.07],1.14,.59,'#d5c8b8');flatBook(left,[.27,-1.935,.07],1.03,.57,'#f0e8dc');plant(left,[1.08,-2.10,.09],.68,true);
