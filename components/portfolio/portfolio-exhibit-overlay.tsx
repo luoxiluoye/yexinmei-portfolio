@@ -168,7 +168,11 @@ export function PortfolioExhibitOverlay({zone,onZoneChange,onClose}:Props){
 
   return <section className={'pe-overlay pe-from-'+zone} role='dialog' aria-modal='true' aria-label='作品展示'>
     <header className='pe-header'>
-      <button className='pe-back' type='button' onClick={onClose}><BackIcon/><span>返回工作台</span></button>
+      <button className='pe-back' type='button' onClick={()=>{
+        if(zone==='aigc'&&collection){setCollection(null);setVisualIndex(0);return;}
+        if(zone==='writing'&&reading){setReading(null);return;}
+        onClose();
+      }}><BackIcon/><span>{zone==='aigc'&&collection?'返回文件夹':zone==='writing'&&reading?'返回书架':'返回工作台'}</span></button>
       <div className='pe-wordmark'>LUO YEXINMEI <small>●</small></div>
       <button className='pe-close' type='button' onClick={onClose} aria-label='关闭作品展示'><CloseIcon/></button>
     </header>
@@ -224,24 +228,65 @@ export function PortfolioExhibitOverlay({zone,onZoneChange,onClose}:Props){
           <p className='pe-hint'>点击文件夹展开作品 · 当前仅展示已接入仓库的真实视觉素材</p>
         </>}
         {activeCollection&&<>
-          <button className='pe-collection-back' type='button' onClick={()=>setCollection(null)}><BackIcon/><span>返回文件夹</span></button>
-          <div className='pe-intro pe-intro-compact'>
-            <div><span className='pe-eyebrow'>VISUAL COLLECTION</span><h2>{activeCollection.title}</h2><p>{activeCollection.subtitle}</p></div>
-            <div className='pe-count'><strong>{String(activeCollection.items.length).padStart(2,'0')}</strong><span>张画面</span></div>
+          <div className='pe-visual-titlebar'>
+            <div>
+              <span className='pe-eyebrow'>VISUAL COLLECTION</span>
+              <h2>{activeCollection.title}</h2>
+              <p>{activeCollection.subtitle}</p>
+            </div>
+            <div className='pe-visual-index'>
+              <strong>{String(visualIndex+1).padStart(2,'0')}</strong>
+              <i>/</i>
+              <span>{String(activeCollection.items.length).padStart(2,'0')}</span>
+            </div>
           </div>
-          <div className='pe-poster-stage'>
+
+          <div className='pe-poster-stage pe-poster-stage-refined'>
+            <div className='pe-poster-stage-glow' aria-hidden='true'/>
             {activeCollection.items.map((item,index)=>{
               const offset=index-visualIndex;
-              const transform='translate(-50%,-50%) translateX('+(offset*245)+'px) translateZ('+(-Math.abs(offset)*125)+'px) rotateY('+(-offset*12)+'deg) scale('+(1-Math.min(Math.abs(offset),3)*.09)+')';
-              return <button type='button' key={item.src} className='pe-poster-card' style={{transform,zIndex:20-Math.abs(offset),opacity:Math.abs(offset)<=3?1:0,pointerEvents:Math.abs(offset)<=3?'auto':'none'}} onClick={()=>{setVisualIndex(index);setVisualViewer(index);}}>
-                <img src={item.src} alt={item.title}/><span>{item.title}</span>
+              const depth=Math.min(Math.abs(offset),3);
+              return <button
+                type='button'
+                key={item.src}
+                className={'pe-poster-card pe-poster-card-refined'+(offset===0?' is-active':'')}
+                style={{
+                  '--offset':String(offset),
+                  '--depth':String(depth),
+                  '--scale':String(1-depth*.085),
+                  zIndex:30-depth,
+                  opacity:Math.abs(offset)<=2?1:0,
+                  pointerEvents:Math.abs(offset)<=2?'auto':'none'
+                } as React.CSSProperties}
+                aria-label={'查看 '+item.title}
+                onClick={()=>{if(index===visualIndex)setVisualViewer(index);else setVisualIndex(index);}}
+              >
+                <span className='pe-poster-thickness' aria-hidden='true'/>
+                <span className='pe-poster-image'><img src={item.src} alt={item.title}/></span>
               </button>;
             })}
           </div>
-          <div className='pe-carousel-controls'>
-            <button type='button' onClick={()=>setVisualIndex(v=>Math.max(0,v-1))} disabled={visualIndex===0}><ArrowIcon dir='left'/></button>
-            <span>{String(visualIndex+1).padStart(2,'0')} / {String(activeCollection.items.length).padStart(2,'0')}</span>
-            <button type='button' onClick={()=>setVisualIndex(v=>Math.min(activeCollection.items.length-1,v+1))} disabled={visualIndex===activeCollection.items.length-1}><ArrowIcon dir='right'/></button>
+
+          <div className='pe-visual-caption'>
+            <button type='button' className='pe-visual-arrow' onClick={()=>setVisualIndex(v=>Math.max(0,v-1))} disabled={visualIndex===0}><ArrowIcon dir='left'/></button>
+            <div>
+              <strong>{activeCollection.items[visualIndex]?.title}</strong>
+              <span>点击当前作品查看高清大图</span>
+            </div>
+            <button type='button' className='pe-visual-arrow' onClick={()=>setVisualIndex(v=>Math.min(activeCollection.items.length-1,v+1))} disabled={visualIndex===activeCollection.items.length-1}><ArrowIcon dir='right'/></button>
+          </div>
+
+          <div className='pe-filmstrip' aria-label='作品缩略图'>
+            {activeCollection.items.map((item,index)=><button
+              key={item.src}
+              type='button'
+              className={index===visualIndex?'is-active':undefined}
+              onClick={()=>setVisualIndex(index)}
+              aria-label={'切换到 '+item.title}
+            >
+              <img src={item.src} alt=''/>
+              <span>{String(index+1).padStart(2,'0')}</span>
+            </button>)}
           </div>
         </>}
       </div>}
@@ -267,7 +312,6 @@ export function PortfolioExhibitOverlay({zone,onZoneChange,onClose}:Props){
           <p className='pe-hint'>点击书册展开 · 阅读作品信息或进入原文</p>
         </>}
         {activeWriting&&<article className='pe-reader'>
-          <button className='pe-collection-back' type='button' onClick={()=>setReading(null)}><BackIcon/><span>返回书架</span></button>
           <div className='pe-reader-book' style={{'--book':activeWriting.color} as React.CSSProperties}>
             <small>{activeWriting.kind}</small><h2>{activeWriting.title}</h2><p>{activeWriting.subtitle}</p><span>罗叶馨梅</span>
           </div>
