@@ -48,7 +48,7 @@ try{
  }
 
  await open();const photoPoint=await page.evaluate(()=>window.__STUDIO_QA__.points.photography);await page.mouse.click(photoPoint.x,photoPoint.y);await page.waitForSelector('.pe-overlay');
- const card=page.locator('.pe-photo-card').filter({visible:true}).first();await card.click();await page.waitForSelector('.pe-lightbox',{state:'visible'});report.photoViewer=true;await page.keyboard.press('Escape');await page.waitForSelector('.pe-lightbox',{state:'detached'});
+ const card=page.locator('.pe-photo-card').first();await card.click();await page.waitForSelector('.pe-lightbox',{state:'visible'});report.photoViewer=true;await page.keyboard.press('Escape');await page.waitForSelector('.pe-lightbox',{state:'detached'});
  await page.getByRole('button',{name:/视觉/}).click();await page.waitForSelector('.pe-folder');await page.locator('.pe-folder').first().click();await page.waitForSelector('.pe-poster-card');report.visualFolder=true;await checkpoint('content-drilldown-passed');
 
  const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,reducedMotion:'reduce'}),mobile=await context.newPage();
