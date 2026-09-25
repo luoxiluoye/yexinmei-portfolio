@@ -1,7 +1,7 @@
 .studio-shell.is-exhibiting .studio-canvas-wrap{
   pointer-events:none;
-  filter:blur(9px) brightness(.72) saturate(.78);
-  transform:scale(1.022);
+  filter:blur(4px) brightness(.64) saturate(.72);
+  transform:scale(1.012);
 }
 .studio-shell.is-exhibiting .studio-topbar,
 .studio-shell.is-exhibiting .studio-view-controls{
@@ -345,3 +345,329 @@
   pointer-events:none
 }
 .pe-wordmark{opacity:.72}
+
+
+/* --- Refined visual collection exhibit ---------------------------------- */
+.pe-visual-page{
+  overflow:hidden;
+}
+.pe-visual-page::before{
+  background:
+    radial-gradient(ellipse at 50% 44%,rgba(249,246,240,.72) 0%,rgba(249,246,240,.48) 44%,rgba(249,246,240,.16) 70%,transparent 88%);
+}
+.pe-visual-titlebar{
+  position:absolute;
+  left:clamp(28px,5.5vw,88px);
+  right:clamp(28px,5.5vw,88px);
+  top:8px;
+  z-index:8;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  pointer-events:none;
+}
+.pe-visual-titlebar h2{
+  margin:5px 0 0;
+  font:400 clamp(24px,2.2vw,34px)/1.28 'Songti SC','STSong',Georgia,serif;
+  letter-spacing:.055em;
+  color:#4b443d;
+}
+.pe-visual-titlebar p{
+  margin:7px 0 0;
+  font-size:10px;
+  color:#8f8579;
+  letter-spacing:.02em;
+}
+.pe-visual-index{
+  display:flex;
+  align-items:baseline;
+  gap:8px;
+  color:#9d9386;
+  font-family:Georgia,'Times New Roman',serif;
+}
+.pe-visual-index strong{
+  font-size:34px;
+  font-weight:400;
+  color:#655c52;
+}
+.pe-visual-index i{
+  font-style:normal;
+  opacity:.45;
+  font-size:13px;
+}
+.pe-visual-index span{
+  font-size:15px;
+  opacity:.7;
+}
+
+.pe-poster-stage-refined{
+  height:clamp(420px,61vh,650px);
+  margin-top:28px;
+  overflow:visible;
+  perspective:1800px;
+  transform-style:preserve-3d;
+}
+.pe-poster-stage-glow{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(70vw,980px);
+  height:min(42vw,560px);
+  transform:translate(-50%,-47%);
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(252,248,240,.96),rgba(248,242,232,.50) 47%,transparent 76%);
+  filter:blur(2px);
+  pointer-events:none;
+}
+.pe-poster-card-refined{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:clamp(420px,49vw,760px);
+  aspect-ratio:16/9;
+  padding:12px 12px 30px!important;
+  border:1px solid rgba(160,142,120,.23)!important;
+  border-radius:2px;
+  background:#fffdf8!important;
+  box-shadow:
+    0 34px 58px -30px rgba(59,43,29,.64),
+    0 8px 24px -16px rgba(59,43,29,.32);
+  transform:
+    translate(-50%,-50%)
+    translateX(calc(var(--offset) * clamp(305px,32vw,470px)))
+    translateZ(calc(var(--depth) * -140px))
+    rotateY(calc(var(--offset) * -11deg))
+    translateY(calc(var(--depth) * 10px))
+    scale(var(--scale));
+  transform-style:preserve-3d;
+  transition:
+    transform .64s cubic-bezier(.22,.8,.2,1),
+    opacity .32s ease,
+    filter .32s ease,
+    box-shadow .32s ease;
+  will-change:transform,opacity;
+}
+.pe-poster-card-refined:not(.is-active){
+  filter:saturate(.76) brightness(.88);
+}
+.pe-poster-card-refined.is-active{
+  box-shadow:
+    0 42px 76px -33px rgba(56,39,24,.72),
+    0 12px 26px -17px rgba(76,50,27,.40),
+    0 0 0 1px rgba(176,151,120,.16);
+}
+.pe-poster-card-refined::before,
+.pe-poster-card-refined::after{
+  content:"";
+  position:absolute;
+  inset:6px -7px -7px 6px;
+  z-index:-1;
+  border:1px solid rgba(157,140,119,.16);
+  background:#f1eadf;
+  transform:translateZ(-7px);
+  box-shadow:0 7px 18px rgba(69,47,29,.10);
+}
+.pe-poster-card-refined::after{
+  inset:10px -11px -11px 10px;
+  background:#e8dfd1;
+  transform:translateZ(-13px);
+  opacity:.78;
+}
+.pe-poster-thickness{
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:5px;
+  background:linear-gradient(90deg,#dfd5c6,#f7f1e7);
+  transform:translateX(-5px) rotateY(90deg);
+  transform-origin:right center;
+  opacity:.78;
+}
+.pe-poster-image{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#171717;
+  box-shadow:inset 0 0 0 1px rgba(20,20,20,.10);
+}
+.pe-poster-image img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:contain;
+  background:#171717;
+}
+.pe-poster-card-refined.is-active:hover{
+  transform:
+    translate(-50%,-50%)
+    translateX(calc(var(--offset) * clamp(305px,32vw,470px)))
+    translateZ(10px)
+    rotateY(0deg)
+    scale(1.015);
+}
+
+.pe-visual-caption{
+  position:absolute;
+  left:50%;
+  bottom:76px;
+  transform:translateX(-50%);
+  z-index:9;
+  width:min(560px,70vw);
+  display:grid;
+  grid-template-columns:42px 1fr 42px;
+  gap:16px;
+  align-items:center;
+  color:#5f564c;
+}
+.pe-visual-caption>div{
+  min-width:0;
+  text-align:center;
+}
+.pe-visual-caption strong{
+  display:block;
+  font:500 11px/1.4 Arial,sans-serif;
+  letter-spacing:.04em;
+  color:#5d544b;
+}
+.pe-visual-caption span{
+  display:block;
+  margin-top:4px;
+  font-size:8px;
+  color:#9a8e80;
+  letter-spacing:.05em;
+}
+.pe-visual-arrow{
+  width:38px;height:38px;
+  border:1px solid rgba(132,112,89,.23)!important;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,252,246,.58)!important;
+  backdrop-filter:blur(7px);
+  transition:transform .2s ease,background .2s ease,opacity .2s ease;
+}
+.pe-visual-arrow:hover:not(:disabled){
+  transform:scale(1.06);
+  background:rgba(255,252,246,.86)!important;
+}
+.pe-visual-arrow:disabled{opacity:.22;cursor:default}
+.pe-visual-arrow svg{width:16px;height:16px}
+
+.pe-filmstrip{
+  position:absolute;
+  left:50%;
+  bottom:19px;
+  transform:translateX(-50%);
+  z-index:10;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  border:1px solid rgba(138,118,94,.13);
+  border-radius:11px;
+  background:rgba(250,246,239,.54);
+  box-shadow:0 12px 28px -18px rgba(54,39,25,.28);
+  backdrop-filter:blur(9px);
+}
+.pe-filmstrip button{
+  position:relative;
+  width:62px;
+  height:39px;
+  padding:3px!important;
+  border:1px solid transparent!important;
+  border-radius:5px;
+  background:rgba(255,255,255,.42)!important;
+  opacity:.52;
+  transition:opacity .2s ease,transform .2s ease,border-color .2s ease;
+}
+.pe-filmstrip button:hover{opacity:.82;transform:translateY(-1px)}
+.pe-filmstrip button.is-active{
+  opacity:1;
+  border-color:rgba(162,77,61,.48)!important;
+  transform:translateY(-2px);
+}
+.pe-filmstrip img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:3px;
+}
+.pe-filmstrip span{
+  position:absolute;
+  right:3px;
+  bottom:2px;
+  min-width:15px;
+  padding:1px 2px;
+  border-radius:3px;
+  background:rgba(29,28,27,.66);
+  color:#f7f2eb;
+  font:7px/1.1 Arial,sans-serif;
+  text-align:center;
+}
+.pe-visual-page .pe-carousel-controls{display:none}
+
+/* Reduce header clutter while the collection itself is open. */
+.pe-from-aigc .pe-wordmark{
+  opacity:.34;
+  font-size:16px;
+}
+.pe-from-aigc .pe-back{
+  background:rgba(250,247,241,.66)!important;
+  border:1px solid rgba(126,105,81,.12)!important;
+}
+.pe-from-aigc .pe-close{
+  background:rgba(250,247,241,.66)!important;
+}
+
+/* Other exhibit modes get a quieter paper treatment too. */
+.pe-photo-card,
+.pe-book-cover,
+.pe-reader-sheet{
+  box-shadow:
+    0 26px 50px -28px rgba(59,43,29,.58),
+    0 7px 18px -14px rgba(59,43,29,.26);
+}
+.pe-lightbox{
+  background:rgba(28,28,27,.72);
+  backdrop-filter:blur(16px) saturate(.8);
+}
+
+@media(max-width:900px){
+  .pe-visual-titlebar{
+    left:22px;right:22px;top:7px;
+  }
+  .pe-visual-titlebar h2{font-size:23px}
+  .pe-visual-index strong{font-size:28px}
+  .pe-poster-stage-refined{
+    height:58vh;
+    margin-top:34px;
+  }
+  .pe-poster-card-refined{
+    width:min(75vw,620px);
+    transform:
+      translate(-50%,-50%)
+      translateX(calc(var(--offset) * 66vw))
+      translateZ(calc(var(--depth) * -90px))
+      rotateY(calc(var(--offset) * -8deg))
+      scale(var(--scale));
+  }
+  .pe-poster-card-refined.is-active:hover{
+    transform:translate(-50%,-50%) scale(1.01);
+  }
+  .pe-visual-caption{bottom:72px;width:min(560px,84vw)}
+  .pe-filmstrip{bottom:16px;max-width:88vw;overflow:auto}
+}
+@media(max-width:560px){
+  .pe-visual-titlebar{top:5px}
+  .pe-visual-titlebar p{display:none}
+  .pe-visual-index strong{font-size:24px}
+  .pe-poster-stage-refined{height:55vh;margin-top:26px}
+  .pe-poster-card-refined{width:82vw;padding:7px 7px 23px!important}
+  .pe-visual-caption{bottom:68px;grid-template-columns:34px 1fr 34px;gap:8px}
+  .pe-visual-arrow{width:32px;height:32px}
+  .pe-filmstrip{gap:5px;padding:6px 7px}
+  .pe-filmstrip button{width:52px;height:33px}
+}
