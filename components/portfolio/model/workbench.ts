@@ -5,7 +5,7 @@ export const WORK_IMAGES=[
  '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
  '/assets/photos/portrait/portrait-06.jpeg','/assets/photos/ziroom-campaign/campaign-02.jpeg','/assets/photos/meituan-product/product-02.jpeg',
  '/assets/projects/red-leaf/gameplay-scene-hires.png',
- '/assets/photos/portrait/yexinmei-frame.jpg',
+ '/assets/photos/portrait/yexinmei-frame-v5.jpg',
 ];
 
 /** Solids and curved surfaces, with photographs applied only to prints and the display. */
