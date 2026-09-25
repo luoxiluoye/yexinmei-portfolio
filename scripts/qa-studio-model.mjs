@@ -49,7 +49,8 @@ try{
 
  await open();const photoPoint=await page.evaluate(()=>window.__STUDIO_QA__.points.photography);await page.mouse.click(photoPoint.x,photoPoint.y);await page.waitForSelector('.pe-overlay');
  const card=page.locator('.pe-photo-card').first();await card.click();await page.waitForSelector('.pe-lightbox',{state:'visible'});report.photoViewer=true;await page.keyboard.press('Escape');await page.waitForSelector('.pe-lightbox',{state:'detached'});
- await page.getByRole('button',{name:/视觉/}).click();await page.waitForSelector('.pe-folder');await page.locator('.pe-folder').first().click();await page.waitForSelector('.pe-poster-card');report.visualFolder=true;await checkpoint('content-drilldown-passed');
+ await page.getByRole('button',{name:'关闭作品展示'}).click();await page.waitForSelector('.pe-overlay',{state:'detached',timeout:45000});await page.waitForTimeout(500);
+ const aigcPoint=await page.evaluate(()=>window.__STUDIO_QA__.points.aigc);await page.mouse.click(aigcPoint.x,aigcPoint.y);await page.waitForSelector('.pe-folder',{state:'visible',timeout:45000});await page.locator('.pe-folder').first().click();await page.waitForSelector('.pe-poster-card');report.visualFolder=true;await checkpoint('content-drilldown-passed');
 
  const context=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true,reducedMotion:'reduce'}),mobile=await context.newPage();
  mobile.on('pageerror',e=>errors.push(e.message));await mobile.goto(base+'/portfolio?qa=1',{waitUntil:'networkidle',timeout:90000});await mobile.waitForFunction(()=>window.__STUDIO_QA__?.points?.photography,null,{timeout:90000});
