@@ -293,23 +293,30 @@ export function PortfolioExhibitOverlay({zone,onZoneChange,onClose}:Props){
 
       {zone==='writing'&&<div className='pe-page pe-writing-page'>
         {!activeWriting&&<>
-          <div className='pe-intro'>
-            <div><span className='pe-eyebrow'>WRITING / 03</span><h2>文字作品</h2></div>
-            <div className='pe-count'><strong>{String(WRITINGS.length).padStart(2,'0')}</strong><span>件作品</span></div>
+          <div className='pe-writing-introbar'>
+            <div>
+              <span className='pe-eyebrow'>WRITING / 03</span>
+              <h2>文字作品</h2>
+              <p>电影剧本 · 校园图文 · 非遗报道</p>
+            </div>
+            <div className='pe-writing-total'><strong>{String(WRITINGS.length).padStart(2,'0')}</strong><span>SELECTED WORKS</span></div>
           </div>
-          <div className='pe-book-stage'>
-            {WRITINGS.map((item,index)=><button type='button' key={item.id} className='pe-book' style={{'--book':item.color} as React.CSSProperties} onClick={()=>setReading(item.id)}>
+          <div className='pe-writing-stage'>
+            <div className='pe-writing-shelf' aria-hidden='true'><span/><span/></div>
+            <div className='pe-writing-shadow' aria-hidden='true'/>
+            {WRITINGS.map((item,index)=><button type='button' key={item.id} className={'pe-book pe-book-refined pe-book-'+(index+1)} style={{'--book':item.color} as React.CSSProperties} onClick={()=>setReading(item.id)}>
+              <span className='pe-book-number' aria-hidden='true'>{String(index+1).padStart(2,'0')}</span>
               <span className='pe-book-pages'/>
               <span className='pe-book-cover'>
-                <small>{item.kind} / {String(index+1).padStart(2,'0')}</small>
+                <small>{item.kind}</small>
                 <b>{item.title}</b>
                 <em>{item.subtitle}</em>
                 <i>罗叶馨梅</i>
               </span>
-              <span className='pe-book-caption'>点击翻开</span>
+              <span className='pe-book-meta'><b>{item.kind}</b><small>{item.subtitle}</small></span>
             </button>)}
           </div>
-          <p className='pe-hint'>点击书册展开 · 阅读作品信息或进入原文</p>
+          <div className='pe-writing-guide'><span>点击书册继续阅读</span><i>03 / 03</i></div>
         </>}
         {activeWriting&&<article className='pe-reader'>
           <div className='pe-reader-book' style={{'--book':activeWriting.color} as React.CSSProperties}>
