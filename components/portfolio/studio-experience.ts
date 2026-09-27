@@ -7,11 +7,13 @@ import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass
 import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
 import {createWorkbench} from './model/workbench';
 import type {ZoneId} from './model/atelier-geometry';
+import {StudioDirector,type DirectorMilestone} from './studio-director';
+import type {StudioState} from './studio-state';
 const IDS:ZoneId[]=['writing','photography','aigc','video'];
 const ACCENTS={writing:'#ed9c54',photography:'#65bafa',aigc:'#dfb53f',video:'#ee806b'};
 const VERSION='studio-interactive-warm-final-20260924';
 type Point={x:number;y:number};
-type Telemetry={stats:{version:string;meshes:number;triangles:number;chair?:unknown};points:Record<string,Point>;frames:number;view:{yaw:number;pitch:number;dragging:boolean;camera:number[]};highlights:Record<string,{amount:number;emission:number;light:number}>;lighting:{pendantOn:boolean;color:string;intensity:number}};
+type Telemetry={stats:{version:string;meshes:number;triangles:number;chair?:unknown};points:Record<string,Point>;frames:number;view:{yaw:number;pitch:number;dragging:boolean;camera:number[]};highlights:Record<string,{amount:number;emission:number;light:number}>;lighting:{pendantOn:boolean;color:string;intensity:number};studioState?:StudioState;director?:ReturnType<StudioDirector['debug']>};
 declare global{interface Window{__STUDIO_QA__?:Telemetry;}}
 /** Actual meshes, raycasting and bounded camera orbit. */
 export class StudioExperience{
@@ -22,11 +24,12 @@ export class StudioExperience{
  private pendantLights:T.Light[]=[];
  private disposed=false;private ready=false;private frames=0;private width=1;private height=1;private ratio=1;
  private yaw=0;private pitch=0;private requestedYaw=0;private requestedPitch=0;private hover:ZoneId|null=null;private selected:ZoneId|null=null;
+ private studioState:StudioState={mode:'idle',phase:'stable'};private director:StudioDirector;
  private ray=new T.Raycaster();private pointer=new T.Vector2();private lookAt=new T.Vector3(0,2.23,.1);private desired=new T.Vector3();private castPoint=new T.Vector3();
- private down:{pointerId:number;x:number;y:number;yaw:number;pitch:number;zone:ZoneId|null;moved:boolean}|null=null;
+ private down:{pointerId:number;x:number;y:number;yaw:number;pitch:number;zone:ZoneId|null;folderId:string|null;moved:boolean}|null=null;
  private reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;private qa=new URLSearchParams(window.location.search).get('qa')==='1';
  private motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');private previousCursor:string;private previousTouchAction:string;
- constructor(private gl:T.WebGLRenderer,private scene:T.Scene,private camera:T.PerspectiveCamera,images:T.Texture[],private invalidate:()=>void,private onSelect:(id:ZoneId)=>void,private onReady:()=>void){
+ constructor(private gl:T.WebGLRenderer,private scene:T.Scene,private camera:T.PerspectiveCamera,images:T.Texture[],private invalidate:()=>void,private onSelect:(id:ZoneId)=>void,private onSelectItem:(id:string)=>void,private onDirectorMilestone:(milestone:DirectorMilestone)=>void,private onReady:()=>void){
   this.model=createWorkbench(images);scene.add(this.model.root,this.rig);gl.toneMapping=T.ACESFilmicToneMapping;gl.toneMappingExposure=.99;gl.outputColorSpace=T.SRGBColorSpace;
   gl.shadowMap.enabled=true;gl.shadowMap.type=T.PCFSoftShadowMap;scene.background=new T.Color('#e9e4db');
   const generator=new T.PMREMGenerator(gl),room=new RoomEnvironment();this.environment=generator.fromScene(room,.04);room.dispose();generator.dispose();
@@ -35,10 +38,11 @@ export class StudioExperience{
   this.composer=new EffectComposer(gl,new T.WebGLRenderTarget(1,1,{type:T.HalfFloatType,samples:4}));const render=new RenderPass(scene,camera);
   this.ao=new SSAOPass(scene,camera,1,1,16);this.ao.kernelRadius=.19;this.ao.minDistance=.001;this.ao.maxDistance=.12;
   this.bloom=new UnrealBloomPass(new T.Vector2(1,1),.27,.48,1.02);this.output=new OutputPass();this.composer.addPass(render);this.composer.addPass(this.ao);this.composer.addPass(this.bloom);this.composer.addPass(this.output);
+  this.director=new StudioDirector(this.model,this.camera,()=>this.reduced,()=>({position:this.camera.position.clone(),quaternion:this.camera.quaternion.clone(),fov:this.camera.fov,orbit:{yaw:this.yaw,pitch:this.pitch,requestedYaw:this.requestedYaw,requestedPitch:this.requestedPitch}}),snapshot=>{this.camera.position.copy(snapshot.position);this.camera.quaternion.copy(snapshot.quaternion);this.camera.fov=snapshot.fov;this.camera.updateProjectionMatrix();if(snapshot.orbit){this.yaw=snapshot.orbit.yaw;this.pitch=snapshot.orbit.pitch;this.requestedYaw=snapshot.orbit.requestedYaw;this.requestedPitch=snapshot.orbit.requestedPitch;}},milestone=>this.onDirectorMilestone(milestone));
   const canvas=gl.domElement;this.previousCursor=canvas.style.cursor;this.previousTouchAction=canvas.style.touchAction;canvas.style.touchAction='none';canvas.style.cursor='grab';
   canvas.addEventListener('pointerdown',this.pointerDown);canvas.addEventListener('pointermove',this.pointerMove);canvas.addEventListener('pointerup',this.pointerUp);canvas.addEventListener('pointercancel',this.pointerCancel);canvas.addEventListener('pointerleave',this.pointerLeave);canvas.addEventListener('lostpointercapture',this.lostCapture);
   window.addEventListener('blur',this.pointerCancel);window.addEventListener('studio:reset',this.reset);this.motionQuery.addEventListener('change',this.motionChange);
-  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:true,color:'#ffd092',intensity:13}};window.addEventListener('studio:qa-pendant',this.qaPendant);}
+  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:true,color:'#ffd092',intensity:13}};window.addEventListener('studio:qa-pendant',this.qaPendant);window.addEventListener('studio:qa-progress',this.qaProgress);}
   this.invalidate();
  }
  private motionChange=(event:MediaQueryListEvent)=>{this.reduced=event.matches;this.invalidate();};
@@ -72,40 +76,50 @@ export class StudioExperience{
   }
  }
  setSize(width:number,height:number){if(this.disposed)return;this.width=width;this.height=height;this.ratio=width/Math.max(height,1);this.composer.setPixelRatio(this.gl.getPixelRatio());this.composer.setSize(width,height);this.ao.enabled=width>=700;this.invalidate();}
- setSelected(id:ZoneId|null){this.selected=id;this.invalidate();}
- private pick(clientX:number,clientY:number):ZoneId|null{const box=this.gl.domElement.getBoundingClientRect();this.pointer.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);this.camera.updateMatrixWorld();this.model.root.updateMatrixWorld(true);this.ray.setFromCamera(this.pointer,this.camera);const hits=this.ray.intersectObjects(IDS.map(id=>this.model.zones[id].hit),false);return hits.length?(hits[0].object.userData.zone as ZoneId):null;}
+ setSelected(id:ZoneId|null){if(this.studioState.mode==='idle')this.selected=id;this.invalidate();}
+ setStudioState(state:StudioState){this.studioState=state;if(state.mode!=='idle')this.selected='aigc';else this.selected=null;this.director.setState(state);this.invalidate();}
+ private interactionLocked(){return this.studioState.mode==='focus'||this.studioState.mode==='item'||(this.studioState.mode==='idle'&&Boolean(this.selected));}
+ private pointerRay(clientX:number,clientY:number){const box=this.gl.domElement.getBoundingClientRect();this.pointer.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);this.camera.updateMatrixWorld();this.model.root.updateMatrixWorld(true);this.ray.setFromCamera(this.pointer,this.camera);}
+ private pick(clientX:number,clientY:number):ZoneId|null{this.pointerRay(clientX,clientY);const hits=this.ray.intersectObjects(IDS.map(id=>this.model.zones[id].hit),false);return hits.length?(hits[0].object.userData.zone as ZoneId):null;}
+ private pickFolder(clientX:number,clientY:number):string|null{if(this.studioState.mode!=='collection')return null;this.pointerRay(clientX,clientY);const hits=this.ray.intersectObject(this.model.aigc.folders['red-leaf'].hit,false);return hits.length?'red-leaf':null;}
  private setHover(id:ZoneId|null){if(id===this.hover)return;this.hover=id;if(id)document.documentElement.dataset.studioHover=id;else delete document.documentElement.dataset.studioHover;if(!this.down?.moved)this.gl.domElement.style.cursor=id?'pointer':'grab';this.invalidate();}
- private pointerDown=(event:PointerEvent)=>{if(this.selected||event.button!==0||!event.isPrimary||this.down)return;event.preventDefault();this.down={pointerId:event.pointerId,x:event.clientX,y:event.clientY,yaw:this.requestedYaw,pitch:this.requestedPitch,zone:this.pick(event.clientX,event.clientY),moved:false};this.gl.domElement.setPointerCapture(event.pointerId);};
+ private pointerDown=(event:PointerEvent)=>{if(this.interactionLocked()||event.button!==0||!event.isPrimary||this.down)return;event.preventDefault();this.down={pointerId:event.pointerId,x:event.clientX,y:event.clientY,yaw:this.requestedYaw,pitch:this.requestedPitch,zone:this.pick(event.clientX,event.clientY),folderId:this.pickFolder(event.clientX,event.clientY),moved:false};this.gl.domElement.setPointerCapture(event.pointerId);};
  private pointerMove=(event:PointerEvent)=>{
-  if(this.selected)return;
+  if(this.studioState.mode==='focus'||this.studioState.mode==='item'||(this.studioState.mode==='idle'&&this.selected))return;
   if(this.down){if(event.pointerId!==this.down.pointerId)return;const dx=event.clientX-this.down.x,dy=event.clientY-this.down.y;if(Math.hypot(dx,dy)>6)this.down.moved=true;if(this.down.moved){this.requestedYaw=T.MathUtils.clamp(this.down.yaw-dx/Math.max(this.width,390)*.85,-.19,.19);this.requestedPitch=T.MathUtils.clamp(this.down.pitch+dy/Math.max(this.height,500)*.24,-.028,.065);this.setHover(null);this.gl.domElement.style.cursor='grabbing';document.documentElement.dataset.studioDragging='true';this.invalidate();}}
   else this.setHover(this.pick(event.clientX,event.clientY));
  };
  private pointerUp=(event:PointerEvent)=>{
   const down=this.down;if(!down||event.pointerId!==down.pointerId)return;
   // A drag suppresses navigation for this gesture only, never for the following click.
-  const moved=down.moved||Math.hypot(event.clientX-down.x,event.clientY-down.y)>6,upZone=this.pick(event.clientX,event.clientY);this.down=null;delete document.documentElement.dataset.studioDragging;
+  const moved=down.moved||Math.hypot(event.clientX-down.x,event.clientY-down.y)>6,upZone=this.pick(event.clientX,event.clientY),upFolder=this.pickFolder(event.clientX,event.clientY);this.down=null;delete document.documentElement.dataset.studioDragging;
   if(this.gl.domElement.hasPointerCapture(event.pointerId))this.gl.domElement.releasePointerCapture(event.pointerId);
-  this.setHover(event.pointerType==='touch'?null:upZone);this.gl.domElement.style.cursor=this.hover?'pointer':'grab';if(!moved&&upZone&&upZone===down.zone){this.selected=upZone;this.onSelect(upZone);}this.invalidate();
+  this.setHover(event.pointerType==='touch'?null:upZone);this.gl.domElement.style.cursor=this.hover||upFolder?'pointer':'grab';if(!moved&&upFolder&&upFolder===down.folderId){this.onSelectItem(upFolder);}else if(!moved&&upZone&&upZone===down.zone&&this.studioState.mode==='idle'){this.selected=upZone;this.onSelect(upZone);}this.invalidate();
  };
  private pointerCancel=()=>{const down=this.down;this.down=null;delete document.documentElement.dataset.studioDragging;if(down&&this.gl.domElement.hasPointerCapture(down.pointerId))this.gl.domElement.releasePointerCapture(down.pointerId);this.setHover(null);this.gl.domElement.style.cursor='grab';this.invalidate();};
  private pointerLeave=()=>{if(!this.down)this.setHover(null);};private lostCapture=()=>{if(this.down)this.pointerCancel();};
- reset=()=>{if(this.selected)return;this.requestedYaw=0;this.requestedPitch=0;this.setHover(null);this.invalidate();};
+ reset=()=>{if(this.selected||this.studioState.mode!=='idle')return;this.requestedYaw=0;this.requestedPitch=0;this.setHover(null);this.invalidate();};
  private qaPendant=(event:Event)=>{const on=(event as CustomEvent<boolean>).detail;this.pendantLights.forEach(light=>light.visible=on);if(window.__STUDIO_QA__)window.__STUDIO_QA__.lighting.pendantOn=on;this.invalidate();};
+ private qaProgress=(event:Event)=>{if(!this.qa)return;const value=Number((event as CustomEvent<number>).detail);if(Number.isFinite(value)){this.director.setDebugProgress(value);this.invalidate();}};
  render(delta:number){
-  if(this.disposed)return;const dt=T.MathUtils.clamp(delta,.016,.15),blend=this.reduced?1:1-Math.exp(-10*dt);this.yaw+=(this.requestedYaw-this.yaw)*blend;this.pitch+=(this.requestedPitch-this.pitch)*blend;
-  const anchor=this.selected?this.model.zones[this.selected].anchor:null,fx=anchor?anchor.x*.23:0,fy=anchor?2.23+(anchor.y-2.23)*.23:2.23,radius=17.3*Math.max(1,1.60/this.ratio)-(this.selected ? .65 : 0);this.lookAt.set(fx,fy,.1);
-  this.desired.set(fx+Math.sin(this.yaw)*radius,fy+1.52+Math.sin(this.pitch)*radius,.1+Math.cos(this.yaw)*radius);this.camera.position.lerp(this.desired,blend);this.camera.lookAt(this.lookAt);this.camera.updateMatrixWorld();
-  let animating=this.frames<6||this.camera.position.distanceToSquared(this.desired)>.000005||Math.abs(this.yaw-this.requestedYaw)>.00008||Math.abs(this.pitch-this.requestedPitch)>.00008;
+  if(this.disposed)return;const dt=T.MathUtils.clamp(delta,.016,.15),blend=this.reduced?1:1-Math.exp(-10*dt);const directorActive=this.director.isActive;
+  let animating=false;
+  if(directorActive){animating=this.director.tick(dt);}else{
+   this.yaw+=(this.requestedYaw-this.yaw)*blend;this.pitch+=(this.requestedPitch-this.pitch)*blend;
+   const anchor=this.selected?this.model.zones[this.selected].anchor:null,fx=anchor?anchor.x*.23:0,fy=anchor?2.23+(anchor.y-2.23)*.23:2.23,radius=17.3*Math.max(1,1.60/this.ratio)-(this.selected ? .65 : 0);this.lookAt.set(fx,fy,.1);
+   this.desired.set(fx+Math.sin(this.yaw)*radius,fy+1.52+Math.sin(this.pitch)*radius,.1+Math.cos(this.yaw)*radius);this.camera.position.lerp(this.desired,blend);this.camera.lookAt(this.lookAt);this.camera.updateMatrixWorld();
+   animating=this.frames<6||this.camera.position.distanceToSquared(this.desired)>.000005||Math.abs(this.yaw-this.requestedYaw)>.00008||Math.abs(this.pitch-this.requestedPitch)>.00008;
+  }
   for(const id of IDS){const zone=this.model.zones[id],h=this.highlights[id],active=id===(this.selected??this.hover),goal=active?1:0;h.amount+=(goal-h.amount)*blend;if(Math.abs(goal-h.amount)>.003)animating=true;h.rim.opacity=.90*h.amount;h.halo.uniforms.strength.value=.95*h.amount;h.light.intensity=2.1*h.amount;h.dot.emissiveIntensity=.65+2.4*h.amount;zone.glow.emissive.set(active?ACCENTS[id]:'#ffdec0');zone.glow.emissiveIntensity=.38+2.3*h.amount;zone.hit.visible=false;}
-  try{this.composer.render(dt);}finally{IDS.forEach(id=>this.model.zones[id].hit.visible=true);}this.frames++;
-  const telemetry=window.__STUDIO_QA__;if(this.qa&&telemetry){telemetry.frames=this.frames;telemetry.view={yaw:this.yaw,pitch:this.pitch,dragging:!!this.down?.moved,camera:this.camera.position.toArray()};const rect=this.gl.domElement.getBoundingClientRect();for(const id of IDS){this.castPoint.copy(this.model.zones[id].anchor).project(this.camera);telemetry.points[id]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};const h=this.highlights[id];telemetry.highlights[id]={amount:h.amount,emission:this.model.zones[id].glow.emissiveIntensity,light:h.light.intensity};}}
+  const folderHit=this.model.aigc.folders['red-leaf'].hit;folderHit.visible=false;
+  try{this.composer.render(dt);}finally{IDS.forEach(id=>this.model.zones[id].hit.visible=true);folderHit.visible=true;}this.frames++;
+  const telemetry=window.__STUDIO_QA__;if(this.qa&&telemetry){telemetry.frames=this.frames;telemetry.view={yaw:this.yaw,pitch:this.pitch,dragging:!!this.down?.moved,camera:this.camera.position.toArray()};telemetry.studioState=this.studioState;telemetry.director=this.director.debug();const rect=this.gl.domElement.getBoundingClientRect();for(const id of IDS){this.castPoint.copy(this.model.zones[id].anchor).project(this.camera);telemetry.points[id]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};const h=this.highlights[id];telemetry.highlights[id]={amount:h.amount,emission:this.model.zones[id].glow.emissiveIntensity,light:h.light.intensity};}}
   if(!this.ready&&this.frames>=6){this.ready=true;document.documentElement.dataset.studioReady='true';this.onReady();}if(animating)this.invalidate();
  }
  dispose(){
   if(this.disposed)return;this.disposed=true;const canvas=this.gl.domElement;
   canvas.removeEventListener('pointerdown',this.pointerDown);canvas.removeEventListener('pointermove',this.pointerMove);canvas.removeEventListener('pointerup',this.pointerUp);canvas.removeEventListener('pointercancel',this.pointerCancel);canvas.removeEventListener('pointerleave',this.pointerLeave);canvas.removeEventListener('lostpointercapture',this.lostCapture);
-  window.removeEventListener('blur',this.pointerCancel);window.removeEventListener('studio:reset',this.reset);window.removeEventListener('studio:qa-pendant',this.qaPendant);this.motionQuery.removeEventListener('change',this.motionChange);
+  window.removeEventListener('blur',this.pointerCancel);window.removeEventListener('studio:reset',this.reset);window.removeEventListener('studio:qa-pendant',this.qaPendant);window.removeEventListener('studio:qa-progress',this.qaProgress);this.motionQuery.removeEventListener('change',this.motionChange);
   canvas.style.cursor=this.previousCursor;canvas.style.touchAction=this.previousTouchAction;this.scene.remove(this.model.root,this.rig);this.scene.environment=this.previousEnvironment;this.scene.environmentIntensity=this.previousEnvironmentIntensity;
   this.rig.traverse(o=>{if(o instanceof T.Light&&'shadow' in o)(o as T.DirectionalLight).shadow?.dispose();});this.ao.dispose();this.bloom.dispose();this.output.dispose();this.composer.dispose();this.environment.dispose();this.model.dispose();
   delete document.documentElement.dataset.studioReady;delete document.documentElement.dataset.studioHover;delete document.documentElement.dataset.studioDragging;if(this.qa)delete window.__STUDIO_QA__;

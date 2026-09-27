@@ -3,7 +3,7 @@ import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeom
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 export type V = [number, number, number];
 export type ZoneId = 'writing' | 'photography' | 'aigc' | 'video';
-export type Zone = { group:T.Group; glow:T.MeshStandardMaterial; anchor:T.Vector3; hit:T.Mesh };
+export type Zone = { group:T.Group; glow:T.MeshStandardMaterial; anchor:T.Vector3; hit:T.Mesh; staticRoot?:T.Group; dynamicRoot?:T.Group };
 
 /** Authored solids, curved surfaces and reusable material resources. */
 export class AtelierGeometry {
@@ -32,7 +32,8 @@ export class AtelierGeometry {
  photoMaterial(texture:T.Texture,aspect:number){const map=texture.clone(),image=map.image as {width:number;height:number},source=image.width/image.height;map.colorSpace=T.SRGBColorSpace;map.anisotropy=8;if(source>aspect){map.repeat.x=aspect/source;map.offset.x=(1-map.repeat.x)/2;}else{map.repeat.y=source/aspect;map.offset.y=(1-map.repeat.y)/2;}map.needsUpdate=true;this.textures.add(map);return this.mat('#ffffff',.7,0,{map,emissive:'#ffffff',emissiveMap:map,emissiveIntensity:.12});}
  batch(group:T.Group){
   group.updateMatrixWorld(true);const inv=group.matrixWorld.clone().invert(),buckets=new Map<T.Material,T.Mesh[]>();
-  group.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch&&!Array.isArray(o.material)){const a=buckets.get(o.material)||[];a.push(o);buckets.set(o.material,a);}});
+  const protectedByAncestor=(object:T.Object3D)=>{let current:T.Object3D|null=object;while(current&&current!==group){if(current.userData.noBatch)return true;current=current.parent;}return Boolean(group.userData.noBatch);};
+  group.traverse(o=>{if(o instanceof T.Mesh&&!protectedByAncestor(o)&&!Array.isArray(o.material)){const a=buckets.get(o.material)||[];a.push(o);buckets.set(o.material,a);}});
   for(const [mat,meshes] of buckets){if(meshes.length<3)continue;const cloned=meshes.map(m=>{const g=m.geometry.clone();g.applyMatrix4(inv.clone().multiply(m.matrixWorld));if(!g.index)return g;const flat=g.toNonIndexed();g.dispose();return flat;});const merged=mergeGeometries(cloned,false);cloned.forEach(g=>g.dispose());if(!merged)continue;this.own(merged);meshes.forEach(m=>m.removeFromParent());const mesh=this.mesh(group,merged,mat);mesh.name=`surface:${mat.name||mat.type}`;}
  }
  dispose(){this.geometries.forEach(g=>g.dispose());this.materials.forEach(m=>m.dispose());this.textures.forEach(t=>t.dispose());}

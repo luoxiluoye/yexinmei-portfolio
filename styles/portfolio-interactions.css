@@ -6,3 +6,7 @@
 .studio-view-controls button:focus-visible{outline:2px solid #a34f38;outline-offset:4px}
 @media(max-width:700px){.studio-view-controls{right:18px;left:18px;justify-content:space-between;gap:8px;font-size:11px}.studio-view-controls button{padding:8px 10px}.studio-view-controls>span{background:transparent;padding:0}}
 @media(prefers-reduced-motion:reduce){.studio-view-controls button{transition:none}}
+.studio-aigc-hud{position:absolute;left:50%;bottom:clamp(5.2rem,9vh,7rem);transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:.7rem;padding:.38rem .58rem .38rem .42rem;border:1px solid rgba(95,78,60,.24);border-radius:999px;background:rgba(246,241,232,.82);box-shadow:0 8px 24px rgba(69,54,39,.12);backdrop-filter:blur(8px);color:#4f463d;font-size:.72rem;letter-spacing:.04em;pointer-events:auto}
+.studio-aigc-hud button{border:1px solid rgba(95,78,60,.26);border-radius:999px;background:#f5eee3;color:#4f463d;padding:.3rem .62rem;font:inherit;cursor:pointer}
+.studio-aigc-hud button:hover,.studio-aigc-hud button:focus-visible{background:#fffaf2;outline:2px solid rgba(168,111,64,.45);outline-offset:2px}
+@media (max-width:700px){.studio-aigc-hud{bottom:5.8rem;font-size:.66rem}.studio-aigc-hud span{max-width:10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}

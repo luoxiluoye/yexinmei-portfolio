@@ -8,6 +8,21 @@ export const WORK_IMAGES=[
  '/assets/photos/portrait/yexinmei-frame-v5.jpg',
 ];
 
+export type AigcFolderId='red-leaf'|'social';
+export type AigcItemId='gameplay-scene';
+export type AigcFolderModel={
+ id:AigcFolderId;
+ root:T.Group;
+ hit:T.Mesh;
+ body:T.Group;
+ coverPivot:T.Group;
+ paperStack:T.Group;
+ heroPaper:T.Group|null;
+ home:T.Vector3;
+ enabled:boolean;
+};
+export type AigcModel={staticRoot:T.Group;dynamicRoot:T.Group;folders:Record<AigcFolderId,AigcFolderModel>};
+
 /** Solids and curved surfaces, with photographs applied only to prints and the display. */
 export function createWorkbench(images:T.Texture[]){
  const d=new AtelierGeometry(),root=new T.Group();root.name='Yexinmei / creative workbench';
@@ -126,17 +141,40 @@ export function createWorkbench(images:T.Texture[]){
  for(let i=0;i<4;i++)film(center,.54+i*.18,-2.06,.08,['#ccc9c1','#242628','#c99740','#323434'][i]);pencilCup(center,[1.55,-2.06,.08],.88);
 
  const upper=alcove('aigc',3.99,3.845,3.35,2.61,p.blue);
- function art(index:number){const map=d.canvas((c,w,h)=>{
-  c.fillStyle=['#f0e8dc','#e7e5df','#eaeef0'][index%3];c.fillRect(0,0,w,h);const gr=c.createLinearGradient(0,0,w,h);gr.addColorStop(0,['#c7846c','#85a6b8','#b78783'][index%3]);gr.addColorStop(1,['#eecba3','#d2e4e8','#e3c7bb'][index%3]);c.fillStyle=gr;c.beginPath();c.arc(w*.59,h*.40,w*.29,0,Math.PI*2);c.fill();
-  c.fillStyle=['#7d93a0','#e2c1a8','#7996a6'][index%3];c.beginPath();c.moveTo(w*.11,h*.92);c.bezierCurveTo(w*.2,h*.32,w*.48,h*.54,w*.59,h*.92);c.fill();c.strokeStyle='rgba(81,87,86,.25)';c.lineWidth=2;c.beginPath();c.moveTo(w*.16,h*.82);c.bezierCurveTo(w*.35,h*.41,w*.51,h*.64,w*.82,h*.7);c.stroke();
- },384,512);return d.mat('#ffffff',.8,0,{map});}
- const artm=[art(0),art(1),art(2)];
- for(let i=0;i<4;i++){const g=group(upper,[-.65+i*.34,.06+[.10,.24,-.09,.035][i],-.50+i*.12],[0,-.04,[-.018,-.061,.035,-.025][i]]);d.box(g,[0,0,0],[1.53,1.96,.025],p.paper,.008);plane(g,[0,0,.018],1.44,1.87,artm[i%3]);}
- d.box(upper,[.05,-1.04,-.10],[2.87,.075,.99],p.ivory,.025);for(const x of [-1.37,1.47])d.box(upper,[x,-.69,-.1],[.057,.7,.99],p.ivory,.02);
+  // The rack itself is static. Folders live in an unbatched subtree so their
+  // transforms, pivots, and stable UUIDs remain available to the director.
+ const upperStatic=group(upper);upperStatic.name='VisualRackStatic';
+ const rackPieces=upper.children.filter(child=>child!==upperStatic);for(const piece of rackPieces)upperStatic.add(piece);
+ const upperDynamic=group(upper);upperDynamic.name='VisualFoldersDynamic';upperDynamic.userData.noBatch=true;
+ const artm=[p.paper,p.paper,p.paper];
+ d.box(upperStatic,[.05,-1.04,-.10],[2.87,.075,.99],p.ivory,.025);for(const x of [-1.37,1.47])d.box(upperStatic,[x,-.69,-.1],[.057,.7,.99],p.ivory,.02);
  const lip=new T.Shape();lip.moveTo(-1.37,-1.0);lip.lineTo(1.47,-1.0);lip.lineTo(1.47,-.50);lip.quadraticCurveTo(1.47,-.38,1.35,-.38);lip.lineTo(.9,-.38);lip.quadraticCurveTo(.82,-.38,.77,-.48);lip.lineTo(.56,-.69);lip.lineTo(-.26,-.69);lip.lineTo(-.45,-.50);lip.quadraticCurveTo(-.52,-.37,-.66,-.37);lip.lineTo(-1.24,-.37);lip.quadraticCurveTo(-1.37,-.37,-1.37,-.5);lip.closePath();
- d.mesh(upper,d.own(new T.ExtrudeGeometry(lip,{depth:.057,bevelEnabled:true,bevelSegments:3,bevelSize:.023,bevelThickness:.018,curveSegments:10})),p.ivory,[0,0,.43]);
- for(let i=0;i<5;i++)book(upper,[.14+i*.126,-.98,.28],.112,1.14+(i%2)*.04,.45,i%2?'#d8cfbf':'#eee6d6','');
- const small=group(upper,[1.0,-.41,.40]);d.box(small,[0,0,0],[.56,.75,.021],p.paper,.007);plane(small,[0,0,.016],.47,.61,artm[1]);
+ d.mesh(upperStatic,d.own(new T.ExtrudeGeometry(lip,{depth:.057,bevelEnabled:true,bevelSegments:3,bevelSize:.023,bevelThickness:.018,curveSegments:10})),p.ivory,[0,0,.43]);
+ for(let i=0;i<5;i++)book(upperStatic,[.14+i*.126,-.98,.28],.112,1.14+(i%2)*.04,.45,i%2?'#d8cfbf':'#eee6d6','');
+ const small=group(upperStatic,[1.0,-.41,.40]);d.box(small,[0,0,0],[.56,.75,.021],p.paper,.007);plane(small,[0,0,.016],.47,.61,artm[1]);
+ const makeAigcFolder=(id:AigcFolderId,pos:V,enabled:boolean,texture:T.Texture|null):AigcFolderModel=>{
+  const rootFolder=group(upperDynamic,pos);rootFolder.name=id==='red-leaf'?'VisualFolderRedLeaf':'VisualFolderSocial';rootFolder.userData={aigcFolder:id,noBatch:true};
+  const body=group(rootFolder);body.name='folder body';
+  const folderMat=id==='red-leaf'?p.red:p.blueDark;d.box(body,[0,0,0],[1.02,1.34,.14],folderMat,.045);
+  d.box(body,[0,-.62,.06],[.96,.12,.16],folderMat,.025);
+  const coverPivot=group(rootFolder,[0,-.67,.12]);coverPivot.name='folder front cover pivot';coverPivot.userData.noBatch=true;
+  d.box(coverPivot,[0,.67,.02],[1.02,1.34,.075],folderMat,.045);
+  const paperStack=group(rootFolder,[0,.02,.105]);paperStack.name='paper stack';paperStack.userData.noBatch=true;
+  for(let i=0;i<3;i++)d.box(paperStack,[0,.015+i*.013,0],[.88,1.15,.022],p.paper,.012);
+  let heroPaper:T.Group|null=null;
+  if(texture){
+   heroPaper=group(rootFolder,[0,.05,.145]);heroPaper.name='hero paper';heroPaper.userData={aigcItem:'gameplay-scene',noBatch:true};
+   const image=texture.image as {width?:number;height?:number};const aspect=(image.width&&image.height)?image.width/image.height:1.78;const w=1.48,h=w/aspect;
+   d.box(heroPaper,[0,0,0],[w,h,.035],p.paper,.008);plane(heroPaper,[0,0,.021],w-.024,h-.024,d.photoMaterial(texture,w/h));
+  }
+  const hit=d.mesh(rootFolder,d.own(new T.BoxGeometry(1.18,1.5,.55)),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),[0,.04,.18]);
+  d.materials.add(hit.material);hit.userData={aigcFolder:id,noBatch:true};hit.castShadow=false;hit.receiveShadow=false;
+  return {id,root:rootFolder,hit,body,coverPivot,paperStack,heroPaper,home:new T.Vector3(...pos),enabled};
+ };
+ const aigcFolders={
+  'red-leaf':makeAigcFolder('red-leaf',[-.62,.03,-.50],true,images[6]),
+  social:makeAigcFolder('social',[.64,.03,-.49],false,null),
+ } satisfies Record<AigcFolderId,AigcFolderModel>;
 
  const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';
  d.box(tv,[0,0,-.20],[2.69,1.49,.75],p.ivory,.145);d.frame(tv,[-.265,.045,.239],2.07,1.263,.055,.064,p.blueDark,.13);d.box(tv,[-.265,.045,.267],[1.943,1.137,.041],p.black,.12);
@@ -160,6 +198,6 @@ export function createWorkbench(images:T.Texture[]){
  for(let i=0;i<5;i++)d.rod(diffuser,[(i-2)*.015,.13,0],[(i-2)*.05,.88+(i%2)*.09,(i%2-.5)*.08],.006,p.pages);
  const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';shade(pendant,[0,0,0],.66,d.mat('#88949a',.30,.46));d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
  applyStudioRefinement(d,root,furniture,zones,p);
- for(const zone of Object.values(zones))d.batch(zone.group);d.batch(furniture);root.updateMatrixWorld(true);
- return {root,zones,dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
+ for(const [id,zone] of Object.entries(zones)){if(id==='aigc')d.batch(upperStatic);else d.batch(zone.group);}d.batch(furniture);root.updateMatrixWorld(true);
+ return {root,zones,aigc:{staticRoot:upperStatic,dynamicRoot:upperDynamic,folders:aigcFolders},dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
 }
