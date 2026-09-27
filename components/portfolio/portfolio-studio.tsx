@@ -82,6 +82,7 @@ export function PortfolioStudio(){
 
   function switchZone(id:ExhibitZone){
     clearTimer();
+    if(id==='aigc'){openZone('aigc');return;}
     setSelected(id);
     setExhibitVisible(true);
     window.history.replaceState({portfolioExhibit:true},'',portfolioUrl('#'+id));
