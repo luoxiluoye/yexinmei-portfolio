@@ -31,6 +31,8 @@ export function PortfolioStudio(){
   const [roomTextureError,setRoomTextureError]=useState(false);
   useEffect(()=>{const fail=()=>setRoomTextureError(true);window.addEventListener('studio:room-texture-error',fail);return()=>window.removeEventListener('studio:room-texture-error',fail);},[]);
   const [ready,setReady]=useState(false);
+  const [lampOn,setLampOn]=useState(false);
+  useEffect(()=>{const update=(event:Event)=>setLampOn((event as CustomEvent<boolean>).detail);window.addEventListener('studio:lamp-status',update);return()=>window.removeEventListener('studio:lamp-status',update);},[]);
   const [textureStatus,setTextureStatus]=useState<Record<string,string>>({});
   useEffect(()=>{const update=(event:Event)=>{const {id,status}=(event as CustomEvent<{id:string;status:string}>).detail;setTextureStatus(previous=>({...previous,[id]:status}));};window.addEventListener('studio:texture-status',update);return()=>window.removeEventListener('studio:texture-status',update);},[]);
 
@@ -152,7 +154,8 @@ export function PortfolioStudio(){
     {!ready&&<div className='studio-loading' role='status'><span aria-hidden='true'/><p>正在打开作品集</p></div>}
 
     <div className={'studio-view-controls'+(aigcActive?' is-hidden':'')}>
-      <span>拖动旋转 · 点亮区域查看作品</span>
+      <span>点击物件查看作品 · 点击吊灯开关灯</span>
+      <button type='button' disabled={!ready} aria-label='吊灯开关' aria-pressed={lampOn} onClick={()=>window.dispatchEvent(new Event('studio:lamp-toggle'))}>{lampOn?'关灯':'开灯'}</button>
       <button type='button' onClick={()=>window.dispatchEvent(new Event('studio:reset'))} aria-label='恢复工作台正面视角' title='恢复正面视角'>
         <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.6' aria-hidden='true'><path d='M4 10a8 8 0 1 1 1.7 7.4M4 4v6h6'/></svg>
         <span>恢复视角</span>

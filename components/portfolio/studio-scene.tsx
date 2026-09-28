@@ -1,7 +1,6 @@
 'use client';
 import {useEffect,useRef} from 'react';
-import {useFrame,useThree} from '@react-three/fiber';
-import {useTexture} from '@react-three/drei';
+import {useFrame,useThree,useLoader} from '@react-three/fiber';
 import * as T from 'three';
 import {StudioExperience} from './studio-experience';
 import {WORK_IMAGES} from './model/workbench';
@@ -10,7 +9,7 @@ import type {StudioState} from './studio-state';
 import type {DirectorMilestone} from './studio-director';
 export type PortfolioZoneId=ZoneId;
 export function StudioScene({onSelect,onSelectFolder,onSelectInspect,onProjectNavigate,onDirectorMilestone,studioState,selected=null,onReady}:{onSelect:(id:ZoneId)=>void;onSelectFolder:(id:string)=>void;onSelectInspect:(id:string)=>void;onProjectNavigate:(delta:number)=>void;onDirectorMilestone:(milestone:DirectorMilestone)=>void;studioState:StudioState;selected?:ZoneId|null;onReady?:()=>void}){
- const images=useTexture(WORK_IMAGES),{gl,scene,camera,size,invalidate}=useThree();
+ const images=useLoader(T.TextureLoader,WORK_IMAGES),{gl,scene,camera,size,invalidate}=useThree();
  const experience=useRef<StudioExperience|null>(null);
  const handlers=useRef({onSelect,onSelectFolder,onSelectInspect,onProjectNavigate,onDirectorMilestone,onReady});handlers.current={onSelect,onSelectFolder,onSelectInspect,onProjectNavigate,onDirectorMilestone,onReady};
  useEffect(()=>{

@@ -1,3 +1,5 @@
+import {preload} from "react-dom";
+import {WORK_IMAGES} from "@/components/portfolio/studio-assets";
 import type { Metadata } from "next";
 
 import { PortfolioStudio } from "@/components/portfolio/portfolio-studio";
@@ -8,6 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
+  WORK_IMAGES.forEach(src=>preload(src,{as:"image"}));
   return (
     <main id="main-content" className="portfolio-studio-page">
       <PortfolioStudio />

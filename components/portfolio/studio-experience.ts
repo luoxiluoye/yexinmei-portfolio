@@ -1,10 +1,5 @@
 import * as T from 'three';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
-import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
-import {StudioSSAOPass as SSAOPass} from './studio-ssao';
-import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import {OutputPass} from 'three/examples/jsm/postprocessing/OutputPass.js';
 import {createWorkbench} from './model/workbench';
 import type {ZoneId} from './model/atelier-geometry';
 import {StudioVideoPlayer} from './studio-video-player';
@@ -20,15 +15,15 @@ declare global{interface Window{__STUDIO_QA__?:Telemetry;}}
 /** Actual meshes, raycasting and bounded camera orbit. */
 export class StudioExperience{
  readonly model:ReturnType<typeof createWorkbench>;
- private rig=new T.Group();private composer:EffectComposer;private ao:SSAOPass;private bloom:UnrealBloomPass;private output:OutputPass;
+ private rig=new T.Group();
  private environment:T.WebGLRenderTarget;private previousEnvironment:T.Texture|null;private previousEnvironmentIntensity:number;
  private highlights={} as Record<ZoneId,{amount:number;rim:T.MeshBasicMaterial;halo:T.ShaderMaterial;light:T.PointLight;dot:T.MeshStandardMaterial}>;
- private pendantLights:T.Light[]=[];
+ private pendantLights:T.Light[]=[];private pendantPower:number[]=[];private lampOn=false;private lampLevel=0;
  private disposed=false;private ready=false;private frames=0;private raf:number|null=null;private width=1;private height=1;private ratio=1;
  private yaw=0;private pitch=0;private requestedYaw=0;private requestedPitch=0;private hover:ZoneId|null=null;private selected:ZoneId|null=null;
  private studioState:StudioState={mode:'idle',phase:'stable'};private director:StudioDirector;private roomDirector:StudioRoomDirector;private videoPlayer:StudioVideoPlayer;private frameTimes:number[]=[];private lastStage='';private lastFrameAt=0;private wasAnimating=false;private wheelAt=0;
  private ray=new T.Raycaster();private pointer=new T.Vector2();private lookAt=new T.Vector3(0,2.23,.1);private desired=new T.Vector3();private castPoint=new T.Vector3();
- private down:{pointerId:number;x:number;y:number;yaw:number;pitch:number;zone:ZoneId|null;folderId:string|null;paperId:string|null;moved:boolean}|null=null;
+ private down:{pointerId:number;x:number;y:number;yaw:number;pitch:number;zone:ZoneId|null;folderId:string|null;paperId:string|null;lamp:boolean;moved:boolean}|null=null;
  private reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;private qa=new URLSearchParams(window.location.search).get('qa')==='1';
  private motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');private previousCursor:string;private previousTouchAction:string;
  constructor(private gl:T.WebGLRenderer,private scene:T.Scene,private camera:T.PerspectiveCamera,images:T.Texture[],private invalidate:()=>void,private onSelect:(id:ZoneId)=>void,private onSelectFolder:(id:string)=>void,private onSelectInspect:(id:string)=>void,private onProjectNavigate:(delta:number)=>void,private onDirectorMilestone:(milestone:DirectorMilestone)=>void,private onReady:()=>void){
@@ -37,19 +32,16 @@ export class StudioExperience{
   this.previousEnvironment=scene.environment;this.previousEnvironmentIntensity=scene.environmentIntensity;
   const roomEnvironment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(gl);
   this.environment=pmrem.fromScene(roomEnvironment,.055);roomEnvironment.dispose();pmrem.dispose();
-  scene.environment=this.environment.texture;scene.environmentIntensity=.30;
+  scene.environment=this.environment.texture;scene.environmentIntensity=.26;
   // Cache shadows from fixed furniture only; moving exhibits must not leave ghost shadows.
   this.model.root.traverse(object=>{if(object instanceof T.Mesh){let parent:T.Object3D|null=object,owned=false;while(parent){owned ||= Boolean(parent.userData.noBatch);parent=parent.parent;}if(owned||(object.material as T.Material).transparent)object.castShadow=false;}});
   this.createLighting();this.createHighlights();
-  this.composer=new EffectComposer(gl,new T.WebGLRenderTarget(1,1,{type:T.HalfFloatType,samples:0}));const render=new RenderPass(scene,camera);
-  this.ao=new SSAOPass(scene,camera,1,1,8);this.ao.kernelRadius=.12;this.ao.minDistance=.001;this.ao.maxDistance=.09;this.ao.enabled=false;
-  this.bloom=new UnrealBloomPass(new T.Vector2(1,1),.055,.34,1.02);this.bloom.enabled=false;this.output=new OutputPass();this.composer.addPass(render);this.composer.addPass(this.ao);this.composer.addPass(this.bloom);this.composer.addPass(this.output);
   this.director=new StudioDirector(this.model,this.camera,()=>this.reduced,()=>({position:this.camera.position.clone(),quaternion:this.camera.quaternion.clone(),fov:this.camera.fov,orbit:{yaw:this.yaw,pitch:this.pitch,requestedYaw:this.requestedYaw,requestedPitch:this.requestedPitch}}),snapshot=>{this.camera.position.copy(snapshot.position);this.camera.quaternion.copy(snapshot.quaternion);this.camera.fov=snapshot.fov;this.camera.updateProjectionMatrix();if(snapshot.orbit){this.yaw=snapshot.orbit.yaw;this.pitch=snapshot.orbit.pitch;this.requestedYaw=snapshot.orbit.requestedYaw;this.requestedPitch=snapshot.orbit.requestedPitch;}},milestone=>this.onDirectorMilestone(milestone),this.invalidate);  this.roomDirector=new StudioRoomDirector(this.model,this.camera,()=>this.reduced,()=>({position:this.camera.position.clone(),quaternion:this.camera.quaternion.clone(),fov:this.camera.fov,orbit:{yaw:this.yaw,pitch:this.pitch,requestedYaw:this.requestedYaw,requestedPitch:this.requestedPitch}}),snapshot=>{this.camera.position.copy(snapshot.position);this.camera.quaternion.copy(snapshot.quaternion);this.camera.fov=snapshot.fov;this.camera.updateProjectionMatrix();if(snapshot.orbit){this.yaw=snapshot.orbit.yaw;this.pitch=snapshot.orbit.pitch;this.requestedYaw=snapshot.orbit.requestedYaw;this.requestedPitch=snapshot.orbit.requestedPitch;}},milestone=>this.onDirectorMilestone(milestone),this.invalidate);
   this.videoPlayer=new StudioVideoPlayer(this.model.rooms.television.surface!,this.invalidate);
   const canvas=gl.domElement;this.previousCursor=canvas.style.cursor;this.previousTouchAction=canvas.style.touchAction;canvas.style.touchAction='none';canvas.style.cursor='grab';
   canvas.addEventListener('pointerdown',this.pointerDown);canvas.addEventListener('pointermove',this.pointerMove);canvas.addEventListener('pointerup',this.pointerUp);canvas.addEventListener('pointercancel',this.pointerCancel);canvas.addEventListener('pointerleave',this.pointerLeave);canvas.addEventListener('lostpointercapture',this.lostCapture);
-  window.addEventListener('blur',this.pointerCancel);window.addEventListener('studio:reset',this.reset);window.addEventListener('studio:retry-textures',this.retryTextures);window.addEventListener('keydown',this.keyDown,true);canvas.addEventListener('wheel',this.wheel,{passive:false});this.motionQuery.addEventListener('change',this.motionChange);
-  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:true,color:'#ffd092',intensity:13}};window.addEventListener('studio:qa-pendant',this.qaPendant);window.addEventListener('studio:qa-progress',this.qaProgress);}
+  window.addEventListener('studio:lamp-toggle',this.toggleLamp);window.addEventListener('blur',this.pointerCancel);window.addEventListener('studio:reset',this.reset);window.addEventListener('studio:retry-textures',this.retryTextures);window.addEventListener('keydown',this.keyDown,true);canvas.addEventListener('wheel',this.wheel,{passive:false});this.motionQuery.addEventListener('change',this.motionChange);
+  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:false,color:'#ffe0b2',intensity:0}};window.addEventListener('studio:qa-pendant',this.qaPendant);window.addEventListener('studio:qa-progress',this.qaProgress);}
   this.invalidate();
  }
  private retryTextures=()=>{this.director.retryTextures();this.roomDirector.retryTextures();};
@@ -59,14 +51,15 @@ export class StudioExperience{
  private createLighting(){
   const add=(light:T.Light,pos?:[number,number,number])=>{if(pos)light.position.set(...pos);this.rig.add(light);return light;};
   add(new T.AmbientLight('#edf4ff',.12));add(new T.HemisphereLight('#e6efff','#d3b89e',.30));
-  const key=new T.DirectionalLight('#fff5e8',1.55);add(key,[-3.8,7,5]);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-5,near:.1,far:26});key.shadow.bias=-.0002;key.shadow.normalBias=.02;key.shadow.radius=4;key.shadow.blurSamples=6;key.shadow.intensity=.72;
+  const key=new T.DirectionalLight('#fff5e8',1.25);add(key,[-3.8,7,5]);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-5,near:.1,far:26});key.shadow.bias=-.0002;key.shadow.normalBias=.02;key.shadow.radius=4;key.shadow.blurSamples=6;key.shadow.intensity=.72;
   add(new T.DirectionalLight('#d7e8ff',.30),[5,3,5]);
-  const spot=(pos:[number,number,number],target:[number,number,number],power:number,angle:number)=>{const light=new T.SpotLight('#ffd092',power,12,angle,.92,2);light.position.set(...pos);light.target.position.set(...target);this.rig.add(light,light.target);this.pendantLights.push(light);return light;};
+  const spot=(pos:[number,number,number],target:[number,number,number],power:number,angle:number)=>{const light=new T.SpotLight('#ffe0b2',power,12,angle,.92,2);light.position.set(...pos);light.target.position.set(...target);this.rig.add(light,light.target);this.pendantLights.push(light);return light;};
   // Broad warm wash on the board; a separate downward source illuminates the desk.
-  spot([0,5.30,.26],[0,1.40,-.64],28,.66);spot([0,5.295,.29],[0,0,.79],55,.47);
+  spot([0,5.30,.26],[0,1.40,-.64],46,.66);spot([0,5.295,.29],[0,0,.79],90,.62);
   const spill=new T.PointLight('#ffd7a3',.08,2.7,2);add(spill,[0,5.30,.26]);this.pendantLights.push(spill);
   add(new T.PointLight('#ffd69b',2.25,3.5,2),[-4.98,1.42,.81]);add(new T.PointLight('#ffe3ae',.35,1.3,2),[-2.95,2.4,.2]);
   for(const material of this.model.geometry.materials){if(material instanceof T.MeshStandardMaterial&&material.emissiveIntensity===1.4){material.color.set('#ffdb9e');material.emissive.set('#ffcf8a');material.emissiveIntensity=2.0;material.needsUpdate=true;}}
+  this.pendantPower=this.pendantLights.map(light=>light.intensity);this.pendantLights.forEach(light=>light.intensity=0);
   const sun=this.model.root.getObjectByName('Filtered window light');if(sun instanceof T.SpotLight)sun.intensity=45;
  }
  private createHighlights(){
@@ -85,43 +78,50 @@ export class StudioExperience{
    const light=new T.PointLight(ACCENTS[id],0,3.7,2);light.position.set(0,0,.96);zone.group.add(light);this.highlights[id]={amount:0,rim,halo,light,dot};
   }
  }
- setSize(width:number,height:number){if(this.disposed)return;this.width=width;this.height=height;this.director.setViewport(height);this.roomDirector.setViewport(height);this.ratio=width/Math.max(height,1);this.composer.setPixelRatio(this.gl.getPixelRatio());this.composer.setSize(width,height);this.ao.enabled=this.studioState.mode==='idle'&&width>=700;this.invalidate();}
+ setSize(width:number,height:number){if(this.disposed)return;this.width=width;this.height=height;this.director.setViewport(height);this.roomDirector.setViewport(height);this.ratio=width/Math.max(height,1);this.invalidate();}
  setSelected(id:ZoneId|null){if(this.studioState.mode==='idle')this.selected=id;this.invalidate();}
- setStudioState(state:StudioState){this.studioState=state;this.videoPlayer.setActive(state.mode==='room'&&state.zone==='video');if(state.mode!=='idle')this.selected=state.zone;else this.selected=null;if(state.mode==='room'||this.roomDirector.isActive)this.roomDirector.setState(state);else this.director.setState(state);this.ao.enabled=state.mode==='idle'&&this.width>=700;this.bloom.strength=state.mode==='idle'?.055:.025;this.invalidate();}
+ setStudioState(state:StudioState){this.studioState=state;this.videoPlayer.setActive(state.mode==='room'&&state.zone==='video');if(state.mode!=='idle')this.selected=state.zone;else this.selected=null;if(state.mode==='room'||this.roomDirector.isActive)this.roomDirector.setState(state);else this.director.setState(state);this.invalidate();}
  private interactionLocked(){return this.studioState.phase==='leaving'||this.studioState.mode==='focus'||(this.studioState.mode==='idle'&&Boolean(this.selected));}
  private pointerRay(clientX:number,clientY:number){const box=this.gl.domElement.getBoundingClientRect();this.pointer.set((clientX-box.left)/box.width*2-1,-(clientY-box.top)/box.height*2+1);this.camera.updateMatrixWorld();this.model.root.updateMatrixWorld(true);this.ray.setFromCamera(this.pointer,this.camera);}
+ private pickLamp(clientX:number,clientY:number){if(this.studioState.mode!=='idle')return false;this.pointerRay(clientX,clientY);return this.ray.intersectObject(this.model.pendant,true).length>0;}
  private pick(clientX:number,clientY:number):ZoneId|null{this.pointerRay(clientX,clientY);const hits=this.ray.intersectObjects(IDS.map(id=>this.model.zones[id].hit),false);return hits.length?(hits[0].object.userData.zone as ZoneId):null;}
  private pickFolder(clientX:number,clientY:number):string|null{if(this.studioState.mode!=='collection')return null;this.pointerRay(clientX,clientY);const hits=this.ray.intersectObjects([this.model.aigc.folders['red-leaf'].hit,this.model.aigc.folders.social.hit],false);return hits.length?(hits[0].object.userData.aigcFolder as string):null;}
  private pickPaper(clientX:number,clientY:number):string|null{if(this.studioState.mode==='room'){this.pointerRay(clientX,clientY);return this.roomDirector.pick(this.ray);}if(this.studioState.mode!=='inspect')return null;this.pointerRay(clientX,clientY);const papers=this.model.aigc.folders[this.studioState.collectionId].papers;const hits=this.ray.intersectObjects(papers.flatMap(p=>p.root.children.filter((o):o is T.Mesh=>o instanceof T.Mesh)),true);for(const hit of hits){let node:T.Object3D|null=hit.object;while(node&& !node.userData.aigcItem)node=node.parent; if(node?.userData.aigcItem)return String(node.userData.aigcItem);}return null;}
  private setHover(id:ZoneId|null){if(id===this.hover)return;this.hover=id;if(id)document.documentElement.dataset.studioHover=id;else delete document.documentElement.dataset.studioHover;if(!this.down?.moved)this.gl.domElement.style.cursor=id?'pointer':'grab';this.invalidate();}
- private pointerDown=(event:PointerEvent)=>{if(this.interactionLocked()||event.button!==0||!event.isPrimary||this.down)return;event.preventDefault();this.down={pointerId:event.pointerId,x:event.clientX,y:event.clientY,yaw:this.requestedYaw,pitch:this.requestedPitch,zone:this.pick(event.clientX,event.clientY),folderId:this.pickFolder(event.clientX,event.clientY),paperId:this.pickPaper(event.clientX,event.clientY),moved:false};this.gl.domElement.setPointerCapture(event.pointerId);};
+ private pointerDown=(event:PointerEvent)=>{if(this.interactionLocked()||event.button!==0||!event.isPrimary||this.down)return;event.preventDefault();this.down={pointerId:event.pointerId,x:event.clientX,y:event.clientY,yaw:this.requestedYaw,pitch:this.requestedPitch,zone:this.pick(event.clientX,event.clientY),folderId:this.pickFolder(event.clientX,event.clientY),paperId:this.pickPaper(event.clientX,event.clientY),lamp:this.pickLamp(event.clientX,event.clientY),moved:false};this.gl.domElement.setPointerCapture(event.pointerId);};
  private pointerMove=(event:PointerEvent)=>{
   if(this.studioState.mode==='focus'||(this.studioState.mode==='idle'&&this.selected))return;
   if(this.down){if(event.pointerId!==this.down.pointerId)return;const dx=event.clientX-this.down.x,dy=event.clientY-this.down.y;if(Math.hypot(dx,dy)>6)this.down.moved=true;if(this.down.moved&&this.studioState.mode==='idle'){this.requestedYaw=T.MathUtils.clamp(this.down.yaw-dx/Math.max(this.width,390)*.85,-.19,.19);this.requestedPitch=T.MathUtils.clamp(this.down.pitch+dy/Math.max(this.height,500)*.24,-.028,.065);this.setHover(null);this.gl.domElement.style.cursor='grabbing';document.documentElement.dataset.studioDragging='true';this.invalidate();}}
-  else this.setHover(this.pick(event.clientX,event.clientY));
+  else {this.setHover(this.pick(event.clientX,event.clientY));this.gl.domElement.style.cursor=this.hover||this.pickLamp(event.clientX,event.clientY)?'pointer':'grab';}
  };
  private pointerUp=(event:PointerEvent)=>{
   const down=this.down;if(!down||event.pointerId!==down.pointerId)return;
   // A drag suppresses navigation for this gesture only, never for the following click.
   const dx=event.clientX-down.x, moved=down.moved||Math.hypot(dx,event.clientY-down.y)>6,upZone=this.pick(event.clientX,event.clientY),upFolder=this.pickFolder(event.clientX,event.clientY),upPaper=this.pickPaper(event.clientX,event.clientY);this.down=null;delete document.documentElement.dataset.studioDragging;
   if(this.gl.domElement.hasPointerCapture(event.pointerId))this.gl.domElement.releasePointerCapture(event.pointerId);
-  this.setHover(event.pointerType==='touch'?null:upZone);this.gl.domElement.style.cursor=this.hover||upFolder?'pointer':'grab';if(!moved&&this.studioState.mode==='room'&&this.studioState.zone==='video'&&upZone==='video'&&down.zone==='video'){this.videoPlayer.toggle();}else if((this.studioState.mode==='inspect'||this.studioState.mode==='room')&&moved&&Math.abs(dx)>18){this.onProjectNavigate(dx<0?1:-1);}else if(!moved&&upPaper&&upPaper===down.paperId&&(this.studioState.mode==='inspect'||this.studioState.mode==='room')){this.onSelectInspect(upPaper);}else if(!moved&&upFolder&&upFolder===down.folderId){this.onSelectFolder(upFolder);}else if(!moved&&upZone&&upZone===down.zone&&this.studioState.mode==='idle'){this.selected=upZone;this.onSelect(upZone);}this.invalidate();
+  this.setHover(event.pointerType==='touch'?null:upZone);this.gl.domElement.style.cursor=this.hover||upFolder?'pointer':'grab';if(!moved&&down.lamp&&this.pickLamp(event.clientX,event.clientY)){this.toggleLamp();}else if(!moved&&this.studioState.mode==='room'&&this.studioState.zone==='video'&&upZone==='video'&&down.zone==='video'){this.videoPlayer.toggle();}else if((this.studioState.mode==='inspect'||this.studioState.mode==='room')&&moved&&Math.abs(dx)>18){this.onProjectNavigate(dx<0?1:-1);}else if(!moved&&upPaper&&upPaper===down.paperId&&(this.studioState.mode==='inspect'||this.studioState.mode==='room')){this.onSelectInspect(upPaper);}else if(!moved&&upFolder&&upFolder===down.folderId){this.onSelectFolder(upFolder);}else if(!moved&&upZone&&upZone===down.zone&&this.studioState.mode==='idle'){this.selected=upZone;this.onSelect(upZone);}this.invalidate();
  };
  private pointerCancel=()=>{const down=this.down;this.down=null;delete document.documentElement.dataset.studioDragging;if(down&&this.gl.domElement.hasPointerCapture(down.pointerId))this.gl.domElement.releasePointerCapture(down.pointerId);this.setHover(null);this.gl.domElement.style.cursor='grab';this.invalidate();};
  private pointerLeave=()=>{if(!this.down)this.setHover(null);};private lostCapture=()=>{if(this.down)this.pointerCancel();};
  reset=()=>{if(this.selected||this.studioState.mode!=='idle')return;this.requestedYaw=0;this.requestedPitch=0;this.setHover(null);this.invalidate();};
- private qaPendant=(event:Event)=>{const on=(event as CustomEvent<boolean>).detail;this.pendantLights.forEach(light=>light.visible=on);if(window.__STUDIO_QA__)window.__STUDIO_QA__.lighting.pendantOn=on;this.invalidate();};
+ private toggleLamp=()=>{if(this.studioState.mode!=='idle'||this.studioState.phase!=='stable')return;this.setLamp(!this.lampOn);};
+ private setLamp(on:boolean){this.lampOn=on;window.dispatchEvent(new CustomEvent('studio:lamp-status',{detail:on}));this.invalidate();}
+ private qaPendant=(event:Event)=>{this.setLamp(Boolean((event as CustomEvent<boolean>).detail));};
  private qaProgress=(event:Event)=>{if(!this.qa)return;const value=Number((event as CustomEvent<number>).detail);if(Number.isFinite(value)){this.director.setDebugProgress(value);this.invalidate();}};
  render(delta:number){
   if(this.disposed)return;const dt=T.MathUtils.clamp(delta,.001,.1),blend=this.reduced?1:1-Math.exp(-10*dt);const directorActive=this.director.isActive;
   let animating=false;
-  const dynamic=this.studioState.mode!=='idle'||this.studioState.phase==='leaving';this.ao.enabled=!dynamic&&this.width>=700;this.bloom.strength=dynamic?.025:.055;
+  const dynamic=this.studioState.mode!=='idle'||this.studioState.phase==='leaving';
   if(this.roomDirector.isActive){animating=this.roomDirector.tick(dt);}else if(directorActive){animating=this.director.tick(dt);}else{
    this.yaw+=(this.requestedYaw-this.yaw)*blend;this.pitch+=(this.requestedPitch-this.pitch)*blend;
    const anchor=this.selected?this.model.zones[this.selected].anchor:null,fx=anchor?anchor.x*.23:0,fy=anchor?2.23+(anchor.y-2.23)*.23:2.23,radius=17.3*Math.max(1,1.60/this.ratio)-(this.selected ? .65 : 0);this.lookAt.set(fx,fy,.1);
    this.desired.set(fx+Math.sin(this.yaw)*radius,fy+1.52+Math.sin(this.pitch)*radius,.1+Math.cos(this.yaw)*radius);this.camera.position.lerp(this.desired,blend);this.camera.lookAt(this.lookAt);this.camera.updateMatrixWorld();
    animating=this.frames<6||this.camera.position.distanceToSquared(this.desired)>.000005||Math.abs(this.yaw-this.requestedYaw)>.00008||Math.abs(this.pitch-this.requestedPitch)>.00008;
   }
+  const lampTarget=this.lampOn?1:0;this.lampLevel=this.reduced?lampTarget:T.MathUtils.damp(this.lampLevel,lampTarget,9,dt);if(Math.abs(this.lampLevel-lampTarget)>.002)animating=true;else this.lampLevel=lampTarget;
+  this.pendantLights.forEach((light,index)=>light.intensity=this.pendantPower[index]*this.lampLevel);
+  this.model.pendantDiffuser.emissiveIntensity=1.7*this.lampLevel;
+  this.model.pendantDiffuser.color.setRGB(1,.97-.08*this.lampLevel,.90-.15*this.lampLevel);
   for(const id of IDS){const zone=this.model.zones[id],h=this.highlights[id],active=id===(this.selected??this.hover),goal=active?1:0;h.amount+=(goal-h.amount)*blend;if(Math.abs(goal-h.amount)>.003)animating=true;const intensity=dynamic?.10:1;h.rim.opacity=.45*h.amount*intensity;h.halo.uniforms.strength.value=.08+.25*h.amount*intensity;h.light.intensity=.35*h.amount*intensity;h.dot.emissiveIntensity=.65+2.4*h.amount;zone.glow.emissive.set(active?ACCENTS[id]:'#ffdec0');zone.glow.emissiveIntensity=.38+.35*h.amount*intensity;zone.hit.visible=false;}
   const folderHit=this.model.aigc.folders['red-leaf'].hit;folderHit.visible=false;
   const frameStart=performance.now();try{this.gl.render(this.scene,this.camera);}finally{IDS.forEach(id=>this.model.zones[id].hit.visible=true);folderHit.visible=true;}this.frames++;const now=performance.now(),submissionMs=now-frameStart;
@@ -130,16 +130,16 @@ export class StudioExperience{
    if(this.wasAnimating&&this.lastFrameAt)this.frameTimes.push(now-this.lastFrameAt);
    const samples=this.frameTimes,sorted=[...samples].sort((a,b)=>a-b),average=samples.length?samples.reduce((a,b)=>a+b,0)/samples.length:0,p95=sorted[Math.max(0,Math.ceil(sorted.length*.95)-1)]??0;
    const metrics={stage,averageFrameTime:samples.length?average:null,p95FrameTime:samples.length?p95:null,estimatedFps:average?1000/average:null,submissionMs,samples:samples.length,drawCalls:this.gl.info.render.calls,triangles:this.gl.info.render.triangles,textures:this.gl.info.memory.textures,gpuMemory:'unavailable' as const};telemetry.metrics=metrics;telemetry.metricsByStage={...(telemetry.metricsByStage??{}),[stage]:metrics};const rect=this.gl.domElement.getBoundingClientRect();this.model.root.updateMatrixWorld(true);for(const id of IDS){this.castPoint.copy(this.model.zones[id].anchor).project(this.camera);telemetry.points[id]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};const h=this.highlights[id];telemetry.highlights[id]={amount:h.amount,emission:this.model.zones[id].glow.emissiveIntensity,light:h.light.intensity};}for(const [key,folder] of Object.entries(this.model.aigc.folders)){folder.root.getWorldPosition(this.castPoint);this.castPoint.project(this.camera);telemetry.points[`aigc-${key}`]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};folder.papers.forEach((paper,index)=>{paper.root.getWorldPosition(this.castPoint);this.castPoint.project(this.camera);telemetry.points[`aigc-${key}-paper-${index}`]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};});}}
-  if(this.qa&&telemetry){const rect=this.gl.domElement.getBoundingClientRect();for(const [zone,objects] of [['photography',this.model.rooms.photoPrints],['writing',this.model.rooms.writingBooks],['video',[this.model.rooms.television]]] as const){objects.forEach((item,index)=>{item.root.getWorldPosition(this.castPoint).project(this.camera);telemetry.points[`${zone}-${index}`]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};});}}
+  if(this.qa&&telemetry){telemetry.lighting={pendantOn:this.lampOn,color:'#ffe0b2',intensity:this.pendantLights[0].intensity};const rect=this.gl.domElement.getBoundingClientRect();this.castPoint.set(0,.22,0);this.model.pendant.localToWorld(this.castPoint).project(this.camera);telemetry.points.lamp={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};for(const [zone,objects] of [['photography',this.model.rooms.photoPrints],['writing',this.model.rooms.writingBooks],['video',[this.model.rooms.television]]] as const){objects.forEach((item,index)=>{item.root.getWorldPosition(this.castPoint).project(this.camera);telemetry.points[`${zone}-${index}`]={x:rect.left+(this.castPoint.x*.5+.5)*rect.width,y:rect.top+(-this.castPoint.y*.5+.5)*rect.height};});}}
   this.lastFrameAt=now;this.wasAnimating=animating||Boolean(telemetry?.video?.playing);
   if(!this.ready&&this.frames>=6){this.ready=true;document.documentElement.dataset.studioReady='true';this.onReady();}if(animating)this.invalidate();
  }
  dispose(){
   if(this.disposed)return;this.disposed=true;if(this.raf!==null){window.cancelAnimationFrame(this.raf);this.raf=null;}const canvas=this.gl.domElement;
   canvas.removeEventListener('pointerdown',this.pointerDown);canvas.removeEventListener('pointermove',this.pointerMove);canvas.removeEventListener('pointerup',this.pointerUp);canvas.removeEventListener('pointercancel',this.pointerCancel);canvas.removeEventListener('pointerleave',this.pointerLeave);canvas.removeEventListener('lostpointercapture',this.lostCapture);
-  window.removeEventListener('blur',this.pointerCancel);window.removeEventListener('studio:reset',this.reset);window.removeEventListener('studio:retry-textures',this.retryTextures);window.removeEventListener('keydown',this.keyDown,true);this.gl.domElement.removeEventListener('wheel',this.wheel);window.removeEventListener('studio:qa-pendant',this.qaPendant);window.removeEventListener('studio:qa-progress',this.qaProgress);this.motionQuery.removeEventListener('change',this.motionChange);
+  window.removeEventListener('studio:lamp-toggle',this.toggleLamp);window.removeEventListener('blur',this.pointerCancel);window.removeEventListener('studio:reset',this.reset);window.removeEventListener('studio:retry-textures',this.retryTextures);window.removeEventListener('keydown',this.keyDown,true);this.gl.domElement.removeEventListener('wheel',this.wheel);window.removeEventListener('studio:qa-pendant',this.qaPendant);window.removeEventListener('studio:qa-progress',this.qaProgress);this.motionQuery.removeEventListener('change',this.motionChange);
   canvas.style.cursor=this.previousCursor;canvas.style.touchAction=this.previousTouchAction;this.scene.remove(this.model.root,this.rig);this.scene.environment=this.previousEnvironment;this.scene.environmentIntensity=this.previousEnvironmentIntensity;
-  this.rig.traverse(o=>{if(o instanceof T.Light&&'shadow' in o)(o as T.DirectionalLight).shadow?.dispose();});this.ao.dispose();this.bloom.dispose();this.output.dispose();this.composer.dispose();this.environment.dispose();this.director.dispose();this.roomDirector.dispose();this.videoPlayer.dispose();this.model.dispose();
+  this.rig.traverse(o=>{if(o instanceof T.Light&&'shadow' in o)(o as T.DirectionalLight).shadow?.dispose();});this.environment.dispose();this.director.dispose();this.roomDirector.dispose();this.videoPlayer.dispose();this.model.dispose();
   delete document.documentElement.dataset.studioReady;delete document.documentElement.dataset.studioHover;delete document.documentElement.dataset.studioDragging;if(this.qa)delete window.__STUDIO_QA__;
  }
 }

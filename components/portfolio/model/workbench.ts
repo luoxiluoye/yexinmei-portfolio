@@ -4,12 +4,8 @@ import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
 import {STUDIO_PHOTOS,STUDIO_WRITINGS} from '../studio-content';
 import {createReadingBook,exhibit,type ExhibitObject} from './studio-exhibits';
 import {applyStudioRefinement} from './refinement';
-export const WORK_IMAGES=[
- '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
- '/assets/photos/portrait/portrait-06.jpeg','/assets/photos/ziroom-campaign/campaign-02.jpeg','/assets/photos/meituan-product/product-02.jpeg',
- '/assets/video/zhoujiadao/poster.png',
- '/assets/photos/portrait/yexinmei-frame-v5.jpg',
-];
+import {WORK_IMAGES} from '../studio-assets';
+export {WORK_IMAGES} from '../studio-assets';
 
 /** Real visual-project assets. The order is part of the stable scene manifest. */
 export const AIGC_IMAGES=[
@@ -118,7 +114,7 @@ export function createWorkbench(images:T.Texture[]){
  }
  function film(parent:T.Object3D,x:number,y:number,z:number,color:string){const mat=d.mat(color,.45,.08);d.cylinder(parent,[x,y+.18,z],.065,.065,.33,mat);d.cylinder(parent,[x,y+.35,z],.072,.072,.028,p.black);d.cylinder(parent,[x,y+.015,z],.07,.07,.025,p.darkMetal);d.box(parent,[x,y+.19,z+.065],[.069,.145,.005],p.paper,.002);}
  function shade(parent:T.Object3D,pos:V,r:number,mat:T.Material){
-  const g=group(parent,pos);d.lathe(g,[0,0,0],[[r*.12,r*.85],[r*.19,r*.82],[r*.42,r*.70],[r*.70,r*.47],[r*.9,r*.19],[r,.045],[r,.015],[r*.956,.012],[r*.88,r*.18],[r*.66,r*.44],[r*.38,r*.65],[r*.12,r*.74]],mat);
+  const g=group(parent,pos);const curve=new T.CatmullRomCurve3([[r*.12,r*.85],[r*.19,r*.82],[r*.42,r*.70],[r*.70,r*.47],[r*.9,r*.19],[r,.045]].map(([x,y])=>new T.Vector3(x,y,0)));const shell=curve.getPoints(40).map(v=>[v.x,v.y] as [number,number]);d.lathe(g,[0,0,0],[...shell,[r,.015],[r*.956,.012],...shell.slice().reverse().map(([x,y])=>[x*.95,y-.026] as [number,number])],mat);
   d.cylinder(g,[0,.022,0],r*.88,r*.88,.016,d.mat('#fff6dc',.4,0,{emissive:'#ffe7b4',emissiveIntensity:1.4}));d.torus(g,[0,.025,0],r*.96,.013,p.edge,[Math.PI/2,0,0]);return g;
  }
  function deskLamp(){
@@ -223,8 +219,8 @@ export function createWorkbench(images:T.Texture[]){
  d.box(furniture,[5.16,.041,1.02],[1.0,.067,.71],p.ivory,.027);for(const x of [4.68,5.64])d.box(furniture,[x,.114,1.02],[.04,.12,.69],p.ivory,.014);for(const z of [.69,1.35])d.box(furniture,[5.16,.114,z],[.96,.12,.04],p.ivory,.014);flatBook(furniture,[5.12,.08,1.02],.65,.43,'#d5c8b5');bear(furniture,[5.34,.01,.44],.72);
  const diffuser=group(furniture,[5.91,.015,.82]);d.lathe(diffuser,[0,0,0],[[.001,0],[.115,0],[.125,.02],[.125,.26],[.07,.30],[.06,.36],[.047,.36],[.05,.29],[.105,.24],[.10,.025],[.001,.025]],d.physical('#ccbfac',{roughness:.25,transparent:true,opacity:.48,depthWrite:false}));
  for(let i=0;i<5;i++)d.rod(diffuser,[(i-2)*.015,.13,0],[(i-2)*.05,.88+(i%2)*.09,(i%2-.5)*.08],.006,p.pages);
- const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';shade(pendant,[0,0,0],.66,d.mat('#88949a',.30,.46));d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
+ const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';pendant.userData.noBatch=true;const pendantShade=shade(pendant,[0,0,0],.66,d.physical('#8d9b9f',{roughness:.27,metalness:.62,clearcoat:.22}));const pendantDiffuser=(pendantShade.children[1] as T.Mesh).material as T.MeshStandardMaterial;pendantDiffuser.emissiveIntensity=0;d.torus(pendant,[0,.044,0],.656,.008,p.chrome,[Math.PI/2,0,0]);d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
  applyStudioRefinement(d,root,furniture,zones,p);
  for(const [id,zone] of Object.entries(zones)){if(id==='aigc')d.batch(upperStatic);else d.batch(zone.group);}d.batch(furniture);root.updateMatrixWorld(true);
- return {root,zones,rooms:{photoPrints,writingBooks,television},aigc:{staticRoot:upperStatic,dynamicRoot:upperDynamic,folders:aigcFolders},dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
+ return {root,zones,pendant,pendantDiffuser,rooms:{photoPrints,writingBooks,television},aigc:{staticRoot:upperStatic,dynamicRoot:upperDynamic,folders:aigcFolders},dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
 }
