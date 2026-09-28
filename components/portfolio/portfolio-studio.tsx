@@ -4,6 +4,7 @@ import {Canvas} from '@react-three/fiber';
 import {Component,Suspense,useEffect,useRef,useState,type ReactNode} from 'react';
 import Link from 'next/link';
 import {StudioScene,type PortfolioZoneId} from './studio-scene';
+import {StudioVideoControls} from './studio-video-controls';
 import {STUDIO_PHOTOS,STUDIO_WRITINGS,STUDIO_VIDEO} from './studio-content';
 import {IDLE_STATE,stateFromHash,studioDepth,hashForStudioState,type StudioState} from './studio-state';
 import {AIGC_COLLECTIONS,collectionContent} from './aigc-content';
@@ -195,7 +196,7 @@ export function PortfolioStudio(){
        <div className='studio-aigc-caption'><span>{room.itemIndex===null?'PHOTOGRAPHY · 16 PHOTOGRAPHS':`${room.itemIndex+1} / ${STUDIO_PHOTOS.length}`}</span><strong>{room.itemIndex===null?'点选照片，靠近观看':STUDIO_PHOTOS[room.itemIndex].title}</strong><small>{roomTextureError?<button className='studio-texture-retry' onClick={()=>{setRoomTextureError(false);window.dispatchEvent(new Event('studio:retry-textures'));}}>图片加载失败 · 重试</button>:room.itemIndex===null?(isMobile?`第 ${room.page+1} / 3 组 · 左右滑动切换`:'从洞洞板延展的影像记录'):'左右滑动或使用方向键切换'}</small></div>
        {(room.itemIndex!==null||isMobile)&&<button aria-label='下一张照片' onClick={()=>navigateAigcProject(1)}>→</button>}
       </nav>}
-      {room.zone==='video'&&<div className='studio-aigc-hud studio-room-hud'><div className='studio-aigc-caption'><strong>周家刀 · 非遗手艺传承</strong><small>成片尚未接入<a className='studio-aigc-action' href={STUDIO_VIDEO.href} target='_blank' rel='noopener noreferrer'>{STUDIO_VIDEO.action} ↗</a></small></div></div>}
+      {room.zone==='video'&&<StudioVideoControls/>}
       {room.zone==='photography'&&<nav className='studio-a11y-nav' aria-label='选择照片'>{STUDIO_PHOTOS.map((item,index)=><button key={item.id} onClick={()=>selectRoomItem(index)}>{item.title}</button>)}</nav>}
       {writing&&<div className='studio-a11y-nav'><h2>{writing.heading}</h2><p>{writing.excerpt}</p></div>}
     </>}

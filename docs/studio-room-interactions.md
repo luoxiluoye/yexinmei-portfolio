@@ -29,7 +29,9 @@
 - 传播论文：用户提供的知网截图；《中国报业》2023 (16)，78–79 页；DOI 10.13854/j.cnki.cni.2023.16.026。书内标注“论文摘要”。对应第二条 CNKI URL。
 - 知网页面在自动访问工具中不可读，元数据依据用户截图录入；不声称全文已获取。
 - 校园图文和非遗报道保留已有真实微信公众号入口，不编造正文。
-- 《周家刀》成片尚未提供。电视已移除错误的赤页游戏截图与虚假播放按钮，显示真实项目名及相关报道入口。当前不能站内播放成片。
+- 《周家刀》：用户提供的两份 1080p H.264 / AAC 视频，分别约 1 分 14 秒（手艺人访谈）和 1 分 49 秒（直播与工坊）。保留完整内容，只做 faststart 无损重封装。封面使用用户提供的原图，保持比例。
+- 点击电视聚焦后，手动播放；支持暂停、进度拖动、静音和两段切换。视频作为 VideoTexture 贴在原电视屏幕，Canvas 和屏幕对象不变。首次点击播放才请求 MP4；退出立即停止音频、移除解码元素、释放自有 VideoTexture 并恢复封面。
+- 视频通过 requestVideoFrameCallback 请求必要画面，暂停后停止刷新；不把 demand 改为永久渲染。浏览器切到后台自动暂停。手机采用 playsInline；尚未进行实体 iPhone / Safari 验证。
 
 ## 旧组件
 
@@ -38,6 +40,7 @@
 ## 验证
 
 - `npm run build`
+- `STUDIO_QA_URL=http://localhost:3109 node scripts/qa-studio-video.mjs`（真实解码、播放/暂停、进度、切片、错误重试、清理与桌面/手机录屏）
 - `STUDIO_QA_URL=http://localhost:3108 node scripts/qa-studio-rooms.mjs`
 - `STUDIO_QA_URL=http://localhost:3108 node scripts/qa-studio-model.mjs`（AIGC 回归）
 - `scripts/record-studio-rooms.mjs` 记录桌面和手机正常速度演示。

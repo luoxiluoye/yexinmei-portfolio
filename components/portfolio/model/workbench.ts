@@ -7,7 +7,7 @@ import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
  '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
  '/assets/photos/portrait/portrait-06.jpeg','/assets/photos/ziroom-campaign/campaign-02.jpeg','/assets/photos/meituan-product/product-02.jpeg',
- '/assets/projects/red-leaf/gameplay-scene-hires.png',
+ '/assets/video/zhoujiadao/poster.png',
  '/assets/photos/portrait/yexinmei-frame-v5.jpg',
 ];
 
@@ -204,9 +204,10 @@ export function createWorkbench(images:T.Texture[]){
 
  const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';tv.userData.noBatch=true;
  d.box(tv,[0,0,-.20],[2.69,1.49,.75],p.ivory,.145);d.frame(tv,[-.265,.045,.239],2.07,1.263,.055,.064,p.blueDark,.13);d.box(tv,[-.265,.045,.267],[1.943,1.137,.041],p.black,.12);
- const screenTexture=d.canvas((c,w,h)=>{c.fillStyle='#26302e';c.fillRect(0,0,w,h);c.fillStyle='#ba8f60';c.font='26px sans-serif';c.fillText('DOCUMENTARY / 非遗记录',70,82);c.fillStyle='#f4e8d5';c.font='100px serif';c.fillText('周家刀',70,250);c.font='30px sans-serif';c.fillText('手艺、传承与新的相遇',70,325);c.fillStyle='#bcb9a9';c.font='22px sans-serif';c.fillText('成片待接入 · 可先阅读相关报道',70,450);},1024,576);
- const screenMat=new T.MeshBasicMaterial({map:screenTexture,toneMapped:false});d.materials.add(screenMat);
+ const poster=images[6].clone();poster.colorSpace=T.SRGBColorSpace;poster.anisotropy=4;poster.needsUpdate=true;d.textures.add(poster);
+ const screenMat=new T.MeshBasicMaterial({map:poster,toneMapped:false});d.materials.add(screenMat);
  const screen=d.roundedPlane(tv,[-.265,.045,.301],1.84,1.04,.084,screenMat);screen.castShadow=false;
+ screen.scale.x=(1080/764)/(1.84/1.04);
  const television=exhibit(tv,2.69,1.49,screen);
  for(let i=0;i<2;i++){const y=.44-i*.285;d.torus(tv,[1.035,y,.219],.103,.014,p.darkMetal);d.cylinder(tv,[1.035,y,.228],.083,.083,.07,p.ivory,[Math.PI/2,0,0]);d.box(tv,[1.035,y+.05,.268],[.012,.036,.008],p.darkMetal,.002);}
  for(let i=0;i<14;i++)d.box(tv,[1.03,-.17-i*.032,.216],[.28,.008,.011],p.blueDark,.003);
