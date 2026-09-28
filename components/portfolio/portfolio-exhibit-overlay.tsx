@@ -57,8 +57,8 @@ const VISUALS:VisualCollection[]=[
   },
   {
     id:'social',
-    title:'个人内容视觉',
-    subtitle:'真实主页与内容界面',
+    title:'个人自媒体运营',
+    subtitle:'小红书与知乎 · 个人账号运营',
     color:'#879dac',
     items:[
       {src:'/assets/projects/personal-social/xiaohongshu/profile-hires.png',title:'小红书主页'},

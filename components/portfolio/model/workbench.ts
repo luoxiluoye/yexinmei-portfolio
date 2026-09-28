@@ -169,7 +169,7 @@ export function createWorkbench(images:T.Texture[]){
   d.box(body,[0,-.62,.06],[.96,.12,.16],folderMat,.025);
   const coverPivot=group(rootFolder,[0,-.67,.12]);coverPivot.name='folder front cover pivot';coverPivot.userData.noBatch=true;
   d.box(coverPivot,[0,.67,.02],[1.02,1.34,.075],folderMat,.045);
-  const label=d.canvas((ctx,w,h)=>{ctx.fillStyle=id==='red-leaf'?'#9a4137':'#71828b';ctx.fillRect(0,0,w,h);ctx.fillStyle='#fff8e9';ctx.textAlign='center';ctx.font='500 58px Georgia';ctx.fillText(id==='red-leaf'?'RED LEAF':'PERSONAL SOCIAL',w/2,110);ctx.font='36px sans-serif';ctx.fillText(id==='red-leaf'?'赤页':'个人内容视觉',w/2,160);ctx.font='30px sans-serif';ctx.fillText(`${papersManifest.length} WORKS`,w/2,226);},768,320);
+  const label=d.canvas((ctx,w,h)=>{ctx.fillStyle=id==='red-leaf'?'#9a4137':'#71828b';ctx.fillRect(0,0,w,h);ctx.fillStyle='#fff8e9';ctx.textAlign='center';ctx.font='500 58px Georgia';ctx.fillText(id==='red-leaf'?'RED LEAF':'SOCIAL MEDIA',w/2,110);ctx.font='36px sans-serif';ctx.fillText(id==='red-leaf'?'赤页':'个人自媒体运营',w/2,160);ctx.font='30px sans-serif';ctx.fillText(`${papersManifest.length} ${id==='social'?'ACCOUNTS':'WORKS'}`,w/2,226);},768,320);
   const labelMat=new T.MeshBasicMaterial({map:label,toneMapped:false});d.materials.add(labelMat);
   plane(coverPivot,[0,.78,.061],.91,.38,labelMat).castShadow=false;
   const paperStack=group(rootFolder,[0,.02,.105]);paperStack.name='paper stack';paperStack.userData.noBatch=true;
@@ -186,7 +186,7 @@ export function createWorkbench(images:T.Texture[]){
   const heroPaper=papers[0]?.root??null;if(heroPaper)heroPaper.name='hero paper';
   const hit=d.mesh(rootFolder,d.own(new T.BoxGeometry(1.18,1.5,.55)),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),[0,.04,.18]);
   d.materials.add(hit.material);hit.userData={aigcFolder:id,noBatch:true};hit.castShadow=false;hit.receiveShadow=false;
-  return {id,root:rootFolder,hit,body,coverPivot,paperStack,papers,heroPaper,home:new T.Vector3(...pos),enabled,title:id==='red-leaf'?'RED LEAF':'PERSONAL SOCIAL',subtitle:id==='red-leaf'?'赤页':'个人内容视觉',count:papers.length};
+  return {id,root:rootFolder,hit,body,coverPivot,paperStack,papers,heroPaper,home:new T.Vector3(...pos),enabled,title:id==='red-leaf'?'RED LEAF':'SOCIAL MEDIA',subtitle:id==='red-leaf'?'赤页':'个人自媒体运营',count:papers.length};
  };
  const aigcFolders={
   'red-leaf':makeAigcFolder('red-leaf',[-.62,.03,-.50],true,[
