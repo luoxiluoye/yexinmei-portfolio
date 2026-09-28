@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass.js';
 import {StudioSSAOPass as SSAOPass} from './studio-ssao';
@@ -31,10 +32,14 @@ export class StudioExperience{
  private reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;private qa=new URLSearchParams(window.location.search).get('qa')==='1';
  private motionQuery=window.matchMedia('(prefers-reduced-motion: reduce)');private previousCursor:string;private previousTouchAction:string;
  constructor(private gl:T.WebGLRenderer,private scene:T.Scene,private camera:T.PerspectiveCamera,images:T.Texture[],private invalidate:()=>void,private onSelect:(id:ZoneId)=>void,private onSelectFolder:(id:string)=>void,private onSelectInspect:(id:string)=>void,private onProjectNavigate:(delta:number)=>void,private onDirectorMilestone:(milestone:DirectorMilestone)=>void,private onReady:()=>void){
-  this.model=createWorkbench(images);scene.add(this.model.root,this.rig);gl.toneMapping=T.ACESFilmicToneMapping;gl.toneMappingExposure=.99;gl.outputColorSpace=T.SRGBColorSpace;
-  gl.shadowMap.enabled=false;gl.shadowMap.type=T.PCFSoftShadowMap;scene.background=new T.Color('#e9e4db');
-  this.environment=new T.WebGLRenderTarget(1,1);
-  this.previousEnvironment=scene.environment;this.previousEnvironmentIntensity=scene.environmentIntensity;scene.environment=null;scene.environmentIntensity=0;
+  this.model=createWorkbench(images);scene.add(this.model.root,this.rig);gl.toneMapping=T.ACESFilmicToneMapping;gl.toneMappingExposure=1.02;gl.outputColorSpace=T.SRGBColorSpace;
+  gl.shadowMap.enabled=true;gl.shadowMap.type=T.VSMShadowMap;gl.shadowMap.autoUpdate=false;gl.shadowMap.needsUpdate=true;scene.background=new T.Color('#eef1f4');
+  this.previousEnvironment=scene.environment;this.previousEnvironmentIntensity=scene.environmentIntensity;
+  const roomEnvironment=new RoomEnvironment(),pmrem=new T.PMREMGenerator(gl);
+  this.environment=pmrem.fromScene(roomEnvironment,.055);roomEnvironment.dispose();pmrem.dispose();
+  scene.environment=this.environment.texture;scene.environmentIntensity=.30;
+  // Cache shadows from fixed furniture only; moving exhibits must not leave ghost shadows.
+  this.model.root.traverse(object=>{if(object instanceof T.Mesh){let parent:T.Object3D|null=object,owned=false;while(parent){owned ||= Boolean(parent.userData.noBatch);parent=parent.parent;}if(owned||(object.material as T.Material).transparent)object.castShadow=false;}});
   this.createLighting();this.createHighlights();
   this.composer=new EffectComposer(gl,new T.WebGLRenderTarget(1,1,{type:T.HalfFloatType,samples:0}));const render=new RenderPass(scene,camera);
   this.ao=new SSAOPass(scene,camera,1,1,8);this.ao.kernelRadius=.12;this.ao.minDistance=.001;this.ao.maxDistance=.09;this.ao.enabled=false;
@@ -53,16 +58,16 @@ export class StudioExperience{
  private wheel=(event:WheelEvent)=>{if((this.studioState.mode==='inspect'||this.studioState.mode==='room')&&Math.abs(event.deltaX+event.deltaY)>3){event.preventDefault();const now=performance.now();if(now-this.wheelAt<300)return;this.wheelAt=now;this.onProjectNavigate((event.deltaX||event.deltaY)>0?1:-1);this.invalidate();}};
  private createLighting(){
   const add=(light:T.Light,pos?:[number,number,number])=>{if(pos)light.position.set(...pos);this.rig.add(light);return light;};
-  add(new T.AmbientLight('#fff0db',.18));add(new T.HemisphereLight('#f9f0e5','#b6a38d',.38));
-  const key=new T.DirectionalLight('#fff4e4',1.32);add(key,[-3.8,8,6]);key.castShadow=false;key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-5,near:.1,far:26});key.shadow.bias=-.00005;key.shadow.normalBias=.015;
-  add(new T.DirectionalLight('#d6e7f4',.27),[5,3,5]);
+  add(new T.AmbientLight('#edf4ff',.12));add(new T.HemisphereLight('#e6efff','#d3b89e',.30));
+  const key=new T.DirectionalLight('#fff5e8',1.55);add(key,[-3.8,7,5]);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-5,near:.1,far:26});key.shadow.bias=-.0002;key.shadow.normalBias=.02;key.shadow.radius=4;key.shadow.blurSamples=6;key.shadow.intensity=.72;
+  add(new T.DirectionalLight('#d7e8ff',.30),[5,3,5]);
   const spot=(pos:[number,number,number],target:[number,number,number],power:number,angle:number)=>{const light=new T.SpotLight('#ffd092',power,12,angle,.92,2);light.position.set(...pos);light.target.position.set(...target);this.rig.add(light,light.target);this.pendantLights.push(light);return light;};
   // Broad warm wash on the board; a separate downward source illuminates the desk.
-  spot([0,5.30,.26],[0,1.40,-.64],13,.66);spot([0,5.295,.29],[0,0,.79],34,.47);
+  spot([0,5.30,.26],[0,1.40,-.64],28,.66);spot([0,5.295,.29],[0,0,.79],55,.47);
   const spill=new T.PointLight('#ffd7a3',.08,2.7,2);add(spill,[0,5.30,.26]);this.pendantLights.push(spill);
   add(new T.PointLight('#ffd69b',2.25,3.5,2),[-4.98,1.42,.81]);add(new T.PointLight('#ffe3ae',.35,1.3,2),[-2.95,2.4,.2]);
   for(const material of this.model.geometry.materials){if(material instanceof T.MeshStandardMaterial&&material.emissiveIntensity===1.4){material.color.set('#ffdb9e');material.emissive.set('#ffcf8a');material.emissiveIntensity=2.0;material.needsUpdate=true;}}
-  const sun=this.model.root.getObjectByName('Filtered window light');if(sun instanceof T.SpotLight)sun.intensity=14;
+  const sun=this.model.root.getObjectByName('Filtered window light');if(sun instanceof T.SpotLight)sun.intensity=45;
  }
  private createHighlights(){
   const d=this.model.geometry;
@@ -117,7 +122,7 @@ export class StudioExperience{
    this.desired.set(fx+Math.sin(this.yaw)*radius,fy+1.52+Math.sin(this.pitch)*radius,.1+Math.cos(this.yaw)*radius);this.camera.position.lerp(this.desired,blend);this.camera.lookAt(this.lookAt);this.camera.updateMatrixWorld();
    animating=this.frames<6||this.camera.position.distanceToSquared(this.desired)>.000005||Math.abs(this.yaw-this.requestedYaw)>.00008||Math.abs(this.pitch-this.requestedPitch)>.00008;
   }
-  for(const id of IDS){const zone=this.model.zones[id],h=this.highlights[id],active=id===(this.selected??this.hover),goal=active?1:0;h.amount+=(goal-h.amount)*blend;if(Math.abs(goal-h.amount)>.003)animating=true;const intensity=dynamic?.10:1;h.rim.opacity=.45*h.amount*intensity;h.halo.uniforms.strength.value=.25*h.amount*intensity;h.light.intensity=.35*h.amount*intensity;h.dot.emissiveIntensity=.65+2.4*h.amount;zone.glow.emissive.set(active?ACCENTS[id]:'#ffdec0');zone.glow.emissiveIntensity=.38+.35*h.amount*intensity;zone.hit.visible=false;}
+  for(const id of IDS){const zone=this.model.zones[id],h=this.highlights[id],active=id===(this.selected??this.hover),goal=active?1:0;h.amount+=(goal-h.amount)*blend;if(Math.abs(goal-h.amount)>.003)animating=true;const intensity=dynamic?.10:1;h.rim.opacity=.45*h.amount*intensity;h.halo.uniforms.strength.value=.08+.25*h.amount*intensity;h.light.intensity=.35*h.amount*intensity;h.dot.emissiveIntensity=.65+2.4*h.amount;zone.glow.emissive.set(active?ACCENTS[id]:'#ffdec0');zone.glow.emissiveIntensity=.38+.35*h.amount*intensity;zone.hit.visible=false;}
   const folderHit=this.model.aigc.folders['red-leaf'].hit;folderHit.visible=false;
   const frameStart=performance.now();try{this.gl.render(this.scene,this.camera);}finally{IDS.forEach(id=>this.model.zones[id].hit.visible=true);folderHit.visible=true;}this.frames++;const now=performance.now(),submissionMs=now-frameStart;
   const telemetry=window.__STUDIO_QA__;if(this.qa&&telemetry){telemetry.frames=this.frames;telemetry.view={yaw:this.yaw,pitch:this.pitch,dragging:!!this.down?.moved,camera:this.camera.position.toArray()};telemetry.studioState=this.studioState;telemetry.director=this.director.debug();telemetry.room=this.roomDirector.debug();telemetry.video=this.videoPlayer.debug();const stage=this.studioState.phase==='leaving'?'returning':this.studioState.mode==='room'?this.studioState.zone==='video'?(telemetry.video.playing?'video-playing':this.studioState.phase==='stable'?'video-paused':'video-focus'):`${this.studioState.zone}-${this.studioState.itemIndex===null?'collection':'reading'}`:this.studioState.mode==='idle'?'idle':this.studioState.mode==='focus'?'focus-transition':this.studioState.mode==='collection'?'collection':(telemetry.director?.project??0)<1?'folder-opening':'inspect';

@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {collectionContent} from '../aigc-content';
 import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
-import {STUDIO_PHOTOS} from '../studio-content';
+import {STUDIO_PHOTOS,STUDIO_WRITINGS} from '../studio-content';
 import {createReadingBook,exhibit,type ExhibitObject} from './studio-exhibits';
 import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
@@ -41,12 +41,12 @@ export function createWorkbench(images:T.Texture[]){
  const furniture=new T.Group();furniture.name='Continuous desk and furniture';root.add(furniture);
  const grain=d.surface();
  const p={
-  ivory:d.physical('#eee6d9',{roughness:.35,clearcoat:.22,bumpMap:grain,bumpScale:.004}),
+  ivory:d.physical('#f5efe5',{roughness:.30,clearcoat:.24,bumpMap:grain,bumpScale:.0015}),
   edge:d.mat('#f8f3e9',.39,.04),blue:d.physical('#aec6d9',{roughness:.36,clearcoat:.21}),
-  blueDark:d.mat('#98a7af',.65),back:d.mat('#bfc5c4',.9,0,{bumpMap:grain,bumpScale:.008}),
-  board:d.mat('#e0d8ca',.86,0,{bumpMap:grain,bumpScale:.009}),paper:d.mat('#f4f0e6',.87,0,{bumpMap:grain,bumpScale:.003}),
+  blueDark:d.mat('#98a7af',.65),back:d.mat('#c9d3d7',.82,0,{bumpMap:grain,bumpScale:.003}),
+  board:d.mat('#eee7db',.82,0,{bumpMap:grain,bumpScale:.003}),paper:d.mat('#f4f0e6',.87,0,{bumpMap:grain,bumpScale:.003}),
   pages:d.mat('#e7dfcf',.86),ceramic:d.physical('#eee9df',{roughness:.34,clearcoat:.20,bumpMap:grain,bumpScale:.004}),
-  metal:d.mat('#bec2c5',.28,.78),chrome:d.mat('#ccd0d3',.22,.85),darkMetal:d.mat('#4b5155',.38,.65),
+  metal:d.mat('#bec2c5',.28,.78),chrome:d.mat('#edf1f5',.16,.94),darkMetal:d.mat('#4b5155',.38,.65),
   red:d.physical('#ac4d41',{roughness:.35,clearcoat:.28}),black:d.mat('#252729',.66,0,{bumpMap:grain,bumpScale:.006}),
   leather:d.mat('#252724',.8,0,{bumpMap:grain,bumpScale:.012}),
   stem:d.mat('#647143',.85),soil:d.mat('#51483a',.95),seam:d.mat('#c7bbae',.83),
@@ -59,9 +59,9 @@ export function createWorkbench(images:T.Texture[]){
  function alcove(id:ZoneId,cx:number,cy:number,w:number,h:number,back:T.Material){
   const g=group(root,[cx,cy,0]);g.name=id;g.userData.zone=id;
   d.box(g,[0,0,-.73],[w,h,.14],back,.09);
-  for(const x of [-w/2+.055,w/2-.055])d.box(g,[x,0,-.24],[.11,h,.97],p.ivory,.035);
-  for(const y of [-h/2+.055,h/2-.055])d.box(g,[0,y,-.24],[w,.11,.97],p.ivory,.035);
-  d.frame(g,[0,0,.237],w,h,.055,.049,p.edge,.13);
+  for(const x of [-w/2+.055,w/2-.055])d.box(g,[x,0,-.24],[.085,h,.97],p.ivory,.035);
+  for(const y of [-h/2+.055,h/2-.055])d.box(g,[0,y,-.24],[w,.085,.97],p.ivory,.035);
+  d.frame(g,[0,0,.237],w,h,.036,.033,p.edge,.16);
   const glow=d.mat('#fff0d7',.45,0,{emissive:'#ffdaac',emissiveIntensity:.42,toneMapped:false});
   const rim=d.frame(g,[0,0,.276],w+.018,h+.018,.012,.012,glow,.145);rim.userData.noBatch=true;rim.castShadow=false;
   d.cylinder(g,[-w/2+.17,h/2-.17,.32],.036,.04,.036,p.red,[Math.PI/2,0,0],24);
@@ -127,7 +127,7 @@ export function createWorkbench(images:T.Texture[]){
   for(const z of [-.043,.043]){d.rod(g,[a[0]-.038,a[1],z],[b[0]-.038,b[1],z],.019,p.ivory);d.rod(g,[a[0]+.038,a[1],z],[b[0]+.038,b[1],z],.019,p.ivory);d.rod(g,[b[0],b[1]-.035,z],[c[0],c[1]-.035,z],.019,p.ivory);d.rod(g,[b[0],b[1]+.035,z],[c[0],c[1]+.035,z],.019,p.ivory);}
   for(const q of [a,b,c]){d.cylinder(g,q,.08,.08,.15,p.edge,[Math.PI/2,0,0],24);d.cylinder(g,[q[0],q[1],.092],.027,.027,.013,p.metal,[Math.PI/2,0,0],20);}shade(g,[.45,1.43,.02],.40,p.ivory);
  }
- const wallMesh=plane(furniture,[0,8,-1.12],80,34,d.mat('#edeae4',.96));wallMesh.castShadow=false;
+ const wallMesh=plane(furniture,[0,8,-1.12],80,34,d.mat('#edf0f4',.92));wallMesh.castShadow=false;
  d.mesh(furniture,d.own(new T.PlaneGeometry(120,120)),d.mat('#e0dfda',.96),[0,-2.22,0],[-Math.PI/2,0,0]).castShadow=false;
  d.box(furniture,[0,-.115,.50],[12.3,.23,2.72],p.ivory,.10);d.box(furniture,[0,-.305,.46],[12.03,.16,2.57],p.blue,.045);
  d.box(furniture,[-5.66,-1.25,-.30],[.16,1.86,.58],p.ivory,.04);d.box(furniture,[-5.66,-2.17,.35],[.5,.06,1.65],p.blue,.023);
@@ -137,7 +137,7 @@ export function createWorkbench(images:T.Texture[]){
 
  const left=alcove('writing',-4.05,2.825,3.16,4.65,p.back);shelf(left,0,.60,2.94);shelf(left,0,-.92,2.94);shelf(left,0,-2.15,2.94);shelf(left,-.77,1.36,1.32,.74);
  plant(left,[-.79,1.42,.00],.68,true);
- const writingBooks=[0,1,2,3].map(i=>createReadingBook(d,left,i,-.11+i*.245));bear(left,[1.13,.66,.02],.85);
+ const writingBooks=STUDIO_WRITINGS.map((_,i)=>createReadingBook(d,left,i,-.11+i*.245));bear(left,[1.13,.66,.02],.85);
  let mx=-1.21;for(let i=0;i<6;i++){const w=.16+(i%2)*.05;book(left,[mx,-.86,.035],w,1.10+(i%3)*.065,.54,['#e6ddce','#d8cfbf','#f1ece2'][i%3],['02','IMAGES','NOTES'][i%3],i===5?-.055:0);mx+=w+.032;}
  const picture=group(left,[.52,-.45,.29],[0,-.04,0]);d.box(picture,[0,0,0],[.55,.76,.048],p.edge,.019);print(picture,[0,0,.034],.46,.63,images[7]);flatBook(left,[.62,-.86,.10],.87,.56,'#e2d6c4');
  d.ball(left,[1.1,-.43,.20],[.235,.235,.235],d.mat('#fff1ce',.78,0,{emissive:'#ffdca0',emissiveIntensity:.6,bumpMap:grain,bumpScale:.022}));d.box(left,[1.1,-.735,.18],[.49,.14,.46],p.ceramic,.025);

@@ -1,7 +1,7 @@
 'use client';
 import {useEffect,useRef} from 'react';
 import {useFrame,useThree} from '@react-three/fiber';
-import {SoftShadows,useTexture} from '@react-three/drei';
+import {useTexture} from '@react-three/drei';
 import * as T from 'three';
 import {StudioExperience} from './studio-experience';
 import {WORK_IMAGES} from './model/workbench';
@@ -22,5 +22,5 @@ export function StudioScene({onSelect,onSelectFolder,onSelectInspect,onProjectNa
  useEffect(()=>{experience.current?.setSelected(selected);},[selected]);
  useEffect(()=>{experience.current?.setStudioState(studioState);},[studioState]);
  useFrame((_,delta)=>experience.current?.render(delta),1);
- return <SoftShadows size={18} samples={5} focus={.3}/>;
+ return null;
 }

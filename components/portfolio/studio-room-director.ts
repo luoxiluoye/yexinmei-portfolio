@@ -43,7 +43,7 @@ export class StudioRoomDirector{
    if(this.zone==='photography'){
     const data=STUDIO_PHOTOS[index],aspect=data.width/data.height,columns=compact?2:4,rows=compact?3:4,slot=compact?index-page*6:index;
     const h=Math.min(compact?1.02:1.0,(compact?1.28:1.5)/aspect),w=h*aspect;
-    target.add(new T.Vector3(((slot%columns)-(columns-1)/2)*(compact?1.5:1.7),((rows-1)/2-Math.floor(slot/columns))*1.24,1.65));
+    target.add(new T.Vector3(((slot%columns)-(Math.min(columns,(compact?Math.min(6,items.length-page*6):items.length)-Math.floor(slot/columns)*columns)-1)/2)*(compact?1.5:1.7),((rows-1)/2-Math.floor(slot/columns))*1.24,1.65));
     targetScale.set(w/item.width,h/item.height,1);
     const inspectH=Math.min(3.0,4.1/aspect),inspectW=inspectH*aspect;
     target.lerp(center.clone().add(new T.Vector3(0,0,3.6)),d);targetScale.lerp(new T.Vector3(inspectW/item.width,inspectH/item.height,1),d);
@@ -51,7 +51,7 @@ export class StudioRoomDirector{
     const mat=item.surface!.material as T.MeshBasicMaterial;if(item.texture)mat.color.setScalar(wanted<0||wanted===index?1:.78);
    }else if(this.zone==='writing'){
     const col=compact?index%2:index,row=compact?Math.floor(index/2):0;
-    target.add(new T.Vector3((col-(compact?.5:1.5))*.9,compact?.8-row*1.6:0,1.55));
+    target.add(new T.Vector3((col-(compact?(Math.min(2,items.length-row*2)-1)/2:(items.length-1)/2))*.9,compact?.8-row*1.6:0,1.55));
     target.lerp(center.clone().add(new T.Vector3(1.025,0,3.1)),d);targetScale.setScalar(1+1.5*d);
     item.cover!.rotation.y=-Math.PI*ease(Math.max(0,(d-.2)/.8));
     for(const page of item.root.userData.readingPages as T.Mesh[]){const visible=d>.01;if(page.visible!==visible){page.visible=visible;const texture=(page.material as T.MeshBasicMaterial).map!;if(visible)texture.needsUpdate=true;else texture.dispose();}}

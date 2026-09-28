@@ -57,3 +57,5 @@
 .studio-video-transport .studio-video-sound{font:11px sans-serif}
 .studio-video-status{font:10px/1.4 sans-serif;color:#887561;text-align:center;min-height:14px}
 @media(max-width:700px){.studio-video-hud{padding:10px 12px;width:calc(100% - 32px)}.studio-video-heading label{gap:8px;font-size:12px}.studio-video-heading select{max-width:170px;font-size:11px}.studio-video-transport{gap:7px}.studio-video-time{font-size:9px}.studio-video-transport button{width:36px;height:36px}.studio-video-status{font-size:9px}}
+
+@media(max-width:700px){.studio-video-heading{flex-wrap:wrap;gap:6px}.studio-video-heading a{margin-left:auto}.studio-video-heading select{max-width:150px}}

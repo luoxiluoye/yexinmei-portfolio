@@ -57,22 +57,22 @@ export function makeRearViewChair(d:AtelierGeometry,parent:T.Object3D,p:Palette)
 }
 
 function botanicalLeaves(d:AtelierGeometry){
- const n=20,m=12,v:number[]=[],uv:number[]=[],indices:number[]=[];
+ const n=12,m=8,v:number[]=[],uv:number[]=[],indices:number[]=[];
  for(let j=0;j<=n;j++){
-  const t=j/n,width=.40*Math.pow(Math.sin(Math.PI*t),.72)*(1.22-.53*t);
+  const t=j/n,width=.33*Math.pow(Math.sin(Math.PI*t),.62)*(1.30-.58*t);
   for(let i=0;i<=m;i++){
    const u=i/m*2-1;
-   v.push(u*width,t,.095*(1-u*u)*Math.sin(Math.PI*t)+.11*t*t+.011*Math.cos(t*15)*Math.abs(u));uv.push(i/m,t);
+   v.push(u*width,t,.055*(1-u*u)*Math.sin(Math.PI*t)-.14*t*t+.011*Math.cos(t*15)*Math.abs(u));uv.push(i/m,t);
   }
  }
  for(let j=0;j<n;j++)for(let i=0;i<m;i++){const a=j*(m+1)+i,b=a+m+1;indices.push(a,a+1,b,a+1,b+1,b);}
  const geo=d.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(v,3));geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geo.setIndex(indices);geo.computeVertexNormals();
  const texture=d.canvas((c,w,h)=>{
-  const grad=c.createLinearGradient(0,0,w,0);grad.addColorStop(0,'#46612b');grad.addColorStop(.48,'#617c38');grad.addColorStop(.52,'#6b8841');grad.addColorStop(1,'#425e2a');c.fillStyle=grad;c.fillRect(0,0,w,h);
+  const grad=c.createLinearGradient(0,0,w,0);grad.addColorStop(0,'#3f6028');grad.addColorStop(.48,'#617f37');grad.addColorStop(.52,'#79944a');grad.addColorStop(1,'#395c26');c.fillStyle=grad;c.fillRect(0,0,w,h);
   c.strokeStyle='rgba(174,187,107,.34)';c.lineWidth=2;c.beginPath();c.moveTo(w/2,0);c.lineTo(w/2,h);c.stroke();
   for(let j=1;j<8;j++)for(const s of [-1,1]){c.lineWidth=.8;c.strokeStyle='rgba(143,165,79,.25)';c.beginPath();c.moveTo(w/2,h*j/9);c.quadraticCurveTo(w/2+s*w*.18,h*(j-.4)/9,w/2+s*w*.4,h*(j-1.45)/9);c.stroke();}
  },256,512);
- const mat=d.physical('#ffffff',{map:texture,roughness:.55,side:T.DoubleSide,clearcoat:.20,clearcoatRoughness:.55});return {geo,mat};
+ const mat=d.physical('#ffffff',{map:texture,roughness:.48,side:T.DoubleSide,clearcoat:.16,clearcoatRoughness:.42,emissive:'#748944',emissiveIntensity:.045});return {geo,mat};
 }
 
 function replacePlants(d:AtelierGeometry,root:T.Object3D,p:Palette){
@@ -87,23 +87,23 @@ function replacePlants(d:AtelierGeometry,root:T.Object3D,p:Palette){
   d.lathe(g,[0,0,0],[[.001,.013],[radius*.76,.013],[radius*.88,.037],[radius,height-.016],[radius*.988,height],[radius*.85,height],[radius*.825,height-.035],[radius*.71,.05],[.001,.05]],potMat);
   d.cylinder(g,[0,height-.030,0],radius*.84,radius*.84,.013,p.soil);
   function leaf(pos:V,length:number,angle:number,tilt:number,twist:number){const l=d.mesh(g,geo,mat,pos,[tilt,twist,angle]);l.scale.set(length,length,length);return l;}
-  const count=large?28:trailing?24:13;
+  const count=large?18:trailing?15:10;
   for(let i=0;i<count;i++){
    const a=i*2.39996+index*.78,r=.12+(i%5)*.066,tip:V=[Math.cos(a)*r,height+.07+(i%4)*.095,Math.sin(a)*r+.04];
-   const length=large?.35+(i%4)*.035:.29+(i%4)*.027;
+   const length=large?.39+(i%4)*.037:.32+(i%4)*.026;
    d.tube(g,[[0,height-.02,0],[tip[0]*.6,height+.16,tip[2]*.55],tip],.007,p.stem);
    leaf(tip,length,-Math.cos(a)*1.04,(i%5-2)*.22,(i%7-3)*.15);
   }
   if(trailing){
    const drop=large?2.53:.89;
-   for(let k=0;k<(large?5:3);k++){
-    const x=-.23-k*.095,phase=k*.83;
-    const pts:V[]=[[0,height-.01,0],[x,height+.08,.23],[x-.05,.13,.44],[x+.07*Math.sin(phase),-drop*.37,.48],[x-.12*Math.sin(phase+1),-drop*.70,.53],[x+.10*Math.cos(phase),-drop,.44]];
-    d.tube(g,pts,.009,p.stem);const curve=new T.CatmullRomCurve3(pts.map(v=>new T.Vector3(...v))),count=large?14:6;
+   for(let k=0;k<(large?3:2);k++){
+    const x=-.16-k*.15,phase=k*1.38;
+    const pts:V[]=[[0,height-.01,0],[x,height+.08,.23],[x-.05,.13,.44],[x+.16*Math.sin(phase),-drop*.37,.48],[x-.20*Math.sin(phase+1),-drop*.70,.53],[x+.10*Math.cos(phase),-drop,.44]];
+    d.tube(g,pts,.009,p.stem);const curve=new T.CatmullRomCurve3(pts.map(v=>new T.Vector3(...v))),count=large?12:6;
     for(let i=1;i<count;i++){
-     const t=i/count,q=curve.getPoint(t),sign=(i+k)%2?1:-1,tip:V=[q.x+sign*.040,q.y-.045,q.z+.030];
+     const t=i/count,q=curve.getPoint(t),sign=(i+k)%2?1:-1,tip:V=[q.x+sign*(.07+.015*(i%3)),q.y-.045,q.z+.030];
      d.rod(g,[q.x,q.y,q.z],tip,.006,p.stem);
-     leaf(tip,(large?.32:.27)*(1-.29*t),sign*(1.43+.28*Math.sin(i+k)),.08+(k%3-1)*.13,sign*.14);
+     leaf(tip,(large?.32:.27)*(1-.29*t),sign*(1.75+.5*Math.sin(i*1.9+k)),.12+(k%3-1)*.28,sign*.22);
     }
    }
   }
@@ -136,6 +136,6 @@ export function applyStudioRefinement(d:AtelierGeometry,root:T.Group,furniture:T
   c.fillStyle='#000000';c.fillRect(0,0,w,h);c.save();c.translate(w/2,h/2);c.rotate(-.20);
   for(let y=-h;y<h;y+=48){const band=c.createLinearGradient(0,y,0,y+30);band.addColorStop(0,'#060606');band.addColorStop(.22,'#adadad');band.addColorStop(.78,'#adadad');band.addColorStop(1,'#060606');c.fillStyle=band;c.fillRect(-w,y,w*2,30);}c.restore();
  },512,512);
- const sun=new T.SpotLight('#fff1d5',30,18,.53,.75,2);sun.name='Filtered window light';sun.map=lightMap;sun.position.set(8,6.8,4);sun.target.position.set(3.0,2.2,-.7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;root.add(sun,sun.target);
+ const sun=new T.SpotLight('#fff1d5',30,18,.53,.75,2);sun.name='Filtered window light';sun.map=lightMap;sun.position.set(8,6.8,4);sun.target.position.set(3.0,2.2,-.7);sun.castShadow=false;sun.shadow.mapSize.set(1024,1024);sun.shadow.bias=-.0002;sun.shadow.normalBias=.02;root.add(sun,sun.target);
  for(const z of Object.values(zones))z.glow.emissiveIntensity=.42;
 }

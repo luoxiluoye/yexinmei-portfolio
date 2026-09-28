@@ -17,6 +17,7 @@ try{for(const mobile of [false,true]){
  for(const zone of ['photography','writing','video']){
   stage=`${label} ${zone}`;console.log(stage);await click(page,zone);await page.waitForTimeout(250);await shot(page,`${label}-${zone}-entering`);await stable(page,'room');await page.waitForTimeout(350);await shot(page,`${label}-${zone}`);const ids=(await q(page)).room.objects.map(o=>o.uuid);
   if(zone==='photography'){
+   await page.waitForFunction(()=>window.__STUDIO_QA__.room.objects.length===15&&window.__STUDIO_QA__.room.objects.every(o=>o.textureWidth>0));assert.equal(await page.getByRole('button',{name:/图片直播入口/}).count(),0);
    const gallery=await q(page);for(const item of gallery.room.objects.filter(o=>o.visible))for(const [x,y] of item.corners){assert(x>-1&&x<1&&y>-1&&y<1,'Photo wall crops a visible print');}
    await click(page,'photography-0');await stable(page,'room');assert.equal((await q(page)).studioState.itemIndex,0);await shot(page,`${label}-photo`);const photo=(await q(page)).room.objects[0];for(const [x,y] of photo.corners)assert(x>-1&&x<1&&y>-1&&y<1,'Inspect photo leaves viewport');
    await page.getByRole('button',{name:'下一张照片'}).click();await stable(page,'room');assert.equal((await q(page)).studioState.itemIndex,1);await shot(page,`${label}-photo-landscape`);
@@ -25,8 +26,8 @@ try{for(const mobile of [false,true]){
   }
   if(zone==='writing'){
    await click(page,'writing-0');await stable(page,'room');assert.equal((await q(page)).studioState.itemIndex,0);await shot(page,`${label}-pei`);assert.match(await page.getByRole('link',{name:'查看知网原文'}).getAttribute('href'),/u5lPRpBnolhv9/);
-   for(let i=0;i<3;i++){await page.getByRole('button',{name:'下一篇作品'}).click();await stable(page,'room');}
-   assert.equal((await q(page)).studioState.itemIndex,3);await shot(page,`${label}-research`);assert.match(await page.getByRole('link',{name:'查看知网原文'}).getAttribute('href'),/u5lPRpBnoljJp/);
+   for(let i=0;i<2;i++){await page.getByRole('button',{name:'下一篇作品'}).click();await stable(page,'room');}
+   assert.equal((await q(page)).studioState.itemIndex,2);await shot(page,`${label}-research`);assert.match(await page.getByRole('link',{name:'查看知网原文'}).getAttribute('href'),/u5lPRpBnoljJp/);
    await page.goBack();await stable(page,'room');assert.equal((await q(page)).studioState.itemIndex,null);
   }
   await stopped(page);assert.deepEqual((await q(page)).room.objects.map(o=>o.uuid),ids);await back(page);await stable(page,'idle');await stopped(page);const restored=await q(page);assert(await page.locator('canvas').evaluate((node,previous)=>node===previous,canvas));for(const item of restored.room.objects){assert.deepEqual(item.position,item.home);assert.deepEqual(item.rotation,item.homeRotation);}assert(restored.view.camera.every((v,i)=>Math.abs(v-original.view.camera[i])<.01));report.checks.push(`${label} ${zone}: physical click, return, same objects/Canvas, exact home, demand stops`);

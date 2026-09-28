@@ -13,7 +13,7 @@ export const STUDIO_PHOTOS = [
     "medium": "/assets/photos/studio-wall/concert-03.webp",
     "width": 768,
     "height": 432,
-    "title": "余超颖巡演现场双人合影"
+    "title": "余超颖 2024 演唱会 · 专职摄影／整场照片直播"
   },
   {
     "id": "still-02",
@@ -80,20 +80,12 @@ export const STUDIO_PHOTOS = [
     "title": "开心麻花《捞金晚宴》官方剧照 · 03"
   },
   {
-    "id": "concert-01",
-    "src": "/assets/photos/yu-chaoying-concert/concert-01.jpeg",
-    "medium": "/assets/photos/studio-wall/concert-01.webp",
-    "width": 698,
-    "height": 960,
-    "title": "余超颖 2024 巡演成都站图片直播入口"
-  },
-  {
     "id": "concert-05",
     "src": "/assets/photos/yu-chaoying-concert/concert-05.jpeg",
     "medium": "/assets/photos/studio-wall/concert-05.webp",
     "width": 768,
     "height": 432,
-    "title": "余超颖巡演现场双人合影"
+    "title": "余超颖 2024 演唱会 · 专职摄影／整场照片直播"
   },
   {
     "id": "product-01",
@@ -135,8 +127,7 @@ export const STUDIO_WRITINGS = [
   heading:'刊发节选',excerpt:'内景 · 医院取药处 · 日\n刘芳走向医院取药处，轻车熟路。一位陌生女人叫住了刘芳，拿出一张白色的取药单询问。\n陌生女人：你好，请问一下，这个药，我应该去哪儿取？\n刘芳接过取药单，扫视了一遍。\n刘芳：前几种都好说，拿好发票，就在这儿取。最后一个有点儿特殊，得在老年康复中心楼下取药的地方取。',
   href:'https://kns.cnki.net/kcms2/article/abstract?v=u5lPRpBnolhv9qeJutXVDUw1Dol1-oTZaWJNXER-sVB_BrLXaGnExj0MKKMG1wxNU2l-IRjUudiz0XVDXnjf-iHKavMN5yMcmoHpm3PWutNYZ-Z63j5eidvtQ90NbK8sxwQ39fWWzxBd7fCvD5lXKezO4s8W_xXkuyTB1QzEthQPkBjxaP5d3Q==',action:'查看知网原文'},
  {id:'regrets',title:'后悔药集锦',kind:'校园图文',subtitle:'如果重回大一，你绝对不会做什么？',color:'#718371',lines:['校园图文','如果重回大一，','你绝对不会做什么？'],heading:'校园记录',excerpt:'后悔药集锦\n如果重回大一，你绝对不会做什么？\n\n打开下方发布入口，阅读完整图文。',href:'https://mp.weixin.qq.com/s/BHc32suL-MCH5DTRKuSvqQ',action:'阅读微信原文'},
- {id:'zhou',title:'当铁花遇上直播间',kind:'非遗报道',subtitle:'周家刀如何「锻」出非遗新生',color:'#616d78',lines:['非遗报道','周家刀如何「锻」出非遗新生','人物与手艺的记录'],heading:'非遗与传播',excerpt:'当铁花遇上直播间\n周家刀如何「锻」出非遗新生\n\n打开下方发布入口，阅读完整报道。',href:'https://mp.weixin.qq.com/s/kVI3RlZmvkxI9FCXlhtOtw',action:'阅读微信原文'},
  {id:'rumor',title:'危机事件中的谣言传播',kind:'传播研究',subtitle:'《中国报业》2023 年第 16 期 · 78–79 页',color:'#74647d',lines:['新媒体视域下危机事件谣言传播分析','——以胡鑫宇事件为例','罗叶馨梅、牟子蕴','《中国报业》2023 (16)：78–79','DOI: 10.13854/j.cnki.cni.2023.16.026'],heading:'论文摘要',excerpt:'如今，新媒体平台已成为突发社会事件的信息集散地，助推了相关信息的快速广泛传播。因其敏感性，突发社会事件极易引发网民的围观和讨论，一些媒体为获取流量，不顾事实发布相关信息，导致谣言产生进而引发舆论危机。本文以胡鑫宇事件为例，分析危机事件中谣言的传播条件和传播机制。\n\n关键词：新媒体；信息；谣言；传播',href:'https://kns.cnki.net/kcms2/article/abstract?v=u5lPRpBnoljJp1M_xhy6ukq_D5gYXTGgHDxQGOQdEfdVyA4zqMDObiQ-C77WH-6AMuAKFtvXLm3GIVCBAFlFq2Z6sQrp3Y_QcbvnHL6qIjILPkTF5sL3Atvul2wdppOsJMuyvVgoJBowtnTsF5UsT7Y4HAOax9anFdHd4knyJQ6jiFdVVYrk2g==',action:'查看知网原文'},
 ] as const;
-export const STUDIO_VIDEO = {title:'周家刀',subtitle:'当 1600℃ 铁花遇上直播间',poster:'/assets/video/zhoujiadao/poster.png',clips:[{title:'手艺人访谈',src:'/assets/video/zhoujiadao/craft-and-inheritance.mp4',duration:73.584},{title:'直播与工坊',src:'/assets/video/zhoujiadao/livestream-and-workshop.mp4',duration:109.157}],href:'https://mp.weixin.qq.com/s/kVI3RlZmvkxI9FCXlhtOtw',action:'查看相关报道'};
+export const STUDIO_VIDEO = {title:'周家刀',subtitle:'当 1600℃ 铁花遇上直播间',poster:'/assets/video/zhoujiadao/poster.png',clips:[{title:'手艺人访谈',src:'/assets/video/zhoujiadao/craft-and-inheritance.mp4',duration:73.584},{title:'直播与工坊',src:'/assets/video/zhoujiadao/livestream-and-workshop.mp4',duration:109.157}],href:'https://mp.weixin.qq.com/s/kVI3RlZmvkxI9FCXlhtOtw',action:'查看微信公众号推文'};
 export type RoomZone='photography'|'writing'|'video';

@@ -187,13 +187,13 @@ export function PortfolioStudio(){
     </>}
 
     {room&&<>
-      <aside className='studio-room-title'><h1>{room.zone==='photography'?'摄影记录':room.zone==='writing'?'文字作品':STUDIO_VIDEO.title}</h1><p>{room.zone==='photography'?'人像 · 剧场 · 现场 · 商业':room.zone==='writing'?'剧本、报道与传播研究':STUDIO_VIDEO.subtitle}</p></aside>
+      <aside className='studio-room-title'><h1>{room.zone==='photography'?'摄影记录':room.zone==='writing'?'文字作品':STUDIO_VIDEO.title}</h1><p>{room.zone==='photography'?'人像 · 剧场 · 现场 · 商业':room.zone==='writing'?'剧本、校园图文与传播研究':STUDIO_VIDEO.subtitle}</p></aside>
       {room.zone==='writing'&&room.itemIndex===null&&<nav className='studio-a11y-nav' aria-label='选择文字作品'>{STUDIO_WRITINGS.map((item,index)=><button key={item.id} onClick={()=>selectRoomItem(index)}><span>{item.kind}</span>{item.title}</button>)}</nav>}
       {room.zone==='writing'&&room.itemIndex===null&&<p className='studio-aigc-collection-hint'>选择一本书<span>展开刊发节选与作品档案</span></p>}
       {writing&&<nav className='studio-aigc-hud studio-room-hud' aria-label='文字作品浏览'><button aria-label='上一篇作品' onClick={()=>navigateAigcProject(-1)}>←</button><div className='studio-aigc-caption'><span>{writing.subtitle}</span><strong>{writing.title}</strong><small><a className='studio-aigc-action' target='_blank' rel='noopener noreferrer' href={writing.href}>{writing.action} ↗</a></small></div><button aria-label='下一篇作品' onClick={()=>navigateAigcProject(1)}>→</button></nav>}
       {room.zone==='photography'&&<nav className='studio-aigc-hud studio-room-hud' aria-label='照片浏览'>
        {(room.itemIndex!==null||isMobile)&&<button aria-label='上一张照片' onClick={()=>navigateAigcProject(-1)}>←</button>}
-       <div className='studio-aigc-caption'><span>{room.itemIndex===null?'PHOTOGRAPHY · 16 PHOTOGRAPHS':`${room.itemIndex+1} / ${STUDIO_PHOTOS.length}`}</span><strong>{room.itemIndex===null?'点选照片，靠近观看':STUDIO_PHOTOS[room.itemIndex].title}</strong><small>{roomTextureError?<button className='studio-texture-retry' onClick={()=>{setRoomTextureError(false);window.dispatchEvent(new Event('studio:retry-textures'));}}>图片加载失败 · 重试</button>:room.itemIndex===null?(isMobile?`第 ${room.page+1} / 3 组 · 左右滑动切换`:'从洞洞板延展的影像记录'):'左右滑动或使用方向键切换'}</small></div>
+       <div className='studio-aigc-caption'><span>{room.itemIndex===null?`PHOTOGRAPHY · ${STUDIO_PHOTOS.length} PHOTOGRAPHS`:`${room.itemIndex+1} / ${STUDIO_PHOTOS.length}`}</span><strong>{room.itemIndex===null?'点选照片，靠近观看':STUDIO_PHOTOS[room.itemIndex].title}</strong><small>{roomTextureError?<button className='studio-texture-retry' onClick={()=>{setRoomTextureError(false);window.dispatchEvent(new Event('studio:retry-textures'));}}>图片加载失败 · 重试</button>:room.itemIndex===null?(isMobile?`第 ${room.page+1} / 3 组 · 左右滑动切换`:'从洞洞板延展的影像记录'):'左右滑动或使用方向键切换'}</small></div>
        {(room.itemIndex!==null||isMobile)&&<button aria-label='下一张照片' onClick={()=>navigateAigcProject(1)}>→</button>}
       </nav>}
       {room.zone==='video'&&<StudioVideoControls/>}
