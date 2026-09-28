@@ -13,13 +13,13 @@ async function click(page,key){const p=(await q(page)).points[key];assert(p,`Mis
 const back=page=>page.getByRole('button',{name:'返回上一步'}).click();
 const shot=(page,name)=>page.screenshot({path:`${out}/${name}.png`});
 async function open(page){page.setDefaultTimeout(60000);page.on('pageerror',e=>report.errors.push(e.message));await page.goto(`${base}/portfolio?qa=1`);await page.waitForFunction(()=>document.documentElement.dataset.studioReady==='true');await stable(page,'idle');await page.waitForTimeout(800);}
-async function inspectFits(page){const state=await q(page),paper=state.director.papers[state.studioState.activeItemIndex];
+async function inspectFits(page){await page.waitForFunction(()=>{const c=document.querySelector('canvas');const expected=Math.max(1,Math.min(devicePixelRatio,3,Math.sqrt(8_000_000/(innerWidth*innerHeight))));return Math.abs(c.width/c.clientWidth-expected)<.01;});const state=await q(page),paper=state.director.papers[state.studioState.activeItemIndex];
  const box=await page.evaluate(()=>({width:innerWidth,height:innerHeight,top:document.querySelector('.studio-aigc-project-note').getBoundingClientRect().bottom,bottom:document.querySelector('.studio-aigc-hud').getBoundingClientRect().top}));
  for(const [x,y] of paper.corners){const px=(x*.5+.5)*box.width,py=(-y*.5+.5)*box.height;assert(px>8&&px<box.width-8,`horizontal crop ${px}`);assert(py>box.top+5&&py<box.bottom-5,`vertical crop/metadata overlap ${py} ${JSON.stringify(box)}`);}
  const [[x1,y1],[x2],[,y2]]=paper.corners;const screenAspect=Math.abs((x2-x1)*box.width/((y2-y1)*box.height));assert(Math.abs(screenAspect-paper.width/paper.height)<.01,`Distorted paper ${screenAspect}`);
- assert.equal(paper.textureWidth,2048,'Inspect must display actual high-resolution texture');
+ assert.equal(paper.textureWidth,paper.id==='xiaohongshu'?2552:paper.id==='zhihu'?2940:2048,'Inspect must display the source-resolution texture');
 }
-async function waitHires(page){await page.waitForFunction(()=>{const q=window.__STUDIO_QA__;return q.director.papers[q.studioState.activeItemIndex].textureWidth===2048;});}
+async function waitHires(page){await page.waitForFunction(()=>{const q=window.__STUDIO_QA__;const paper=q.director.papers[q.studioState.activeItemIndex];return paper.textureWidth===(paper.id==='xiaohongshu'?2552:paper.id==='zhihu'?2940:2048);});}
 async function stopped(page){await page.waitForTimeout(500);const a=(await q(page)).frames;await page.waitForTimeout(600);assert.equal((await q(page)).frames,a,'Demand rendering did not stop');}
 try{
  const context=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:2});const page=await context.newPage();current=page;await open(page);

@@ -166,7 +166,10 @@ export function PortfolioStudio(){
 
   const aigcActive=studioState.mode!=='idle'||studioState.phase==='leaving';
   const [isMobile,setIsMobile]=useState(false);
-  useEffect(()=>{const query=window.matchMedia('(max-width:700px)');const sync=()=>setIsMobile(query.matches);sync();query.addEventListener('change',sync);return()=>query.removeEventListener('change',sync);},[]);
+  const [readingDpr,setReadingDpr]=useState(1);
+  // Motion keeps the economical buffer; a settled artwork gets screen-density pixels.
+  // Bound unusually large displays to eight million pixels, then demand rendering stops.
+  useEffect(()=>{const sync=()=>{setIsMobile(window.innerWidth<=700);setReadingDpr(Math.max(1,Math.min(window.devicePixelRatio||1,3,Math.sqrt(8_000_000/(window.innerWidth*window.innerHeight)))));};sync();window.addEventListener('resize',sync);return()=>window.removeEventListener('resize',sync);},[]);
   const content=collectionContent(studioState.mode==='inspect'?studioState.collectionId:'red-leaf');
   const currentItem=content.items[studioState.mode==='inspect'?studioState.activeItemIndex:content.initialIndex];
   return <section className={'studio-shell'+(exhibitVisible?' is-exhibiting':'')} aria-label='三维作品集工作台' data-studio-mode={studioState.mode} data-studio-phase={studioState.phase??'stable'}>
@@ -177,7 +180,7 @@ export function PortfolioStudio(){
 
     <div className='studio-canvas-wrap' aria-hidden={exhibitVisible}>
       <SceneBoundary onError={()=>setReady(true)}>
-        <Canvas frameloop='demand' shadows dpr={isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
+        <Canvas frameloop='demand' shadows dpr={studioState.mode==='inspect'&&studioState.phase==='stable'?readingDpr:isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
           <Suspense fallback={null}><StudioScene selected={selected} studioState={studioState} onSelect={openZone} onSelectFolder={selectAigcFolder} onSelectInspect={selectAigcInspect} onProjectNavigate={navigateAigcProject} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
         </Canvas>
       </SceneBoundary>
