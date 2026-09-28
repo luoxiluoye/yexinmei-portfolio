@@ -8,18 +8,27 @@ export const WORK_IMAGES=[
  '/assets/photos/portrait/yexinmei-frame-v5.jpg',
 ];
 
+/** Real visual-project assets. The order is part of the stable scene manifest. */
+export const AIGC_IMAGES=[
+ '/assets/projects/red-leaf/medium/landing-hero-medium.png',
+ '/assets/projects/red-leaf/medium/gameplay-scene-medium.png',
+ '/assets/projects/red-leaf/medium/gameplay-choice-medium.png',
+ '/assets/projects/red-leaf/medium/library-medium.png',
+ '/assets/projects/red-leaf/medium/story-modal-medium.png',
+ '/assets/projects/personal-social/xiaohongshu/medium/profile-medium.png',
+ '/assets/projects/personal-social/zhihu/medium/profile-medium.png',
+];
+export const STUDIO_IMAGES=WORK_IMAGES;
+export const AIGC_HIRES=['/assets/projects/red-leaf/landing-hero-hires.png','/assets/projects/red-leaf/gameplay-scene-hires.png','/assets/projects/red-leaf/gameplay-choice-hires.png','/assets/projects/red-leaf/library-hires.png','/assets/projects/red-leaf/story-modal-hires.png','/assets/projects/personal-social/xiaohongshu/profile-hires.png','/assets/projects/personal-social/zhihu/profile-hires.png'];
+
+
 export type AigcFolderId='red-leaf'|'social';
-export type AigcItemId='gameplay-scene';
+export type AigcItemId='landing-hero'|'gameplay-scene'|'gameplay-choice'|'story-library'|'story-modal'|'xiaohongshu'|'zhihu';
+export type AigcPaperModel={id:AigcItemId;root:T.Group;home:T.Vector3;imageIndex:number;imagePath:string;hiresPath:string;title:string;surface:T.Mesh|null;texture?:T.Texture};
 export type AigcFolderModel={
- id:AigcFolderId;
- root:T.Group;
- hit:T.Mesh;
- body:T.Group;
- coverPivot:T.Group;
- paperStack:T.Group;
- heroPaper:T.Group|null;
- home:T.Vector3;
- enabled:boolean;
+ id:AigcFolderId;root:T.Group;hit:T.Mesh;body:T.Group;coverPivot:T.Group;paperStack:T.Group;
+ papers:AigcPaperModel[];heroPaper:T.Group|null;home:T.Vector3;enabled:boolean;
+ title:string;subtitle:string;count:number;
 };
 export type AigcModel={staticRoot:T.Group;dynamicRoot:T.Group;folders:Record<AigcFolderId,AigcFolderModel>};
 
@@ -152,28 +161,37 @@ export function createWorkbench(images:T.Texture[]){
  d.mesh(upperStatic,d.own(new T.ExtrudeGeometry(lip,{depth:.057,bevelEnabled:true,bevelSegments:3,bevelSize:.023,bevelThickness:.018,curveSegments:10})),p.ivory,[0,0,.43]);
  for(let i=0;i<5;i++)book(upperStatic,[.14+i*.126,-.98,.28],.112,1.14+(i%2)*.04,.45,i%2?'#d8cfbf':'#eee6d6','');
  const small=group(upperStatic,[1.0,-.41,.40]);d.box(small,[0,0,0],[.56,.75,.021],p.paper,.007);plane(small,[0,0,.016],.47,.61,artm[1]);
- const makeAigcFolder=(id:AigcFolderId,pos:V,enabled:boolean,texture:T.Texture|null):AigcFolderModel=>{
+ const makeAigcFolder=(id:AigcFolderId,pos:V,enabled:boolean,papersManifest:{id:AigcItemId;imageIndex:number;title:string}[]):AigcFolderModel=>{
   const rootFolder=group(upperDynamic,pos);rootFolder.name=id==='red-leaf'?'VisualFolderRedLeaf':'VisualFolderSocial';rootFolder.userData={aigcFolder:id,noBatch:true};
-  const body=group(rootFolder);body.name='folder body';
+  const body=group(rootFolder);body.name='folder body';body.userData.noBatch=true;
   const folderMat=id==='red-leaf'?p.red:p.blueDark;d.box(body,[0,0,0],[1.02,1.34,.14],folderMat,.045);
   d.box(body,[0,-.62,.06],[.96,.12,.16],folderMat,.025);
   const coverPivot=group(rootFolder,[0,-.67,.12]);coverPivot.name='folder front cover pivot';coverPivot.userData.noBatch=true;
   d.box(coverPivot,[0,.67,.02],[1.02,1.34,.075],folderMat,.045);
   const paperStack=group(rootFolder,[0,.02,.105]);paperStack.name='paper stack';paperStack.userData.noBatch=true;
-  for(let i=0;i<3;i++)d.box(paperStack,[0,.015+i*.013,0],[.88,1.15,.022],p.paper,.012);
-  let heroPaper:T.Group|null=null;
-  if(texture){
-   heroPaper=group(rootFolder,[0,.05,.145]);heroPaper.name='hero paper';heroPaper.userData={aigcItem:'gameplay-scene',noBatch:true};
-   const image=texture.image as {width?:number;height?:number};const aspect=(image.width&&image.height)?image.width/image.height:1.78;const w=1.48,h=w/aspect;
-   d.box(heroPaper,[0,0,0],[w,h,.035],p.paper,.008);plane(heroPaper,[0,0,.021],w-.024,h-.024,d.photoMaterial(texture,w/h));
-  }
+  for(let i=0;i<Math.max(3,papersManifest.length);i++)d.box(paperStack,[0,.015+i*.013,0],[.88,1.15,.022],p.paper,.012);
+  const papers:AigcPaperModel[]=papersManifest.map((item,index)=>{
+   const paper=group(rootFolder,[0,.05,.145]);paper.name=`paper ${item.id}`;paper.userData={aigcItem:item.id,noBatch:true};
+   const texture=images[item.imageIndex]??d.canvas((c,w,h)=>{c.fillStyle='#eee8dc';c.fillRect(0,0,w,h);c.strokeStyle='rgba(145,117,94,.22)';c.strokeRect(1,1,w-2,h-2);},4,4);
+   let surface:T.Mesh|null=null;
+   const image=texture?.image as {width?:number;height?:number}|undefined;const aspect=(image?.width&&image?.height)?image.width/image.height:1.5;const w=id==='red-leaf' ? .98 : .84,h=w/aspect;
+   d.box(paper,[0,0,0],[w,h,.035],p.paper,.008);
+   surface=plane(paper,[0,0,.021],w-.024,h-.024,d.photoMaterial(texture,w/h));
+   paper.visible=false;return {id:item.id,root:paper,home:new T.Vector3(0,.05,.145),imageIndex:item.imageIndex,imagePath:AIGC_IMAGES[item.imageIndex-8],hiresPath:AIGC_HIRES[item.imageIndex-8],title:item.title,surface};
+  });
+  const heroPaper=papers[0]?.root??null;if(heroPaper)heroPaper.name='hero paper';
   const hit=d.mesh(rootFolder,d.own(new T.BoxGeometry(1.18,1.5,.55)),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),[0,.04,.18]);
   d.materials.add(hit.material);hit.userData={aigcFolder:id,noBatch:true};hit.castShadow=false;hit.receiveShadow=false;
-  return {id,root:rootFolder,hit,body,coverPivot,paperStack,heroPaper,home:new T.Vector3(...pos),enabled};
+  return {id,root:rootFolder,hit,body,coverPivot,paperStack,papers,heroPaper,home:new T.Vector3(...pos),enabled,title:id==='red-leaf'?'RED LEAF':'PERSONAL SOCIAL',subtitle:id==='red-leaf'?'赤页':'个人内容视觉',count:papers.length};
  };
  const aigcFolders={
-  'red-leaf':makeAigcFolder('red-leaf',[-.62,.03,-.50],true,images[6]),
-  social:makeAigcFolder('social',[.64,.03,-.49],false,null),
+  'red-leaf':makeAigcFolder('red-leaf',[-.62,.03,-.50],true,[
+   {id:'landing-hero',imageIndex:8,title:'LANDING HERO'},{id:'gameplay-scene',imageIndex:9,title:'GAMEPLAY SCENE'},
+   {id:'gameplay-choice',imageIndex:10,title:'CHOICE INTERFACE'},{id:'story-library',imageIndex:11,title:'STORY LIBRARY'},{id:'story-modal',imageIndex:12,title:'STORY MODAL'},
+  ]),
+  social:makeAigcFolder('social',[.64,.03,-.49],true,[
+   {id:'xiaohongshu',imageIndex:13,title:'XIAOHONGSHU'},{id:'zhihu',imageIndex:14,title:'ZHIHU'},
+  ]),
  } satisfies Record<AigcFolderId,AigcFolderModel>;
 
  const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';

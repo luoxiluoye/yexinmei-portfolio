@@ -10,3 +10,22 @@
 .studio-aigc-hud button{border:1px solid rgba(95,78,60,.26);border-radius:999px;background:#f5eee3;color:#4f463d;padding:.3rem .62rem;font:inherit;cursor:pointer}
 .studio-aigc-hud button:hover,.studio-aigc-hud button:focus-visible{background:#fffaf2;outline:2px solid rgba(168,111,64,.45);outline-offset:2px}
 @media (max-width:700px){.studio-aigc-hud{bottom:5.8rem;font-size:.66rem}.studio-aigc-hud span{max-width:10rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+
+/* AIGC stays in the same world: controls disappear while the director owns the camera. */
+.studio-shell[data-studio-mode='focus'] .studio-view-controls,
+.studio-shell[data-studio-mode='collection'] .studio-view-controls,
+.studio-shell[data-studio-mode='project'] .studio-view-controls,
+.studio-shell[data-studio-mode='inspect'] .studio-view-controls,
+.studio-view-controls.is-hidden{display:none}
+.studio-shell[data-studio-mode='focus'] .studio-canvas-wrap canvas,
+.studio-shell[data-studio-mode='collection'] .studio-canvas-wrap canvas,
+.studio-shell[data-studio-mode='project'] .studio-canvas-wrap canvas,
+.studio-shell[data-studio-mode='inspect'] .studio-canvas-wrap canvas{filter:brightness(.88) saturate(.88)}
+.studio-aigc-hud{bottom:max(24px,env(safe-area-inset-bottom));background:rgba(246,241,232,.88);backdrop-filter:blur(4px);box-shadow:0 8px 24px rgba(69,54,39,.13)}
+.studio-aigc-index{padding-left:.65rem;border-left:1px solid rgba(95,78,60,.22);font-variant-numeric:tabular-nums;color:#796958}
+.studio-aigc-labels{position:absolute;right:clamp(20px,8vw,150px);top:clamp(22%,28vh,34%);z-index:8;display:grid;gap:10px;pointer-events:none;color:#4f463d;font:11px/1.35 'PingFang SC','Microsoft YaHei',sans-serif;letter-spacing:.08em}
+.studio-aigc-labels>div,.studio-aigc-project-note{display:grid;gap:3px;padding:8px 11px;border-left:2px solid rgba(157,69,55,.68);background:rgba(246,241,232,.78);box-shadow:0 6px 18px rgba(69,54,39,.08)}
+.studio-aigc-labels>div:nth-child(2){border-left-color:rgba(84,108,120,.68)}
+.studio-aigc-labels span,.studio-aigc-project-note span{font-size:10px;letter-spacing:.02em;color:#7c6f62}
+.studio-aigc-project-note{position:absolute;left:clamp(20px,6vw,100px);top:clamp(18%,24vh,30%);z-index:8;pointer-events:none}
+@media(max-width:700px){.studio-shell[data-studio-mode='focus'] .studio-canvas-wrap canvas,.studio-shell[data-studio-mode='collection'] .studio-canvas-wrap canvas,.studio-shell[data-studio-mode='project'] .studio-canvas-wrap canvas,.studio-shell[data-studio-mode='inspect'] .studio-canvas-wrap canvas{filter:brightness(.92) saturate(.9)}.studio-aigc-labels{right:16px;top:22%;gap:7px;font-size:9px}.studio-aigc-labels>div{padding:6px 8px}.studio-aigc-project-note{left:16px;top:19%;font-size:10px}.studio-aigc-hud{max-width:calc(100vw - 32px);white-space:nowrap}}

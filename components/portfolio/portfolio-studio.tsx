@@ -88,25 +88,44 @@ export function PortfolioStudio(){
     window.history.replaceState({portfolioExhibit:true},'',portfolioUrl('#'+id));
   }
 
-  function selectAigcItem(folderId:string){
-    if(studioState.mode!=='collection')return;
-    const itemId=folderId==='red-leaf'?'gameplay-scene':folderId;
-    const next:StudioState={mode:'item',zone:'aigc',collectionId:'red-leaf',itemId,phase:'entering'};
-    setStudioState(next);window.history.pushState({portfolioAigc:'item'},'',portfolioUrl('#aigc/red-leaf/gameplay-scene'));
+  function selectAigcFolder(folderId:string){
+    if(studioState.mode!=='collection'||folderId!=='red-leaf')return;
+    const next:StudioState={mode:'project',zone:'aigc',collectionId:'red-leaf',activeItemIndex:1,phase:'entering'};
+    setStudioState(next);window.history.pushState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));
+  }
+
+  const RED_LEAF_ITEMS=['landing-hero','gameplay-scene','gameplay-choice','story-library','story-modal'];
+  function selectAigcInspect(itemId:string){
+    if(studioState.mode!=='project'||studioState.collectionId!=='red-leaf')return;
+    const activeItemIndex=Math.max(0,RED_LEAF_ITEMS.indexOf(itemId));
+    const next:StudioState={mode:'inspect',zone:'aigc',collectionId:'red-leaf',itemId,activeItemIndex,phase:'entering'};
+    setStudioState(next);window.history.replaceState({portfolioAigc:'inspect'},'',portfolioUrl(`#aigc/red-leaf/${itemId}`));
+  }
+
+  function navigateAigcProject(delta:number){
+    if(studioState.mode!=='project')return;
+    const activeItemIndex=(studioState.activeItemIndex+delta+RED_LEAF_ITEMS.length)%RED_LEAF_ITEMS.length;
+    const next={...studioState,activeItemIndex,phase:'stable'} as StudioState;
+    setStudioState(next);window.history.replaceState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));
   }
 
   function onDirectorMilestone(milestone:DirectorMilestone){
     setStudioState(previous=>{
       if(milestone==='idle')return IDLE_STATE;
       if(milestone==='collection'&&(previous.mode==='focus'||previous.mode==='collection'))return {mode:'collection',zone:'aigc',collectionId:'red-leaf',phase:'stable'};
-      if(milestone==='item'&&previous.mode==='item')return {...previous,phase:'stable'};
+      if(milestone==='project'&&previous.mode==='project')return {...previous,phase:'stable'};
+      if(milestone==='inspect'&&previous.mode==='inspect')return {...previous,phase:'stable'};
       return previous;
     });
   }
 
   function requestAigcBack(){
-    if(studioState.mode==='item'){
-      if(window.history.state?.portfolioAigc==='item')window.history.back();
+    if(studioState.mode==='inspect'){
+      const next:StudioState={mode:'project',zone:'aigc',collectionId:studioState.collectionId,activeItemIndex:studioState.activeItemIndex,phase:'leaving'};
+      setStudioState(next);window.history.replaceState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));return;
+    }
+    if(studioState.mode==='project'){
+      if(window.history.state?.portfolioAigc==='project')window.history.back();
       else{setStudioState({mode:'collection',zone:'aigc',collectionId:'red-leaf',phase:'leaving'});window.history.replaceState({portfolioAigc:'collection'},'',portfolioUrl('#aigc'));}
       return;
     }
@@ -131,6 +150,8 @@ export function PortfolioStudio(){
   }
 
   const aigcActive=studioState.mode!=='idle'||studioState.phase==='leaving';
+  const [isMobile,setIsMobile]=useState(false);
+  useEffect(()=>{const query=window.matchMedia('(max-width:700px)');const sync=()=>setIsMobile(query.matches);sync();query.addEventListener('change',sync);return()=>query.removeEventListener('change',sync);},[]);
   return <section className={'studio-shell'+(exhibitVisible?' is-exhibiting':'')} aria-label='三维作品集工作台' data-studio-mode={studioState.mode} data-studio-phase={studioState.phase??'stable'}>
     <header className='studio-topbar'>
       <Link className='studio-brand' href='/' aria-label='罗叶馨梅，返回个人主页'>LUO YEXINMEI<span aria-hidden='true'>●</span></Link>
@@ -139,15 +160,15 @@ export function PortfolioStudio(){
 
     <div className='studio-canvas-wrap' aria-hidden={exhibitVisible}>
       <SceneBoundary onError={()=>setReady(true)}>
-        <Canvas frameloop='demand' shadows dpr={[1,1.5]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
-          <Suspense fallback={null}><StudioScene selected={selected} studioState={studioState} onSelect={openZone} onSelectItem={selectAigcItem} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
+        <Canvas frameloop='demand' shadows dpr={isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:false,alpha:false,powerPreference:'high-performance'}}>
+          <Suspense fallback={null}><StudioScene selected={selected} studioState={studioState} onSelect={openZone} onSelectFolder={selectAigcFolder} onSelectInspect={selectAigcInspect} onProjectNavigate={navigateAigcProject} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
         </Canvas>
       </SceneBoundary>
     </div>
 
     {!ready&&<div className='studio-loading' role='status'><span aria-hidden='true'/><p>正在打开作品集</p></div>}
 
-    <div className='studio-view-controls'>
+    <div className={'studio-view-controls'+(aigcActive?' is-hidden':'')}>
       <span>拖动旋转 · 点亮区域查看作品</span>
       <button type='button' onClick={()=>window.dispatchEvent(new Event('studio:reset'))} aria-label='恢复工作台正面视角' title='恢复正面视角'>
         <svg width='17' height='17' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.6' aria-hidden='true'><path d='M4 10a8 8 0 1 1 1.7 7.4M4 4v6h6'/></svg>
@@ -165,7 +186,12 @@ export function PortfolioStudio(){
     {aigcActive&&<div className='studio-aigc-hud' role='status' aria-live='polite'>
       <button type='button' onClick={requestAigcBack} aria-label='返回上一步'>返回</button>
       <span>{studioStateLabel(studioState)}</span>
+      {studioState.mode==='project'&&<span className='studio-aigc-index'>{String(studioState.activeItemIndex+1).padStart(2,'0')} / 05</span>}
+      {studioState.mode==='inspect'&&<span className='studio-aigc-index'>ESC 返回项目</span>}
     </div>}
+
+    {studioState.mode==='collection'&&<div className='studio-aigc-labels' aria-label='视觉项目'><div><b>RED LEAF</b><span>赤页 · 5 WORKS</span></div><div><b>PERSONAL SOCIAL</b><span>个人内容视觉 · 2 WORKS</span></div></div>}
+    {studioState.mode==='project'&&<div className='studio-aigc-project-note'><b>赤页</b><span>AI 互动叙事产品 · 横向浏览 5 张作品</span></div>}
 
     {exhibitVisible&&selected&&<PortfolioExhibitOverlay zone={selected} onZoneChange={switchZone} onClose={closeExhibit}/>}
   </section>;
