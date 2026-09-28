@@ -1,5 +1,5 @@
 import * as T from 'three';
-import {RED_LEAF_ITEMS} from '../aigc-content';
+import {collectionContent} from '../aigc-content';
 import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
 import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
@@ -176,7 +176,7 @@ export function createWorkbench(images:T.Texture[]){
   for(let i=0;i<Math.max(3,papersManifest.length);i++)d.box(paperStack,[0,.015+i*.013,0],[.88,1.15,.022],p.paper,.012);
   const papers:AigcPaperModel[]=papersManifest.map((item,index)=>{
    const paper=group(rootFolder,[0,.05,.145]);paper.name=`paper ${item.id}`;paper.userData={aigcItem:item.id,noBatch:true};
-   const aspect=id==='red-leaf'?2048/RED_LEAF_ITEMS[index].height:2;
+   const aspect=2048/collectionContent(id).items[index].height;
    const w=.98,h=w/aspect;
    d.box(paper,[0,0,0],[w+.024,h+.024,.018],p.paper,.004);
    const material=new T.MeshBasicMaterial({color:'#eee8dc',toneMapped:false});d.materials.add(material);
