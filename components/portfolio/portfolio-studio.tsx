@@ -31,7 +31,7 @@ export function PortfolioStudio(){
   const [roomTextureError,setRoomTextureError]=useState(false);
   useEffect(()=>{const fail=()=>setRoomTextureError(true);window.addEventListener('studio:room-texture-error',fail);return()=>window.removeEventListener('studio:room-texture-error',fail);},[]);
   const [ready,setReady]=useState(false);
-  const [lampOn,setLampOn]=useState(false);
+  const [lampOn,setLampOn]=useState(true);
   useEffect(()=>{const update=(event:Event)=>setLampOn((event as CustomEvent<boolean>).detail);window.addEventListener('studio:lamp-status',update);return()=>window.removeEventListener('studio:lamp-status',update);},[]);
   const [textureStatus,setTextureStatus]=useState<Record<string,string>>({});
   useEffect(()=>{const update=(event:Event)=>{const {id,status}=(event as CustomEvent<{id:string;status:string}>).detail;setTextureStatus(previous=>({...previous,[id]:status}));};window.addEventListener('studio:texture-status',update);return()=>window.removeEventListener('studio:texture-status',update);},[]);

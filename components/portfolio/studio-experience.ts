@@ -18,7 +18,7 @@ export class StudioExperience{
  private rig=new T.Group();
  private environment:T.WebGLRenderTarget;private previousEnvironment:T.Texture|null;private previousEnvironmentIntensity:number;
  private highlights={} as Record<ZoneId,{amount:number;rim:T.MeshBasicMaterial;halo:T.ShaderMaterial;light:T.PointLight;dot:T.MeshStandardMaterial}>;
- private pendantLights:T.Light[]=[];private pendantPower:number[]=[];private lampOn=false;private lampLevel=0;
+ private pendantLights:T.Light[]=[];private pendantPower:number[]=[];private lampOn=true;private lampLevel=1;
  private disposed=false;private ready=false;private frames=0;private raf:number|null=null;private width=1;private height=1;private ratio=1;
  private yaw=0;private pitch=0;private requestedYaw=0;private requestedPitch=0;private hover:ZoneId|null=null;private selected:ZoneId|null=null;
  private studioState:StudioState={mode:'idle',phase:'stable'};private director:StudioDirector;private roomDirector:StudioRoomDirector;private videoPlayer:StudioVideoPlayer;private frameTimes:number[]=[];private lastStage='';private lastFrameAt=0;private wasAnimating=false;private wheelAt=0;
@@ -41,7 +41,7 @@ export class StudioExperience{
   const canvas=gl.domElement;this.previousCursor=canvas.style.cursor;this.previousTouchAction=canvas.style.touchAction;canvas.style.touchAction='none';canvas.style.cursor='grab';
   canvas.addEventListener('pointerdown',this.pointerDown);canvas.addEventListener('pointermove',this.pointerMove);canvas.addEventListener('pointerup',this.pointerUp);canvas.addEventListener('pointercancel',this.pointerCancel);canvas.addEventListener('pointerleave',this.pointerLeave);canvas.addEventListener('lostpointercapture',this.lostCapture);
   window.addEventListener('studio:lamp-toggle',this.toggleLamp);window.addEventListener('blur',this.pointerCancel);window.addEventListener('studio:reset',this.reset);window.addEventListener('studio:retry-textures',this.retryTextures);window.addEventListener('keydown',this.keyDown,true);canvas.addEventListener('wheel',this.wheel,{passive:false});this.motionQuery.addEventListener('change',this.motionChange);
-  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:false,color:'#ffe0b2',intensity:0}};window.addEventListener('studio:qa-pendant',this.qaPendant);window.addEventListener('studio:qa-progress',this.qaProgress);}
+  if(this.qa){let meshes=0,triangles=0;this.model.root.traverse(o=>{if(o instanceof T.Mesh&&!o.userData.noBatch){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3*(o instanceof T.InstancedMesh?o.count:1);}});window.__STUDIO_QA__={stats:{version:VERSION,meshes,triangles,chair:this.model.root.userData.chair},points:{},frames:0,view:{yaw:0,pitch:0,dragging:false,camera:[]},highlights:{},lighting:{pendantOn:true,color:'#ffe0b2',intensity:18}};window.addEventListener('studio:qa-pendant',this.qaPendant);window.addEventListener('studio:qa-progress',this.qaProgress);}
   this.invalidate();
  }
  private retryTextures=()=>{this.director.retryTextures();this.roomDirector.retryTextures();};
@@ -53,13 +53,13 @@ export class StudioExperience{
   add(new T.AmbientLight('#edf4ff',.12));add(new T.HemisphereLight('#e6efff','#d3b89e',.30));
   const key=new T.DirectionalLight('#fff5e8',1.25);add(key,[-3.8,7,5]);key.castShadow=true;key.shadow.mapSize.set(2048,2048);Object.assign(key.shadow.camera,{left:-8,right:8,top:8,bottom:-5,near:.1,far:26});key.shadow.bias=-.0002;key.shadow.normalBias=.02;key.shadow.radius=4;key.shadow.blurSamples=6;key.shadow.intensity=.72;
   add(new T.DirectionalLight('#d7e8ff',.30),[5,3,5]);
-  const spot=(pos:[number,number,number],target:[number,number,number],power:number,angle:number)=>{const light=new T.SpotLight('#ffe0b2',power,12,angle,.92,2);light.position.set(...pos);light.target.position.set(...target);this.rig.add(light,light.target);this.pendantLights.push(light);return light;};
-  // Broad warm wash on the board; a separate downward source illuminates the desk.
-  spot([0,5.30,.26],[0,1.40,-.64],46,.66);spot([0,5.295,.29],[0,0,.79],90,.62);
+  const spot=(pos:[number,number,number],target:[number,number,number],power:number,angle:number,penumbra:number)=>{const light=new T.SpotLight('#ffe0b2',power,12,angle,penumbra,2);light.position.set(...pos);light.target.position.set(...target);this.rig.add(light,light.target);this.pendantLights.push(light);return light;};
+  // Wide, feathered lamp cones reach both side cabinets and the desk without raising global exposure.
+  spot([0,5.30,.26],[0,1.80,-.64],18,1.42,.55);spot([0,5.295,.29],[0,0,2.80],70,1.10,.65);
   const spill=new T.PointLight('#ffd7a3',.08,2.7,2);add(spill,[0,5.30,.26]);this.pendantLights.push(spill);
   add(new T.PointLight('#ffd69b',2.25,3.5,2),[-4.98,1.42,.81]);add(new T.PointLight('#ffe3ae',.35,1.3,2),[-2.95,2.4,.2]);
   for(const material of this.model.geometry.materials){if(material instanceof T.MeshStandardMaterial&&material.emissiveIntensity===1.4){material.color.set('#ffdb9e');material.emissive.set('#ffcf8a');material.emissiveIntensity=2.0;material.needsUpdate=true;}}
-  this.pendantPower=this.pendantLights.map(light=>light.intensity);this.pendantLights.forEach(light=>light.intensity=0);
+  this.pendantPower=this.pendantLights.map(light=>light.intensity);this.pendantLights.forEach((light,index)=>light.intensity=this.pendantPower[index]*this.lampLevel);
   const sun=this.model.root.getObjectByName('Filtered window light');if(sun instanceof T.SpotLight)sun.intensity=45;
  }
  private createHighlights(){
