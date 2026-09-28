@@ -5,7 +5,9 @@ import {Component,Suspense,useEffect,useRef,useState,type ReactNode} from 'react
 import Link from 'next/link';
 import {StudioScene,type PortfolioZoneId} from './studio-scene';
 import {PortfolioExhibitOverlay,type ExhibitZone} from './portfolio-exhibit-overlay';
-import {IDLE_STATE,stateFromHash,studioDepth,studioStateLabel,type StudioState} from './studio-state';
+import {IDLE_STATE,stateFromHash,studioDepth,type StudioState} from './studio-state';
+import {RED_LEAF_ITEMS,RED_LEAF_URL} from './aigc-content';
+import {AIGC_HIRES} from './model/workbench';
 import type {DirectorMilestone} from './studio-director';
 import '../../styles/portfolio-interactions.css';
 
@@ -34,14 +36,18 @@ export function PortfolioStudio(){
   const [selected,setSelected]=useState<PortfolioZoneId|null>(null);
   const [exhibitVisible,setExhibitVisible]=useState(false);
   const [studioState,setStudioState]=useState<StudioState>(IDLE_STATE);
+  const stateRef=useRef(studioState);stateRef.current=studioState;
   const [ready,setReady]=useState(false);
+  const [textureStatus,setTextureStatus]=useState<Record<string,string>>({});
+  useEffect(()=>{const update=(event:Event)=>{const {id,status}=(event as CustomEvent<{id:string;status:string}>).detail;setTextureStatus(previous=>({...previous,[id]:status}));};window.addEventListener('studio:texture-status',update);return()=>window.removeEventListener('studio:texture-status',update);},[]);
 
   function clearTimer(){if(timer.current){clearTimeout(timer.current);timer.current=null;}}
 
   useEffect(()=>{
     function syncFromHistory(){
       clearTimer();
-      const aigc=stateFromHash(window.location.hash);
+      let aigc=stateFromHash(window.location.hash);
+      if(aigc.mode==='project'&&typeof window.history.state?.activeItemIndex==='number')aigc={...aigc,activeItemIndex:window.history.state.activeItemIndex};
       if(aigc.mode!=='idle'){
         setExhibitVisible(false);setSelected(null);setStudioState(previous=>({...aigc,phase:studioDepth(aigc)>studioDepth(previous)?'entering':'leaving'} as StudioState));return;
       }
@@ -57,18 +63,29 @@ export function PortfolioStudio(){
     const direct=zoneFromHash();
     const directAigc=stateFromHash(window.location.hash);
     if(directAigc.mode!=='idle')setStudioState(directAigc);
-    if(direct){
+    if(direct&&direct!=='aigc'){
       setSelected(direct);
       timer.current=setTimeout(()=>setExhibitVisible(true),180);
     }
+    const localRoute=window.location.pathname+window.location.search;
+    // next-view-transitions starts a document snapshot for every popstate. Our
+    // same-document hashes already have a reversible Three animation; a second
+    // transition can freeze pointer input (especially with reduced motion).
+    function onHistory(event:PopStateEvent){
+      const isLocal=window.location.pathname+window.location.search===localRoute;
+      const isAigc=stateRef.current.mode!=='idle'||window.location.hash.startsWith('#aigc');
+      if(isLocal&&isAigc){event.stopImmediatePropagation();syncFromHistory();}
+    }
+    window.addEventListener('popstate',onHistory,true);
     window.addEventListener('popstate',syncFromHistory);
     window.addEventListener('hashchange',syncFromHistory);
-    return()=>{clearTimer();window.removeEventListener('popstate',syncFromHistory);window.removeEventListener('hashchange',syncFromHistory);};
+    return()=>{clearTimer();window.removeEventListener('popstate',onHistory,true);window.removeEventListener('popstate',syncFromHistory);window.removeEventListener('hashchange',syncFromHistory);};
   },[]);
 
   function openZone(id:PortfolioZoneId){
     clearTimer();
     if(id==='aigc'){
+      if(studioState.mode!=='idle')return;
       setExhibitVisible(false);setSelected(null);setStudioState({mode:'focus',zone:'aigc',phase:'entering'});
       window.history.pushState({portfolioAigc:'collection'},'',portfolioUrl('#aigc'));return;
     }
@@ -91,27 +108,34 @@ export function PortfolioStudio(){
   function selectAigcFolder(folderId:string){
     if(studioState.mode!=='collection'||folderId!=='red-leaf')return;
     const next:StudioState={mode:'project',zone:'aigc',collectionId:'red-leaf',activeItemIndex:1,phase:'entering'};
-    setStudioState(next);window.history.pushState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));
+    setStudioState(next);window.history.pushState({portfolioAigc:'project',activeItemIndex:1},'',portfolioUrl('#aigc/red-leaf'));
   }
 
-  const RED_LEAF_ITEMS=['landing-hero','gameplay-scene','gameplay-choice','story-library','story-modal'];
   function selectAigcInspect(itemId:string){
-    if(studioState.mode!=='project'||studioState.collectionId!=='red-leaf')return;
-    const activeItemIndex=Math.max(0,RED_LEAF_ITEMS.indexOf(itemId));
+    if(studioState.mode!=='project'&&studioState.mode!=='inspect')return;
+    const activeItemIndex=RED_LEAF_ITEMS.findIndex(item=>item.id===itemId);if(activeItemIndex<0)return;
     const next:StudioState={mode:'inspect',zone:'aigc',collectionId:'red-leaf',itemId,activeItemIndex,phase:'entering'};
-    setStudioState(next);window.history.replaceState({portfolioAigc:'inspect'},'',portfolioUrl(`#aigc/red-leaf/${itemId}`));
+    if(studioState.mode==='project'){
+      window.history.replaceState({portfolioAigc:'project',activeItemIndex:studioState.activeItemIndex},'',portfolioUrl('#aigc/red-leaf'));
+      window.history.pushState({portfolioAigc:'inspect'},'',portfolioUrl(`#aigc/red-leaf/${itemId}`));
+    }else window.history.replaceState({portfolioAigc:'inspect'},'',portfolioUrl(`#aigc/red-leaf/${itemId}`));
+    setStudioState(next);
   }
 
   function navigateAigcProject(delta:number){
-    if(studioState.mode!=='project')return;
-    const activeItemIndex=(studioState.activeItemIndex+delta+RED_LEAF_ITEMS.length)%RED_LEAF_ITEMS.length;
-    const next={...studioState,activeItemIndex,phase:'stable'} as StudioState;
-    setStudioState(next);window.history.replaceState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));
+    const previous=stateRef.current;
+    if(previous.mode!=='project'&&previous.mode!=='inspect')return;
+    const activeItemIndex=(previous.activeItemIndex+delta+RED_LEAF_ITEMS.length)%RED_LEAF_ITEMS.length;
+    const itemId=RED_LEAF_ITEMS[activeItemIndex].id;
+    const next={...previous,activeItemIndex,...(previous.mode==='inspect'?{itemId}:{}),phase:'entering'} as StudioState;
+    stateRef.current=next;setStudioState(next);
+    window.history.replaceState({portfolioAigc:previous.mode,activeItemIndex},'',portfolioUrl(previous.mode==='inspect'?`#aigc/red-leaf/${itemId}`:'#aigc/red-leaf'));
   }
 
   function onDirectorMilestone(milestone:DirectorMilestone){
     setStudioState(previous=>{
-      if(milestone==='idle')return IDLE_STATE;
+      if(milestone==='idle')return previous.mode==='idle'&&previous.phase==='stable'?previous:IDLE_STATE;
+      if(previous.mode===milestone&&previous.phase==='stable')return previous;
       if(milestone==='collection'&&(previous.mode==='focus'||previous.mode==='collection'))return {mode:'collection',zone:'aigc',collectionId:'red-leaf',phase:'stable'};
       if(milestone==='project'&&previous.mode==='project')return {...previous,phase:'stable'};
       if(milestone==='inspect'&&previous.mode==='inspect')return {...previous,phase:'stable'};
@@ -121,8 +145,9 @@ export function PortfolioStudio(){
 
   function requestAigcBack(){
     if(studioState.mode==='inspect'){
-      const next:StudioState={mode:'project',zone:'aigc',collectionId:studioState.collectionId,activeItemIndex:studioState.activeItemIndex,phase:'leaving'};
-      setStudioState(next);window.history.replaceState({portfolioAigc:'project'},'',portfolioUrl('#aigc/red-leaf'));return;
+      if(window.history.state?.portfolioAigc==='inspect')window.history.back();
+      else{setStudioState({mode:'project',zone:'aigc',collectionId:'red-leaf',activeItemIndex:studioState.activeItemIndex,phase:'leaving'});window.history.replaceState({portfolioAigc:'project',activeItemIndex:studioState.activeItemIndex},'',portfolioUrl('#aigc/red-leaf'));}
+      return;
     }
     if(studioState.mode==='project'){
       if(window.history.state?.portfolioAigc==='project')window.history.back();
@@ -160,7 +185,7 @@ export function PortfolioStudio(){
 
     <div className='studio-canvas-wrap' aria-hidden={exhibitVisible}>
       <SceneBoundary onError={()=>setReady(true)}>
-        <Canvas frameloop='demand' shadows dpr={isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:false,alpha:false,powerPreference:'high-performance'}}>
+        <Canvas frameloop='demand' shadows dpr={isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
           <Suspense fallback={null}><StudioScene selected={selected} studioState={studioState} onSelect={openZone} onSelectFolder={selectAigcFolder} onSelectInspect={selectAigcInspect} onProjectNavigate={navigateAigcProject} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
         </Canvas>
       </SceneBoundary>
@@ -176,22 +201,29 @@ export function PortfolioStudio(){
       </button>
     </div>
 
-    <nav className='studio-a11y-nav' aria-label='作品分类'>
+    <nav className='studio-a11y-nav' aria-label='作品分类' inert={aigcActive}>
       <button onClick={()=>openZone('writing')}>文字作品</button>
       <button onClick={()=>openZone('photography')}>摄影作品</button>
       <button onClick={()=>openZone('aigc')}>视觉与 AIGC</button>
       <button onClick={()=>openZone('video')}>视频作品</button>
     </nav>
 
-    {aigcActive&&<div className='studio-aigc-hud' role='status' aria-live='polite'>
-      <button type='button' onClick={requestAigcBack} aria-label='返回上一步'>返回</button>
-      <span>{studioStateLabel(studioState)}</span>
-      {studioState.mode==='project'&&<span className='studio-aigc-index'>{String(studioState.activeItemIndex+1).padStart(2,'0')} / 05</span>}
-      {studioState.mode==='inspect'&&<span className='studio-aigc-index'>ESC 返回项目</span>}
-    </div>}
-
-    {studioState.mode==='collection'&&<div className='studio-aigc-labels' aria-label='视觉项目'><div><b>RED LEAF</b><span>赤页 · 5 WORKS</span></div><div><b>PERSONAL SOCIAL</b><span>个人内容视觉 · 2 WORKS</span></div></div>}
-    {studioState.mode==='project'&&<div className='studio-aigc-project-note'><b>赤页</b><span>AI 互动叙事产品 · 横向浏览 5 张作品</span></div>}
+    {aigcActive&&<>
+      <button className='studio-aigc-back' type='button' onClick={requestAigcBack} aria-label='返回上一步'>← {studioState.mode==='inspect'?'项目总览':studioState.mode==='project'?'视觉项目':'工作台'}</button>
+      {(studioState.mode==='project'||studioState.mode==='inspect')&&<>
+        <aside className='studio-aigc-project-note' aria-label='赤页项目信息'>
+          <div><h1>赤页 <span>RED LEAF</span></h1><p>把故事变成可以游玩的文字冒险。<span>AI 互动叙事产品 · 独立设计与开发</span></p></div>
+          <a href={RED_LEAF_URL} target='_blank' rel='noopener noreferrer'>在线体验 ↗</a>
+        </aside>
+        <nav className='studio-aigc-hud' aria-label='作品浏览'>
+          <button type='button' onClick={()=>navigateAigcProject(-1)} aria-label='上一张作品'>←</button>
+          <div className='studio-aigc-caption' aria-live='polite'><span>{String(studioState.activeItemIndex+1).padStart(2,'0')} / 05 · {RED_LEAF_ITEMS[studioState.activeItemIndex].title}</span><strong>{RED_LEAF_ITEMS[studioState.activeItemIndex].caption}</strong><small>{textureStatus[RED_LEAF_ITEMS[studioState.activeItemIndex].id]==='error'?<button className='studio-texture-retry' onClick={()=>window.dispatchEvent(new Event('studio:retry-textures'))}>图片加载失败 · 重试</button>:textureStatus[RED_LEAF_ITEMS[studioState.activeItemIndex].id]==='loading'?'正在加载清晰原图…':studioState.mode==='inspect'?'放大查看 · 可直接切换作品':'点击纸张放大 · 左右滑动浏览'}{studioState.mode==='inspect'&&<> · <a href={AIGC_HIRES[studioState.activeItemIndex]} target='_blank' rel='noopener noreferrer'>查看原图 ↗</a></>}</small></div>
+          <button type='button' onClick={()=>navigateAigcProject(1)} aria-label='下一张作品'>→</button>
+        </nav>
+      </>}
+      {studioState.mode==='collection'&&<nav className='studio-a11y-nav' aria-label='打开视觉项目'><button onClick={()=>selectAigcFolder('red-leaf')}>展开赤页 · 5 张作品</button></nav>}
+      {studioState.mode==='collection'&&<p className='studio-aigc-collection-hint'>视觉与 AIGC <span>选择文件夹，展开项目</span></p>}
+    </>}
 
     {exhibitVisible&&selected&&<PortfolioExhibitOverlay zone={selected} onZoneChange={switchZone} onClose={closeExhibit}/>}
   </section>;

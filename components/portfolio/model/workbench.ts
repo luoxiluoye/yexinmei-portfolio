@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {RED_LEAF_ITEMS} from '../aigc-content';
 import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
 import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
@@ -24,7 +25,7 @@ export const AIGC_HIRES=['/assets/projects/red-leaf/landing-hero-hires.png','/as
 
 export type AigcFolderId='red-leaf'|'social';
 export type AigcItemId='landing-hero'|'gameplay-scene'|'gameplay-choice'|'story-library'|'story-modal'|'xiaohongshu'|'zhihu';
-export type AigcPaperModel={id:AigcItemId;root:T.Group;home:T.Vector3;imageIndex:number;imagePath:string;hiresPath:string;title:string;surface:T.Mesh|null;texture?:T.Texture};
+export type AigcPaperModel={id:AigcItemId;root:T.Group;home:T.Vector3;imageIndex:number;imagePath:string;hiresPath:string;title:string;width:number;height:number;surface:T.Mesh|null;texture?:T.Texture};
 export type AigcFolderModel={
  id:AigcFolderId;root:T.Group;hit:T.Mesh;body:T.Group;coverPivot:T.Group;paperStack:T.Group;
  papers:AigcPaperModel[];heroPaper:T.Group|null;home:T.Vector3;enabled:boolean;
@@ -168,16 +169,19 @@ export function createWorkbench(images:T.Texture[]){
   d.box(body,[0,-.62,.06],[.96,.12,.16],folderMat,.025);
   const coverPivot=group(rootFolder,[0,-.67,.12]);coverPivot.name='folder front cover pivot';coverPivot.userData.noBatch=true;
   d.box(coverPivot,[0,.67,.02],[1.02,1.34,.075],folderMat,.045);
+  const label=d.canvas((ctx,w,h)=>{ctx.fillStyle=id==='red-leaf'?'#9a4137':'#71828b';ctx.fillRect(0,0,w,h);ctx.fillStyle='#fff8e9';ctx.textAlign='center';ctx.font='500 58px Georgia';ctx.fillText(id==='red-leaf'?'RED LEAF':'PERSONAL SOCIAL',w/2,110);ctx.font='36px sans-serif';ctx.fillText(id==='red-leaf'?'赤页':'个人内容视觉',w/2,160);ctx.font='30px sans-serif';ctx.fillText(`${papersManifest.length} WORKS`,w/2,226);},768,320);
+  const labelMat=new T.MeshBasicMaterial({map:label,toneMapped:false});d.materials.add(labelMat);
+  plane(coverPivot,[0,.78,.061],.91,.38,labelMat).castShadow=false;
   const paperStack=group(rootFolder,[0,.02,.105]);paperStack.name='paper stack';paperStack.userData.noBatch=true;
   for(let i=0;i<Math.max(3,papersManifest.length);i++)d.box(paperStack,[0,.015+i*.013,0],[.88,1.15,.022],p.paper,.012);
   const papers:AigcPaperModel[]=papersManifest.map((item,index)=>{
    const paper=group(rootFolder,[0,.05,.145]);paper.name=`paper ${item.id}`;paper.userData={aigcItem:item.id,noBatch:true};
-   const texture=images[item.imageIndex]??d.canvas((c,w,h)=>{c.fillStyle='#eee8dc';c.fillRect(0,0,w,h);c.strokeStyle='rgba(145,117,94,.22)';c.strokeRect(1,1,w-2,h-2);},4,4);
-   let surface:T.Mesh|null=null;
-   const image=texture?.image as {width?:number;height?:number}|undefined;const aspect=(image?.width&&image?.height)?image.width/image.height:1.5;const w=id==='red-leaf' ? .98 : .84,h=w/aspect;
-   d.box(paper,[0,0,0],[w,h,.035],p.paper,.008);
-   surface=plane(paper,[0,0,.021],w-.024,h-.024,d.photoMaterial(texture,w/h));
-   paper.visible=false;return {id:item.id,root:paper,home:new T.Vector3(0,.05,.145),imageIndex:item.imageIndex,imagePath:AIGC_IMAGES[item.imageIndex-8],hiresPath:AIGC_HIRES[item.imageIndex-8],title:item.title,surface};
+   const aspect=id==='red-leaf'?2048/RED_LEAF_ITEMS[index].height:2;
+   const w=.98,h=w/aspect;
+   d.box(paper,[0,0,0],[w+.024,h+.024,.018],p.paper,.004);
+   const material=new T.MeshBasicMaterial({color:'#eee8dc',toneMapped:false});d.materials.add(material);
+   const surface=plane(paper,[0,0,.011],w,h,material);surface.castShadow=false;
+   paper.visible=false;return {id:item.id,root:paper,home:new T.Vector3(0,.05,.145),width:w,height:h,imageIndex:item.imageIndex,imagePath:AIGC_IMAGES[item.imageIndex-8],hiresPath:AIGC_HIRES[item.imageIndex-8],title:item.title,surface};
   });
   const heroPaper=papers[0]?.root??null;if(heroPaper)heroPaper.name='hero paper';
   const hit=d.mesh(rootFolder,d.own(new T.BoxGeometry(1.18,1.5,.55)),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),[0,.04,.18]);

@@ -2,7 +2,7 @@ export type StudioZone='aigc';
 export type MotionPhase='entering'|'stable'|'leaving';
 
 /** The public route is intentionally shallow: collection is #aigc, project is #aigc/<id>.
- * Inspect is a transient, replaceState-only view of the active paper. */
+ * Inspect has one history entry; changing images replaces that entry. */
 export type StudioState=
  | {mode:'idle';phase?:MotionPhase}
  | {mode:'focus';zone:StudioZone;phase:MotionPhase}

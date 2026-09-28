@@ -1,96 +1,124 @@
 import * as T from 'three';
 import type {StudioState} from './studio-state';
-import type {AigcFolderModel} from './model/workbench';
+import type {AigcFolderModel,AigcPaperModel} from './model/workbench';
 
 export type DirectorSnapshot={position:T.Vector3;quaternion:T.Quaternion;fov:number;orbit?:{yaw:number;pitch:number;requestedYaw:number;requestedPitch:number}};
 export type DirectorMilestone='collection'|'project'|'inspect'|'idle';
 type DirectorModel={aigc:{folders:Record<'red-leaf'|'social',AigcFolderModel>}};
 
-/** Owns all reversible transforms for the AIGC slice. Nothing is remounted while
- * a folder is opening, browsing, inspecting, or returning. */
+/** Persistent physical objects; progress is reversible, never reset on navigation. */
 export class StudioDirector{
- private target:StudioState={mode:'idle',phase:'stable'}; private loaded=new Set<string>();
- private collection=0; private project=0; private inspect=0; private activeItemIndex=0;
- private settled:DirectorMilestone|null=null; private snapshot:DirectorSnapshot|null=null; private justRestored=false;
- private readonly idleTarget=new T.Vector3(0,2.23,.1);
- private readonly focusPosition=new T.Vector3(4.55,4.65,11.35); private readonly focusTarget=new T.Vector3(3.55,3.75,.1);
- private readonly collectionPosition=new T.Vector3(4.15,4.20,9.25); private readonly collectionTarget=new T.Vector3(3.35,3.65,.25);
- private readonly projectPosition=new T.Vector3(3.82,4.10,9.35); private readonly projectTarget=new T.Vector3(3.45,3.88,.72);
- private readonly inspectPosition=new T.Vector3(3.28,4.02,6.65); private readonly inspectTarget=new T.Vector3(3.45,3.92,1.02);
- private readonly displayPositions={red:new T.Vector3(-.42,.40,.88),social:new T.Vector3(.76,.40,.75)};
- constructor(
-  private model:DirectorModel, private camera:T.PerspectiveCamera, private reduced:()=>boolean,
-  private readSnapshot:()=>DirectorSnapshot, private restoreSnapshot:(snapshot:DirectorSnapshot)=>void,
-  private onMilestone:(milestone:DirectorMilestone)=>void,
- ){}
- get isActive(){return this.target.mode!=='idle'||this.collection>.0001||this.project>.0001||this.inspect>.0001||this.justRestored;}
- get targetState(){return this.target;}
+ private target:StudioState={mode:'idle',phase:'stable'};
+ private collection=0;private project=0;private inspect=0;private activeItemIndex=1;
+ private settled:DirectorMilestone|null=null;private snapshot:DirectorSnapshot|null=null;
+ private viewportHeight=900;
+ private disposed=false;private requests=new Map<AigcPaperModel,string>();private pending=new Set<string>();
+ private textureErrors=new Set<string>();private layoutMoving=false;
+ constructor(private model:DirectorModel,private camera:T.PerspectiveCamera,private reduced:()=>boolean,
+  private readSnapshot:()=>DirectorSnapshot,private restoreSnapshot:(snapshot:DirectorSnapshot)=>void,
+  private onMilestone:(milestone:DirectorMilestone)=>void,private invalidate:()=>void){}
+ setViewport(height:number){this.viewportHeight=height;}
+ get isActive(){return this.target.mode!=='idle'||this.collection>0||this.project>0||this.inspect>0;}
  setState(state:StudioState){
-  if(state.mode!=='idle'&&this.target.mode==='idle'&&this.collection<.001)this.snapshot=this.readSnapshot();
-  if('activeItemIndex' in state)this.activeItemIndex=Math.max(0,state.activeItemIndex);
-  this.target=state;this.settled=null;this.justRestored=false;
-  if(state.mode==='project'||state.mode==='inspect')this.ensureTextures(state.collectionId,state.mode==='inspect',state.mode==='inspect'?state.itemId:undefined);
+  if(state.mode!=='idle'&&!this.snapshot)this.snapshot=this.readSnapshot();
+  if('activeItemIndex' in state)this.activeItemIndex=state.activeItemIndex;
+  this.target=state;this.settled=null;
+  if(state.mode==='project'||state.mode==='inspect')this.ensureTextures();
  }
- setActiveItemIndex(index:number){
-  const folder=this.model.aigc.folders['red-leaf'];this.activeItemIndex=T.MathUtils.clamp(Math.round(index),0,Math.max(0,folder.papers.length-1));this.applyFolder(this.collection,this.project,this.inspect);this.applyCamera(this.collection,this.project,this.inspect);}
- /** QA hook: progress 0..1 drives the complete reversible director without changing React state. */
- setDebugProgress(value:number){const v=T.MathUtils.clamp(value,0,1);this.collection=v;this.project=v;this.inspect=0;this.settled=null;this.applyFolder(v,v,0);this.applyCamera(v,v,0);}
- private ensureTextures(collectionId:string,hires=false,activeId?:string){
-  if(collectionId!=='red-leaf')return;
-  const folder=this.model.aigc.folders['red-leaf'];
-  for(const paper of folder.papers){
-   if((hires&&activeId!==paper.id)||(!hires&&this.loaded.has(paper.id))||!paper.imagePath)continue;const key=hires?`${paper.id}:hires`:paper.id;if(this.loaded.has(key))continue;this.loaded.add(key);
-   new T.TextureLoader().load(hires?paper.hiresPath:paper.imagePath,texture=>{texture.colorSpace=T.SRGBColorSpace;paper.texture=texture;if(paper.surface){paper.surface.material=new T.MeshBasicMaterial({map:texture,toneMapped:true});} });
+ private ensureTextures(){
+  for(const [index,paper] of this.model.aigc.folders['red-leaf'].papers.entries()){
+   const distance=Math.min((index-this.activeItemIndex+5)%5,(this.activeItemIndex-index+5)%5);
+   const path=this.target.mode==='inspect'&&distance===0?paper.hiresPath:distance<=1?paper.imagePath:paper.imagePath.replace('/medium/','/thumb/').replace('-medium','-thumb');
+   this.requests.set(paper,path);
+   if(paper.texture?.userData.path===path||this.pending.has(path))continue;
+   this.pending.add(path);this.textureErrors.delete(paper.id);this.notifyTexture(paper.id,'loading');
+   new T.TextureLoader().load(path,texture=>{
+    this.pending.delete(path);
+    if(this.disposed||this.requests.get(paper)!==path){texture.dispose();return;}
+    texture.colorSpace=T.SRGBColorSpace;texture.anisotropy=8;texture.userData.path=path;
+    const old=paper.texture;paper.texture=texture;
+    const material=paper.surface?.material as T.MeshBasicMaterial;
+    material.map=texture;material.color.set('#ffffff');material.needsUpdate=true;old?.dispose();this.notifyTexture(paper.id,'ready');this.invalidate();
+   },undefined,()=>{this.pending.delete(path);if(this.requests.get(paper)===path){this.textureErrors.add(paper.id);this.notifyTexture(paper.id,'error');this.invalidate();}});
   }
  }
- private targetCollection(){return this.target.mode==='idle'?0:1;}
- private targetProject(){return this.target.mode==='project'||this.target.mode==='inspect'?1:0;}
- private targetInspect(){return this.target.mode==='inspect'?1:0;}
+ retryTextures(){this.ensureTextures();}
+ private notifyTexture(id:string,status:string){window.dispatchEvent(new CustomEvent('studio:texture-status',{detail:{id,status}}));}
+ private releaseTextures(){this.requests.clear();for(const paper of this.model.aigc.folders['red-leaf'].papers){const mat=paper.surface?.material as T.MeshBasicMaterial;mat.map=null;mat.color.set('#eee8dc');mat.needsUpdate=true;paper.texture?.dispose();paper.texture=undefined;}}
  private ease(v:number){return T.MathUtils.smoothstep(T.MathUtils.clamp(v,0,1),0,1);}
- private applyFolder(collection:number,project:number,inspect:number){
-  const c=this.ease(collection),p=this.ease(project),i=this.ease(inspect);
-  const red=this.model.aigc.folders['red-leaf'],social=this.model.aigc.folders.social;
-  for(const [folder,display,rotation] of [[red,this.displayPositions.red,-.12],[social,this.displayPositions.social,.08]] as const){
-   folder.root.position.copy(folder.home).lerp(display,c);folder.root.rotation.z=rotation*c;
+ private applyFolder(delta:number){
+  const c=this.collection,p=this.project,i=this.inspect,red=this.model.aigc.folders['red-leaf'],social=this.model.aigc.folders.social;
+  const lift=this.ease(c/.32),forward=this.ease((c-.32)/.34),settle=this.ease((c-.66)/.34);
+  for(const [folder,x] of [[red,-.65],[social,.65]] as const){
+   folder.root.position.copy(folder.home);folder.root.position.y+=.88*lift;
+   folder.root.position.z+=1.8*forward;folder.root.position.x=T.MathUtils.lerp(folder.home.x,x,settle);
+   folder.root.position.y-=.75*settle;folder.root.rotation.set(0,0,(folder===red?-.045:.045)*settle);
   }
-  const cover=this.ease(p/.68);red.coverPivot.rotation.x=-1.04*cover;
-  red.paperStack.visible=p<.88;
-  const paperTotal=red.papers.length;
+  red.root.position.lerp(new T.Vector3(-.2,-.65,1.65),p);red.root.rotation.z*=1-p;
+  social.root.position.lerp(new T.Vector3(1.55,-.50,.65),p);social.root.scale.setScalar(1-.28*p);
+  red.coverPivot.rotation.x=-1.04*this.ease(p/.45);red.paperStack.visible=p<.98;
+  const fan=this.ease((p-.45)/.55),compact=this.camera.aspect<.9;
+  this.layoutMoving=false;
   red.papers.forEach((paper,index)=>{
-   let rel=index-this.activeItemIndex;if(rel>paperTotal/2)rel-=paperTotal;if(rel<-paperTotal/2)rel+=paperTotal;const dist=Math.abs(rel),fan=this.ease((p-.16)/.84);
-   paper.root.visible=p>.035;
-   const home=paper.home;
-   const x=rel*.44*fan, y=home.y+.20*fan-(Math.min(dist,2)*.035*fan), z=home.z+.15*fan+(Math.max(0,2-dist)*.18*fan);
-   paper.root.position.set(x,y,z);paper.root.rotation.z=(-rel*.10)*fan;paper.root.scale.setScalar((dist===0?1:.68)*fan);
-   if(i>.001 && index===this.activeItemIndex){paper.root.position.z+=.76*i;paper.root.position.y+=.12*i;paper.root.scale.setScalar(1+.30*i);paper.root.rotation.z*=1-i;}
+   let rel=index-this.activeItemIndex;if(rel>2)rel-=5;if(rel< -2)rel+=5;const dist=Math.abs(rel);
+   const x=dist===0?-.2:-.2+Math.sign(rel)*(compact?(.84+(dist-1)*.53):(1.22+(dist-1)*.92));
+   const display=new T.Vector3(x,.38-dist*.22,dist===0?2.75:2.25-dist*.08);
+   if(dist===0)display.lerp(new T.Vector3(-.2,.38,3.85),i);
+   else display.x+=Math.sign(rel)*.48*i;
+   // Coordinates are in the rack's space, converted to the persistent folder's space.
+   display.sub(red.root.position).applyQuaternion(red.root.quaternion.clone().invert());
+   const position=paper.home.clone().lerp(display,fan);
+   const scale=T.MathUtils.lerp(1,dist===0?T.MathUtils.lerp(compact?1.72:2.2,3.35,i):.94,fan);
+   const rotation=(dist===0?0:-rel*.035)*fan;
+   const blend=this.reduced()||fan<.995?1:1-Math.exp(-13*delta);
+   paper.root.position.lerp(position,blend);paper.root.scale.lerp(new T.Vector3(scale,scale,scale),blend);
+   paper.root.rotation.z=T.MathUtils.lerp(paper.root.rotation.z,rotation,blend);
+   if(paper.root.position.distanceTo(position)>.0005||Math.abs(paper.root.scale.x-scale)>.0005)this.layoutMoving=true;
+   else{paper.root.position.copy(position);paper.root.scale.setScalar(scale);paper.root.rotation.z=rotation;}
+   paper.root.visible=p>.02;
+   const material=paper.surface?.material as T.MeshBasicMaterial;material.color.setScalar(dist===0?1:1-i*.16);
   });
-  social.papers.forEach((paper,index)=>{paper.root.visible=false;paper.root.position.copy(paper.home);paper.root.scale.setScalar(1);});
-  // Keep one stable reference for older QA consumers while the real project now has five papers.
-  if(red.heroPaper)red.heroPaper.userData.aigcItem=red.papers[this.activeItemIndex]?.id??red.papers[0]?.id;
+  social.papers.forEach(paper=>{paper.root.visible=false;});
  }
- private applyCamera(collection:number,project:number,inspect:number){
-  const c=this.ease(collection),p=this.ease(project),i=this.ease(inspect),position=new T.Vector3(),target=new T.Vector3();
-  if(c<.42){const t=this.ease(c/.42);position.copy(this.snapshot?.position??this.camera.position).lerp(this.focusPosition,t);target.copy(this.idleTarget).lerp(this.focusTarget,t);}
-  else {const t=this.ease((c-.42)/.58);position.copy(this.focusPosition).lerp(this.collectionPosition,t);target.copy(this.focusTarget).lerp(this.collectionTarget,t);}
-  if(p>.001){position.lerp(this.projectPosition,p);target.lerp(this.projectTarget,p);}
-  if(i>.001){position.lerp(this.inspectPosition,i);target.lerp(this.inspectTarget,i);}
-  this.camera.position.copy(position);this.camera.lookAt(target);this.camera.fov=this.snapshot?T.MathUtils.lerp(this.snapshot.fov,Math.max(21,this.snapshot.fov-2.2),Math.max(p,i)):this.camera.fov;this.camera.updateProjectionMatrix();this.camera.updateMatrixWorld();
+ private applyCamera(){
+  if(!this.snapshot)return;
+  const c=this.ease(this.collection),p=this.ease(this.project),i=this.ease(this.inspect),aspect=this.camera.aspect;
+  const center=new T.Vector3(3.79,4.225,0);
+  const fov=this.snapshot.fov,tan=Math.tan(T.MathUtils.degToRad(fov/2));
+  const compact=aspect<.9;
+  // Fit the whole physical composition inside header/footer safe areas at every aspect ratio.
+  const collectionDistance=Math.max(2.7/.66,3.6/(aspect*.86))/(2*tan)+1.3;
+  const projectDistance=Math.max(3.05/.62,(compact?3.95:5.55)/(aspect*.90))/(2*tan)+2.6;
+  const safeTop=compact?212:194,safeBottom=126;
+  const available=Math.max(.25,(this.viewportHeight-safeTop-safeBottom)/this.viewportHeight);
+  const inspectDistance=Math.max(1.78/available,3.45/(aspect*.84))/(2*tan)+3.86;
+  const distance=T.MathUtils.lerp(T.MathUtils.lerp(collectionDistance,projectDistance,p),inspectDistance,i);
+  const offset=T.MathUtils.lerp(16,(safeTop-safeBottom)/2,Math.max(p,i));
+  center.y+=offset*(2*tan*(distance-T.MathUtils.lerp(1.3,3.86,i)))/this.viewportHeight;
+  const position=center.clone().add(new T.Vector3(0,0,distance));
+  this.camera.position.copy(this.snapshot.position).lerp(position,c);
+  this.camera.lookAt(center);const destination=this.camera.quaternion.clone();
+  this.camera.quaternion.copy(this.snapshot.quaternion).slerp(destination,c);
+  this.camera.fov=fov;this.camera.updateProjectionMatrix();this.camera.updateMatrixWorld();
  }
  tick(delta:number){
-  const speed=this.reduced()?1:7.5,previous=[this.collection,this.project,this.inspect];
-  if(this.reduced()){this.collection=this.targetCollection();this.project=this.targetProject();this.inspect=this.targetInspect();}
-  else {this.collection=T.MathUtils.damp(this.collection,this.targetCollection(),speed,delta);this.project=T.MathUtils.damp(this.project,this.targetProject(),speed,delta);this.inspect=T.MathUtils.damp(this.inspect,this.targetInspect(),speed,delta);}
-  const snap=(value:number,target:number)=>Math.abs(value-target)<.0015?target:value;
-  this.collection=snap(this.collection,this.targetCollection());this.project=snap(this.project,this.targetProject());this.inspect=snap(this.inspect,this.targetInspect());
-  this.applyFolder(this.collection,this.project,this.inspect);this.applyCamera(this.collection,this.project,this.inspect);
-  const done=Math.abs(this.collection-this.targetCollection())<.0015&&Math.abs(this.project-this.targetProject())<.0015&&Math.abs(this.inspect-this.targetInspect())<.0015;
-  if(done){
-   if(this.target.mode==='idle'){if(this.settled!=='idle'){this.settled='idle';if(this.snapshot)this.restoreSnapshot(this.snapshot);this.snapshot=null;this.justRestored=true;this.onMilestone('idle');}}
-   else if(this.target.mode==='inspect'){if(this.settled!=='inspect'){this.settled='inspect';this.onMilestone('inspect');}}
-   else if(this.target.mode==='project'){if(this.settled!=='project'){this.settled='project';this.onMilestone('project');}}
-   else if(this.target.mode==='collection'||this.target.mode==='focus'){if(this.settled!=='collection'){this.settled='collection';this.onMilestone('collection');}}
+  const wantC=this.target.mode==='idle'?0:1,wantP=this.target.mode==='project'||this.target.mode==='inspect'?1:0,wantI=this.target.mode==='inspect'?1:0;
+  const step=(value:number,target:number)=>{if(this.reduced())return target;return T.MathUtils.clamp(value+Math.sign(target-value)*delta*.95,Math.min(value,target),Math.max(value,target));};
+  // Close / retract inner parts before moving the containing object. Midway Back uses current progress.
+  this.inspect=step(this.inspect,wantI);
+  this.project=step(this.project,wantP===1?(this.collection===1?1:0):(this.inspect===0?0:this.project));
+  this.collection=step(this.collection,wantC===1?1:(this.project===0?0:this.collection));
+  this.applyFolder(delta);this.applyCamera();
+  const done=this.collection===wantC&&this.project===wantP&&this.inspect===wantI&&!this.layoutMoving;
+  if(done){const milestone=this.target.mode==='focus'?'collection':this.target.mode;
+   if(this.settled!==milestone){this.settled=milestone;
+    if(milestone==='idle'){if(this.snapshot)this.restoreSnapshot(this.snapshot);this.snapshot=null;this.releaseTextures();}
+    this.onMilestone(milestone);
+   }
   }
-  const moving=previous.some((v,index)=>Math.abs(v-[this.collection,this.project,this.inspect][index])>.00004)||this.justRestored;if(this.justRestored)this.justRestored=false;return moving;
+  return !done;
  }
- debug(){const red=this.model.aigc.folders['red-leaf'];return {collection:this.collection,project:this.project,inspect:this.inspect,activeItemIndex:this.activeItemIndex,folderUUID:red?.root.uuid,paperUUID:red?.heroPaper?.uuid??null,activePaperUUID:red?.papers[this.activeItemIndex]?.root.uuid??null,paperUUIDs:red?.papers.map(p=>p.root.uuid)??[],paperCount:red?.papers.length??0,paperPositions:red?.papers.map(p=>p.root.position.toArray())??[],coverRotation:red?.coverPivot.rotation.x??0};}
+ setDebugProgress(value:number){this.collection=T.MathUtils.clamp(value,0,1);this.applyFolder(1);this.applyCamera();}
+ debug(){const red=this.model.aigc.folders['red-leaf'];return {collection:this.collection,project:this.project,inspect:this.inspect,activeItemIndex:this.activeItemIndex,folderUUID:red.root.uuid,paperUUID:red.heroPaper?.uuid,paperUUIDs:red.papers.map(p=>p.root.uuid),folderPosition:red.root.position.toArray(),paperPositions:red.papers.map(p=>p.root.position.toArray()),coverRotation:red.coverPivot.rotation.x,textureErrors:[...this.textureErrors],papers:red.papers.map(p=>({id:p.id,width:p.width,height:p.height,textureWidth:p.texture?.image?.width??0,path:p.texture?.userData.path??null,corners:[[-p.width/2,-p.height/2],[p.width/2,-p.height/2],[p.width/2,p.height/2],[-p.width/2,p.height/2]].map(([x,y])=>p.surface!.localToWorld(new T.Vector3(x,y,0)).project(this.camera).toArray())}))};}
+ dispose(){this.disposed=true;this.releaseTextures();}
 }
