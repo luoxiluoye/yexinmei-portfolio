@@ -4,20 +4,13 @@ import {Canvas} from '@react-three/fiber';
 import {Component,Suspense,useEffect,useRef,useState,type ReactNode} from 'react';
 import Link from 'next/link';
 import {StudioScene,type PortfolioZoneId} from './studio-scene';
-import {PortfolioExhibitOverlay,type ExhibitZone} from './portfolio-exhibit-overlay';
+import {STUDIO_PHOTOS,STUDIO_WRITINGS,STUDIO_VIDEO} from './studio-content';
 import {IDLE_STATE,stateFromHash,studioDepth,hashForStudioState,type StudioState} from './studio-state';
 import {AIGC_COLLECTIONS,collectionContent} from './aigc-content';
 import type {DirectorMilestone} from './studio-director';
 import '../../styles/portfolio-interactions.css';
 
-const ZONES:PortfolioZoneId[]=['writing','photography','aigc','video'];
 function portfolioUrl(hash=''){if(typeof window==='undefined')return '/portfolio'+hash;return window.location.pathname+window.location.search+hash;}
-
-function zoneFromHash():PortfolioZoneId|null{
-  if(typeof window==='undefined')return null;
-  const value=window.location.hash.replace('#','') as PortfolioZoneId;
-  return ZONES.includes(value)?value:null;
-}
 
 class SceneBoundary extends Component<{children:ReactNode;onError:()=>void},{failed:boolean}>{
   state={failed:false};
@@ -31,79 +24,41 @@ class SceneBoundary extends Component<{children:ReactNode;onError:()=>void},{fai
 }
 
 export function PortfolioStudio(){
-  const timer=useRef<ReturnType<typeof setTimeout>|null>(null);
-  const [selected,setSelected]=useState<PortfolioZoneId|null>(null);
-  const [exhibitVisible,setExhibitVisible]=useState(false);
   const [studioState,setStudioState]=useState<StudioState>(IDLE_STATE);
+  const queuedHistoryState=useRef<StudioState|null>(null);
   const stateRef=useRef(studioState);stateRef.current=studioState;
+  const [roomTextureError,setRoomTextureError]=useState(false);
+  useEffect(()=>{const fail=()=>setRoomTextureError(true);window.addEventListener('studio:room-texture-error',fail);return()=>window.removeEventListener('studio:room-texture-error',fail);},[]);
   const [ready,setReady]=useState(false);
   const [textureStatus,setTextureStatus]=useState<Record<string,string>>({});
   useEffect(()=>{const update=(event:Event)=>{const {id,status}=(event as CustomEvent<{id:string;status:string}>).detail;setTextureStatus(previous=>({...previous,[id]:status}));};window.addEventListener('studio:texture-status',update);return()=>window.removeEventListener('studio:texture-status',update);},[]);
 
-  function clearTimer(){if(timer.current){clearTimeout(timer.current);timer.current=null;}}
-
   useEffect(()=>{
     function syncFromHistory(){
-      clearTimer();
-      const aigc=stateFromHash(window.location.hash);
-      if(aigc.mode!=='idle'){
-        const hash=hashForStudioState(aigc);if(window.location.hash!==hash)window.history.replaceState(window.history.state,'',portfolioUrl(hash));
-        setExhibitVisible(false);setSelected(null);setStudioState(previous=>({...aigc,phase:studioDepth(aigc)>studioDepth(previous)?'entering':'leaving'} as StudioState));return;
-      }
-      const zone=zoneFromHash();
-      if(zone){
-        setSelected(zone);
-        timer.current=setTimeout(()=>setExhibitVisible(true),80);
-      }else{
-        setExhibitVisible(false);setStudioState(previous=>studioDepth(previous)>0||previous.phase==='leaving'?{mode:'idle',phase:'leaving'}:IDLE_STATE);
-        timer.current=setTimeout(()=>setSelected(null),330);
-      }
+      const next=stateFromHash(window.location.hash);if(next.mode!=='idle'){const canonical=hashForStudioState(next);if(window.location.hash!==canonical)window.history.replaceState(window.history.state,'',portfolioUrl(canonical));}if(next.mode==='room')next.page=window.history.state?.page??0;
+      const previous=stateRef.current;
+      if(queuedHistoryState.current&&previous.mode==='idle'&&previous.phase==='leaving'){queuedHistoryState.current=next.mode==='idle'?null:next;return;}
+      if(previous.mode==='idle'&&next.mode==='idle')return;
+      if(previous.mode!=='idle'&&next.mode!=='idle'&&previous.zone!==next.zone){queuedHistoryState.current=next;const leaving:StudioState={mode:'idle',phase:'leaving'};stateRef.current=leaving;setStudioState(leaving);return;}
+      queuedHistoryState.current=null;const updated={...next,phase:studioDepth(next)<studioDepth(previous)?'leaving':'entering'} as StudioState;stateRef.current=updated;setStudioState(updated);
     }
-    const direct=zoneFromHash();
-    const directAigc=stateFromHash(window.location.hash);
-    if(directAigc.mode!=='idle'){setStudioState(directAigc);window.history.replaceState(window.history.state,'',portfolioUrl(hashForStudioState(directAigc)));}
-    if(direct&&direct!=='aigc'){
-      setSelected(direct);
-      timer.current=setTimeout(()=>setExhibitVisible(true),180);
-    }
-    const localRoute=window.location.pathname+window.location.search;
-    // next-view-transitions starts a document snapshot for every popstate. Our
-    // same-document hashes already have a reversible Three animation; a second
-    // transition can freeze pointer input (especially with reduced motion).
-    function onHistory(event:PopStateEvent){
-      const isLocal=window.location.pathname+window.location.search===localRoute;
-      const isAigc=stateRef.current.mode!=='idle'||window.location.hash.startsWith('#aigc');
-      if(isLocal&&isAigc){event.stopImmediatePropagation();syncFromHistory();}
-    }
-    window.addEventListener('popstate',onHistory,true);
-    window.addEventListener('popstate',syncFromHistory);
-    window.addEventListener('hashchange',syncFromHistory);
-    return()=>{clearTimer();window.removeEventListener('popstate',onHistory,true);window.removeEventListener('popstate',syncFromHistory);window.removeEventListener('hashchange',syncFromHistory);};
+    const initial=stateFromHash(window.location.hash);if(initial.mode!=='idle'){setStudioState(initial);window.history.replaceState(window.history.state,'',portfolioUrl(hashForStudioState(initial)));}
+    const route=window.location.pathname+window.location.search;
+    const onHistory=(event:PopStateEvent)=>{if(window.location.pathname+window.location.search===route){event.stopImmediatePropagation();syncFromHistory();}};
+    window.addEventListener('popstate',onHistory,true);window.addEventListener('hashchange',syncFromHistory);
+    return()=>{window.removeEventListener('popstate',onHistory,true);window.removeEventListener('hashchange',syncFromHistory);};
   },[]);
-
   function openZone(id:PortfolioZoneId){
-    clearTimer();
-    if(id==='aigc'){
-      if(studioState.mode!=='idle')return;
-      setExhibitVisible(false);setSelected(null);setStudioState({mode:'focus',zone:'aigc',phase:'entering'});
-      window.history.pushState({portfolioAigc:'collection'},'',portfolioUrl('#aigc'));return;
-    }
-    setSelected(id);
-    const url=portfolioUrl('#'+id);
-    if(window.location.hash==='#'+id)window.history.replaceState({portfolioExhibit:true},'',url);
-    else window.history.pushState({portfolioExhibit:true},'',url);
-    const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    timer.current=setTimeout(()=>setExhibitVisible(true),reduce?0:410);
+    if(studioState.mode!=='idle'||studioState.phase==='leaving')return;
+    const next:StudioState=id==='aigc'?{mode:'focus',zone:'aigc',phase:'entering'}:{mode:'room',zone:id,itemIndex:null,page:0,phase:'entering'};
+    stateRef.current=next;setStudioState(next);window.history.pushState(id==='aigc'?{portfolioAigc:'collection'}:{portfolioRoom:'collection'},'',portfolioUrl('#'+id));
   }
-
-  function switchZone(id:ExhibitZone){
-    clearTimer();
-    if(id==='aigc'){openZone('aigc');return;}
-    setSelected(id);
-    setExhibitVisible(true);
-    window.history.replaceState({portfolioExhibit:true},'',portfolioUrl('#'+id));
+  function selectRoomItem(index:number){
+    const previous=stateRef.current;if(previous.mode!=='room'||previous.zone==='video')return;
+    const next:StudioState={...previous,itemIndex:index,phase:'entering'};stateRef.current=next;setStudioState(next);
+    if(previous.itemIndex===null)window.history.pushState({portfolioRoom:'item'},'',portfolioUrl(hashForStudioState(next)));
+    else window.history.replaceState({portfolioRoom:'item'},'',portfolioUrl(hashForStudioState(next)));
   }
-
   function selectAigcFolder(folderId:string){
     if(studioState.mode!=='collection'||studioState.phase!=='stable'||!(folderId in AIGC_COLLECTIONS))return;
     const content=collectionContent(folderId),activeItemIndex=content.initialIndex;
@@ -113,7 +68,7 @@ export function PortfolioStudio(){
   }
 
   function selectAigcInspect(itemId:string){
-    const previous=stateRef.current;if(previous.mode!=='inspect')return;
+    const previous=stateRef.current;if(previous.mode==='room'){selectRoomItem(Number(itemId));return;}if(previous.mode!=='inspect')return;
     const content=collectionContent(previous.collectionId),activeItemIndex=content.items.findIndex(item=>item.id===itemId);
     if(activeItemIndex<0)return;
     const next:StudioState={...previous,itemId,activeItemIndex,phase:'entering'};
@@ -122,23 +77,37 @@ export function PortfolioStudio(){
   }
 
   function navigateAigcProject(delta:number){
-    const previous=stateRef.current;if(previous.mode!=='inspect')return;
+    const previous=stateRef.current;
+    if(previous.mode==='room'){
+      if(previous.zone==='video')return;
+      const count=previous.zone==='photography'?STUDIO_PHOTOS.length:STUDIO_WRITINGS.length;
+      if(previous.itemIndex!==null){selectRoomItem((previous.itemIndex+delta+count)%count);return;}
+      if(previous.zone==='photography'){const page=(previous.page+delta+3)%3;setStudioState({...previous,page,phase:'entering'});window.history.replaceState({...window.history.state,page},'',portfolioUrl(hashForStudioState(previous)));}return;
+    }
+    if(previous.mode!=='inspect')return;
     const items=collectionContent(previous.collectionId).items;
     const index=(previous.activeItemIndex+delta+items.length)%items.length;
     selectAigcInspect(items[index].id);
   }
 
   function onDirectorMilestone(milestone:DirectorMilestone){
+    if(milestone==='idle'&&queuedHistoryState.current){const next=queuedHistoryState.current;queuedHistoryState.current=null;stateRef.current=next;setStudioState(next);return;}
     setStudioState(previous=>{
       if(milestone==='idle')return previous.mode==='idle'&&previous.phase==='stable'?previous:IDLE_STATE;
       if(previous.mode===milestone&&previous.phase==='stable')return previous;
       if(milestone==='collection'&&(previous.mode==='focus'||previous.mode==='collection'))return {mode:'collection',zone:'aigc',collectionId:'red-leaf',phase:'stable'};
+      if(milestone==='room'&&previous.mode==='room')return {...previous,phase:'stable'};
       if(milestone==='inspect'&&previous.mode==='inspect')return {...previous,phase:'stable'};
       return previous;
     });
   }
 
   function requestAigcBack(){
+    if(studioState.mode==='room'){
+      const detail=studioState.itemIndex!==null;
+      if(window.history.state?.portfolioRoom===(detail?'item':'collection'))window.history.back();
+      else{const next:StudioState=detail?{...studioState,itemIndex:null,phase:'leaving'}:{mode:'idle',phase:'leaving'};setStudioState(next);window.history.replaceState(null,'',portfolioUrl(hashForStudioState(next)));}return;
+    }
     if(studioState.mode==='inspect'){
       if(window.history.state?.portfolioAigc==='inspect')window.history.back();
       else{setStudioState({mode:'collection',zone:'aigc',collectionId:studioState.collectionId,phase:'leaving'});window.history.replaceState({portfolioAigc:'collection'},'',portfolioUrl('#aigc'));}
@@ -155,15 +124,6 @@ export function PortfolioStudio(){
     window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);
   },[studioState]);
 
-  function closeExhibit(){
-    clearTimer();
-    setExhibitVisible(false);
-    const wasOpenedHere=Boolean(window.history.state?.portfolioExhibit);
-    if(wasOpenedHere)window.history.back();
-    else window.history.replaceState(null,'',portfolioUrl());
-    timer.current=setTimeout(()=>setSelected(null),330);
-  }
-
   const aigcActive=studioState.mode!=='idle'||studioState.phase==='leaving';
   const [isMobile,setIsMobile]=useState(false);
   const [readingDpr,setReadingDpr]=useState(1);
@@ -172,16 +132,18 @@ export function PortfolioStudio(){
   useEffect(()=>{const sync=()=>{setIsMobile(window.innerWidth<=700);setReadingDpr(Math.max(1,Math.min(window.devicePixelRatio||1,3,Math.sqrt(8_000_000/(window.innerWidth*window.innerHeight)))));};sync();window.addEventListener('resize',sync);return()=>window.removeEventListener('resize',sync);},[]);
   const content=collectionContent(studioState.mode==='inspect'?studioState.collectionId:'red-leaf');
   const currentItem=content.items[studioState.mode==='inspect'?studioState.activeItemIndex:content.initialIndex];
-  return <section className={'studio-shell'+(exhibitVisible?' is-exhibiting':'')} aria-label='三维作品集工作台' data-studio-mode={studioState.mode} data-studio-phase={studioState.phase??'stable'}>
+  const room=studioState.mode==='room'?studioState:null;
+  const writing=room?.zone==='writing'&&room.itemIndex!==null?STUDIO_WRITINGS[room.itemIndex]:null;
+  return <section className='studio-shell' aria-label='三维作品集工作台' data-studio-mode={studioState.mode} data-studio-phase={studioState.phase??'stable'}>
     <header className='studio-topbar'>
       <Link className='studio-brand' href='/' aria-label='罗叶馨梅，返回个人主页'>LUO YEXINMEI<span aria-hidden='true'>●</span></Link>
       <nav className='studio-topnav' aria-label='作品集导航'><Link href='/' aria-label='返回个人主页'>Home</Link><span aria-current='page'>Portfolio</span></nav>
     </header>
 
-    <div className='studio-canvas-wrap' aria-hidden={exhibitVisible}>
+    <div className='studio-canvas-wrap'>
       <SceneBoundary onError={()=>setReady(true)}>
-        <Canvas frameloop='demand' shadows dpr={studioState.mode==='inspect'&&studioState.phase==='stable'?readingDpr:isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
-          <Suspense fallback={null}><StudioScene selected={selected} studioState={studioState} onSelect={openZone} onSelectFolder={selectAigcFolder} onSelectInspect={selectAigcInspect} onProjectNavigate={navigateAigcProject} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
+        <Canvas frameloop='demand' shadows dpr={(studioState.mode==='inspect'||studioState.mode==='room')&&studioState.phase==='stable'?readingDpr:isMobile?1:[1,1.25]} camera={{position:[0,3.75,17.4],fov:26,near:.05,far:160}} gl={{antialias:true,alpha:false,powerPreference:'high-performance'}}>
+          <Suspense fallback={null}><StudioScene studioState={studioState} onSelect={openZone} onSelectFolder={selectAigcFolder} onSelectInspect={selectAigcInspect} onProjectNavigate={navigateAigcProject} onDirectorMilestone={onDirectorMilestone} onReady={()=>setReady(true)}/></Suspense>
         </Canvas>
       </SceneBoundary>
     </div>
@@ -204,7 +166,7 @@ export function PortfolioStudio(){
     </nav>
 
     {aigcActive&&<>
-      <button className='studio-aigc-back' type='button' onClick={requestAigcBack} aria-label='返回上一步'>← {studioState.mode==='inspect'?'视觉项目':'工作台'}</button>
+      <button className='studio-aigc-back' type='button' onClick={requestAigcBack} aria-label='返回上一步'>← {studioState.mode==='inspect'?'视觉项目':room?.itemIndex!==null&&room?.itemIndex!==undefined?(room.zone==='photography'?'照片墙':'书架'):'工作台'}</button>
       {studioState.mode==='inspect'&&<>
         <aside className='studio-aigc-project-note' aria-label='项目信息'>
           <div><h1>{content.title} <span>{content.englishTitle}</span></h1><p>{content.description}<span>{content.credit}</span></p></div>
@@ -223,6 +185,20 @@ export function PortfolioStudio(){
       {studioState.mode==='collection'&&<p className='studio-aigc-collection-hint'>视觉与 AIGC <span>选择文件夹，展开项目</span></p>}
     </>}
 
-    {exhibitVisible&&selected&&<PortfolioExhibitOverlay zone={selected} onZoneChange={switchZone} onClose={closeExhibit}/>}
+    {room&&<>
+      <aside className='studio-room-title'><h1>{room.zone==='photography'?'摄影记录':room.zone==='writing'?'文字作品':STUDIO_VIDEO.title}</h1><p>{room.zone==='photography'?'人像 · 剧场 · 现场 · 商业':room.zone==='writing'?'剧本、报道与传播研究':STUDIO_VIDEO.subtitle}</p></aside>
+      {room.zone==='writing'&&room.itemIndex===null&&<nav className='studio-a11y-nav' aria-label='选择文字作品'>{STUDIO_WRITINGS.map((item,index)=><button key={item.id} onClick={()=>selectRoomItem(index)}><span>{item.kind}</span>{item.title}</button>)}</nav>}
+      {room.zone==='writing'&&room.itemIndex===null&&<p className='studio-aigc-collection-hint'>选择一本书<span>展开刊发节选与作品档案</span></p>}
+      {writing&&<nav className='studio-aigc-hud studio-room-hud' aria-label='文字作品浏览'><button aria-label='上一篇作品' onClick={()=>navigateAigcProject(-1)}>←</button><div className='studio-aigc-caption'><span>{writing.subtitle}</span><strong>{writing.title}</strong><small><a className='studio-aigc-action' target='_blank' rel='noopener noreferrer' href={writing.href}>{writing.action} ↗</a></small></div><button aria-label='下一篇作品' onClick={()=>navigateAigcProject(1)}>→</button></nav>}
+      {room.zone==='photography'&&<nav className='studio-aigc-hud studio-room-hud' aria-label='照片浏览'>
+       {(room.itemIndex!==null||isMobile)&&<button aria-label='上一张照片' onClick={()=>navigateAigcProject(-1)}>←</button>}
+       <div className='studio-aigc-caption'><span>{room.itemIndex===null?'PHOTOGRAPHY · 16 PHOTOGRAPHS':`${room.itemIndex+1} / ${STUDIO_PHOTOS.length}`}</span><strong>{room.itemIndex===null?'点选照片，靠近观看':STUDIO_PHOTOS[room.itemIndex].title}</strong><small>{roomTextureError?<button className='studio-texture-retry' onClick={()=>{setRoomTextureError(false);window.dispatchEvent(new Event('studio:retry-textures'));}}>图片加载失败 · 重试</button>:room.itemIndex===null?(isMobile?`第 ${room.page+1} / 3 组 · 左右滑动切换`:'从洞洞板延展的影像记录'):'左右滑动或使用方向键切换'}</small></div>
+       {(room.itemIndex!==null||isMobile)&&<button aria-label='下一张照片' onClick={()=>navigateAigcProject(1)}>→</button>}
+      </nav>}
+      {room.zone==='video'&&<div className='studio-aigc-hud studio-room-hud'><div className='studio-aigc-caption'><strong>周家刀 · 非遗手艺传承</strong><small>成片尚未接入<a className='studio-aigc-action' href={STUDIO_VIDEO.href} target='_blank' rel='noopener noreferrer'>{STUDIO_VIDEO.action} ↗</a></small></div></div>}
+      {room.zone==='photography'&&<nav className='studio-a11y-nav' aria-label='选择照片'>{STUDIO_PHOTOS.map((item,index)=><button key={item.id} onClick={()=>selectRoomItem(index)}>{item.title}</button>)}</nav>}
+      {writing&&<div className='studio-a11y-nav'><h2>{writing.heading}</h2><p>{writing.excerpt}</p></div>}
+    </>}
+
   </section>;
 }

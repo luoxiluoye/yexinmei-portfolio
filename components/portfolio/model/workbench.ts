@@ -1,6 +1,8 @@
 import * as T from 'three';
 import {collectionContent} from '../aigc-content';
 import {AtelierGeometry,type V,type Zone,type ZoneId} from './atelier-geometry';
+import {STUDIO_PHOTOS} from '../studio-content';
+import {createReadingBook,exhibit,type ExhibitObject} from './studio-exhibits';
 import {applyStudioRefinement} from './refinement';
 export const WORK_IMAGES=[
  '/assets/photos/portrait/portrait-01.jpeg','/assets/photos/happy-mahua/still-02.jpeg','/assets/photos/yu-chaoying-concert/concert-03.jpeg',
@@ -135,7 +137,7 @@ export function createWorkbench(images:T.Texture[]){
 
  const left=alcove('writing',-4.05,2.825,3.16,4.65,p.back);shelf(left,0,.60,2.94);shelf(left,0,-.92,2.94);shelf(left,0,-2.15,2.94);shelf(left,-.77,1.36,1.32,.74);
  plant(left,[-.79,1.42,.00],.68,true);
- let bx=-.11;for(const [i,w] of [.21,.24,.18,.23].entries()){book(left,[bx,.66,.025],w,1.3-i*.07,.55,['#eee9de','#d5c9ba','#e6dfd2','#f3ebdf'][i],['NOTES','PHOTOGRAPHY','ARCHIVE','01'][i],i===2?-.035:0);bx+=w+.027;}bear(left,[1.13,.66,.02],.85);
+ const writingBooks=[0,1,2,3].map(i=>createReadingBook(d,left,i,-.11+i*.245));bear(left,[1.13,.66,.02],.85);
  let mx=-1.21;for(let i=0;i<6;i++){const w=.16+(i%2)*.05;book(left,[mx,-.86,.035],w,1.10+(i%3)*.065,.54,['#e6ddce','#d8cfbf','#f1ece2'][i%3],['02','IMAGES','NOTES'][i%3],i===5?-.055:0);mx+=w+.032;}
  const picture=group(left,[.52,-.45,.29],[0,-.04,0]);d.box(picture,[0,0,0],[.55,.76,.048],p.edge,.019);print(picture,[0,0,.034],.46,.63,images[7]);flatBook(left,[.62,-.86,.10],.87,.56,'#e2d6c4');
  d.ball(left,[1.1,-.43,.20],[.235,.235,.235],d.mat('#fff1ce',.78,0,{emissive:'#ffdca0',emissiveIntensity:.6,bumpMap:grain,bumpScale:.022}));d.box(left,[1.1,-.735,.18],[.49,.14,.46],p.ceramic,.025);
@@ -146,7 +148,9 @@ export function createWorkbench(images:T.Texture[]){
  const holes=new T.InstancedMesh(d.own(new T.CircleGeometry(.0125,10)),d.mat('#928779',.95),18*21);holes.position.z=-.648;const matrix=new T.Matrix4();let hi=0;
  for(let y=0;y<21;y++)for(let x=0;x<18;x++){matrix.makeTranslation(-1.86+x*.218,2.12-y*.214,0);holes.setMatrixAt(hi++,matrix);}holes.instanceMatrix.needsUpdate=true;center.add(holes);holes.userData.noBatch=true;
  const papers:[number,number,number,number,number,number][]=[[-1.19,1.14,.95,.87,-.050,0],[-.05,1.40,1.24,.95,.020,2],[1.20,1.05,1.0,.86,-.045,1],[-1.06,.02,1.02,1.13,.055,3],[.16,.17,1.04,.81,-.045,4],[1.17,-.15,.91,1.12,-.075,5]];
- for(const [x,y,w,h,a,ix] of papers){print(center,[x,y,-.545+ix*.007],w,h,images[ix],a);pin(center,[x+.015,y+h/2+.052,-.487+ix*.007],ix%2===0);}
+ const photoPrints:ExhibitObject[]=papers.map(([x,y,w,h,a,ix],index)=>{const g=print(center,[x,y,-.545+ix*.007],w,h,images[ix],a);g.userData.roomItem=String(index);pin(center,[x+.015,y+h/2+.052,-.487+ix*.007],ix%2===0);return exhibit(g,w,h,g.children[1] as T.Mesh);});
+ for(let i=6;i<STUDIO_PHOTOS.length;i++){const g=group(center,[0,.4,-.56]);g.name=`Photo / ${STUDIO_PHOTOS[i].id}`;g.userData.roomItem=String(i);const w=.9,h=w*STUDIO_PHOTOS[i].height/STUDIO_PHOTOS[i].width;d.box(g,[0,0,0],[w+.07,h+.1,.021],p.paper,.008);const mat=new T.MeshBasicMaterial({color:'#eee6d9',toneMapped:false});d.materials.add(mat);const face=plane(g,[0,0,.015],w,h,mat);g.visible=false;photoPrints.push(exhibit(g,w,h,face));}
+
  shelf(center,0,-2.12,3.94,.90);plant(center,[-1.64,-2.06,.025],.59);camera(center,[-.33,-2.06,.05]);
  for(let i=0;i<4;i++)film(center,.54+i*.18,-2.06,.08,['#ccc9c1','#242628','#c99740','#323434'][i]);pencilCup(center,[1.55,-2.06,.08],.88);
 
@@ -198,12 +202,12 @@ export function createWorkbench(images:T.Texture[]){
   ]),
  } satisfies Record<AigcFolderId,AigcFolderModel>;
 
- const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';
+ const lower=alcove('video',3.99,1.424,3.35,1.99,p.blue),tv=group(lower,[0,-.04,-.01]);tv.name='CRT enclosure and optics';tv.userData.noBatch=true;
  d.box(tv,[0,0,-.20],[2.69,1.49,.75],p.ivory,.145);d.frame(tv,[-.265,.045,.239],2.07,1.263,.055,.064,p.blueDark,.13);d.box(tv,[-.265,.045,.267],[1.943,1.137,.041],p.black,.12);
- const original=d.photoMaterial(images[6],1.84/1.04),screenMat=new T.MeshBasicMaterial({map:original.map,toneMapped:false});d.materials.add(screenMat);
- d.roundedPlane(tv,[-.265,.045,.301],1.84,1.04,.084,screenMat).castShadow=false;d.roundedPlane(tv,[-.265,.045,.308],1.86,1.06,.087,p.glass).castShadow=false;
- const white=d.mat('#fff8e8',.4,0,{emissive:'#ffffff',emissiveIntensity:.3});d.torus(tv,[-.265,.045,.335],.18,.011,white);
- const tri=new T.Shape();tri.moveTo(-.045,-.08);tri.lineTo(.079,0);tri.lineTo(-.045,.08);tri.closePath();d.mesh(tv,d.own(new T.ShapeGeometry(tri)),white,[-.252,.045,.34]);
+ const screenTexture=d.canvas((c,w,h)=>{c.fillStyle='#26302e';c.fillRect(0,0,w,h);c.fillStyle='#ba8f60';c.font='26px sans-serif';c.fillText('DOCUMENTARY / 非遗记录',70,82);c.fillStyle='#f4e8d5';c.font='100px serif';c.fillText('周家刀',70,250);c.font='30px sans-serif';c.fillText('手艺、传承与新的相遇',70,325);c.fillStyle='#bcb9a9';c.font='22px sans-serif';c.fillText('成片待接入 · 可先阅读相关报道',70,450);},1024,576);
+ const screenMat=new T.MeshBasicMaterial({map:screenTexture,toneMapped:false});d.materials.add(screenMat);
+ const screen=d.roundedPlane(tv,[-.265,.045,.301],1.84,1.04,.084,screenMat);screen.castShadow=false;
+ const television=exhibit(tv,2.69,1.49,screen);
  for(let i=0;i<2;i++){const y=.44-i*.285;d.torus(tv,[1.035,y,.219],.103,.014,p.darkMetal);d.cylinder(tv,[1.035,y,.228],.083,.083,.07,p.ivory,[Math.PI/2,0,0]);d.box(tv,[1.035,y+.05,.268],[.012,.036,.008],p.darkMetal,.002);}
  for(let i=0;i<14;i++)d.box(tv,[1.03,-.17-i*.032,.216],[.28,.008,.011],p.blueDark,.003);
  for(const x of [-.85,.86])d.box(tv,[x,-.799,-.13],[.25,.14,.43],p.ivory,.052);plant(lower,[-1.39,-.92,.21],.44);
@@ -221,5 +225,5 @@ export function createWorkbench(images:T.Texture[]){
  const pendant=group(furniture,[0,5.36,.26]);pendant.name='Spun-metal pendant';shade(pendant,[0,0,0],.66,d.mat('#88949a',.30,.46));d.cylinder(pendant,[0,.54,0],.069,.071,.071,p.red);d.cylinder(pendant,[0,.80,0],.014,.014,.48,p.darkMetal);
  applyStudioRefinement(d,root,furniture,zones,p);
  for(const [id,zone] of Object.entries(zones)){if(id==='aigc')d.batch(upperStatic);else d.batch(zone.group);}d.batch(furniture);root.updateMatrixWorld(true);
- return {root,zones,aigc:{staticRoot:upperStatic,dynamicRoot:upperDynamic,folders:aigcFolders},dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
+ return {root,zones,rooms:{photoPrints,writingBooks,television},aigc:{staticRoot:upperStatic,dynamicRoot:upperDynamic,folders:aigcFolders},dispose:()=>{root.traverse(o=>{if(o instanceof T.SpotLight)o.shadow.dispose();});d.dispose();},geometry:d};
 }

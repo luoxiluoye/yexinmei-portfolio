@@ -1,9 +1,9 @@
 import * as T from 'three';
-import type {StudioState} from './studio-state';
+import type {AigcState as StudioState} from './studio-state';
 import type {AigcFolderModel,AigcPaperModel} from './model/workbench';
 
 export type DirectorSnapshot={position:T.Vector3;quaternion:T.Quaternion;fov:number;orbit?:{yaw:number;pitch:number;requestedYaw:number;requestedPitch:number}};
-export type DirectorMilestone='collection'|'inspect'|'idle';
+export type DirectorMilestone='collection'|'inspect'|'idle'|'room';
 type DirectorModel={aigc:{folders:Record<'red-leaf'|'social',AigcFolderModel>}};
 
 /** Persistent physical objects; progress is reversible, never reset on navigation. */
