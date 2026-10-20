@@ -1,0 +1,9 @@
+[
+ {"path":"components/professional/approved-home.tsx","from":"<span aria-hidden=\"true\">👋</span>","to":"<UiIcon name=\"leaf\" />","count":1},
+ {"path":"components/professional/approved-contact.tsx","from":"        <img className={styles.contactVignette} src=\"/assets/profile-20261020/editorial-light.webp\" alt=\"\" width={2172} height={724} />\n","to":"","count":1},
+ {"path":"components/professional/approved-contact.tsx","from":"<span aria-hidden=\"true\">🌿</span>","to":"<UiIcon name=\"leaf\" />","count":1},
+ {"path":"components/professional/approved-profile.tsx","from":"<span aria-hidden=\"true\">📷</span>","to":"<UiIcon name=\"camera\" />","count":1},
+ {"path":"components/professional/support-pages.tsx","from":"import { IconBadge } from \"./editorial-ui\";","to":"import { IconBadge, UiIcon, type UiIconName } from \"./editorial-ui\";","count":1},
+ {"path":"components/professional/support-pages.tsx","from":"const journalSymbols: Record<JournalEntry[\"category\"], string> = {\n  \"TECH NOTES\": \"✍️\",\n  \"PHOTO NOTES\": \"📷\",\n  \"SIDE PROJECT LOG\": \"⚙️\",\n};","to":"const journalSymbols: Record<JournalEntry[\"category\"], UiIconName> = {\n  \"TECH NOTES\": \"pen\",\n  \"PHOTO NOTES\": \"camera\",\n  \"SIDE PROJECT LOG\": \"briefcase\",\n};","count":1},
+ {"path":"components/professional/support-pages.tsx","from":"<span aria-hidden=\"true\">{journalSymbols[entry.category]}</span>","to":"<UiIcon name={journalSymbols[entry.category]} />","count":2}
+]
