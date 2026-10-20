@@ -63,6 +63,24 @@ commit, then invokes `node` on it. The script runs `npm run build` itself.
 - Portfolio preservation is checked against the original deployed source and
   all assets by the build script, rather than against the older Git checkout.
 
-Visual and navigation checks are performed on the resulting preview. The
-browser used for inspection has WebGL disabled, so it cannot render the existing
-3D scene; that limitation also occurs on the untouched production deployment.
+### Verified preview
+
+- URL: https://yexinmei-portfolio-r4fe02r48-luoyes-projects-a7639a71.vercel.app/
+- Deployment: `dpl_Ghm1mA7Ysss76y3D9bqFCnHTzsg9`; READY; preview (`target: null`).
+- Build patch commit: `9a61df50bfebb92043a059f62b7352d876d31826`.
+- Production `luoyexinmei.top` still resolves to the original deployment.
+- 442 protected files had the same SHA256 manifest before the patch, after the
+  patch, and after the successful Next.js build:
+  `79db1cd9486e488b70b58e05e2861f0be86a8268305c0367fcc0dfb92116a15e`.
+- Browser checks covered home, profile, experience, curated detail, legacy
+  detail, red-leaf, contact, skills, journal list/article, and navigation into
+  the original portfolio. Both copy buttons produced the correct clipboard
+  text and success status. Both home images loaded.
+- The original portfolio photography view still contains 35 photo controls;
+  the professional shell and new page classes are absent from that route.
+- Desktop viewport checked at 1363 px. Responsive CSS was reviewed; a separate
+  phone viewport was not available in the browser inspection environment.
+
+The inspection browser has WebGL disabled, so it cannot render the existing 3D
+scene. The same WebGL error occurs on the untouched production deployment;
+the portfolio renderer chunk is unchanged in the preview.
