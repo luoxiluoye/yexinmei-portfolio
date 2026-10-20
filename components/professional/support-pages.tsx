@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { journalSeed, type JournalEntry } from "@/data/journal";
+import { IconBadge } from "./editorial-ui";
 import styles from "./resume.module.css";
 
 const abilityGroups = [
   {
     title: "文字与内容编辑",
+    icon: "pen",
+    tone: "brick",
     description: "围绕具体主题整理资料、核对信息，完成稿件与平台内容。",
     work: "整理选题资料与信息来源，编辑新闻、活动和公众号稿件，并跟进内容发布与反馈记录。",
     tools: "文字编辑、图文排版、Excel",
@@ -12,6 +15,8 @@ const abilityGroups = [
   },
   {
     title: "摄影与视觉制作",
+    icon: "camera",
+    tone: "bronze",
     description: "根据内容需求完成现场记录、素材筛选、图片处理和视频剪辑。",
     work: "拍摄人物、舞台和活动，整理并剪辑视频素材、制作字幕，完成宣传海报与封面等基础视觉内容。",
     tools: "Photoshop、Premiere Pro、After Effects、剪映",
@@ -19,6 +24,8 @@ const abilityGroups = [
   },
   {
     title: "沟通与组织协调",
+    icon: "people",
+    tone: "sage",
     description: "明确需求与分工，跟进人员沟通、活动准备和过程中的具体事项。",
     work: "跟进工作室选题分工、会务和导师项目执行，沟通达人合作与招聘流程中的具体事项。",
     tools: "工作记录、进度表、资料与素材台账",
@@ -26,6 +33,8 @@ const abilityGroups = [
   },
   {
     title: "数据整理与 AI 辅助",
+    icon: "sparkle",
+    tone: "bronze",
     description: "结合实际任务使用工具，辅助整理资料、汇总记录与制作内容。",
     work: "用 Excel 整理内容表现和工作台账，用 AI 辅助资料归纳、文案与创意制作，并结合内容项目学习 Python、SQL 和自动化工具。",
     tools: "Excel、ChatGPT、Claude、Coze",
@@ -37,6 +46,12 @@ const journalCategories: Record<JournalEntry["category"], string> = {
   "TECH NOTES": "内容观察",
   "PHOTO NOTES": "摄影记录",
   "SIDE PROJECT LOG": "工作方法",
+};
+
+const journalSymbols: Record<JournalEntry["category"], string> = {
+  "TECH NOTES": "✍️",
+  "PHOTO NOTES": "📷",
+  "SIDE PROJECT LOG": "⚙️",
 };
 
 const monthNumbers: Record<string, string> = {
@@ -72,10 +87,18 @@ export function SupportSkills() {
         <div className={styles.abilityGrid}>
           {abilityGroups.map((group) => (
             <article className={styles.abilityBlock} key={group.title}>
-              <h2>{group.title}</h2>
+              <div className={styles.abilityHeading}>
+                <IconBadge name={group.icon} tone={group.tone} />
+                <h2>{group.title}</h2>
+              </div>
               <p>{group.description}</p>
               <p>{group.work}</p>
-              <p className={styles.abilityMeta}>工具与方法：{group.tools}</p>
+              <div className={styles.abilityMeta}>
+                <span>工具与方法：</span>
+                <div className={styles.toolTags}>
+                  {group.tools.split("、").map((tool) => <span className={styles.toolTag} key={tool}>{tool}</span>)}
+                </div>
+              </div>
               <Link className={styles.link} href={group.practice.href}>{group.practice.label} <span aria-hidden="true">→</span></Link>
             </article>
           ))}
@@ -107,7 +130,10 @@ export function SupportJournal() {
               <article className={styles.journalEntry} key={entry.slug}>
                 <div className={styles.journalMeta}>
                   <time dateTime={date.iso}>{date.label}</time>
-                  <span>{journalCategories[entry.category]}</span>
+                  <span className={styles.journalCategory}>
+                    <span aria-hidden="true">{journalSymbols[entry.category]}</span>
+                    {journalCategories[entry.category]}
+                  </span>
                 </div>
                 <h2><Link href={`/journal/${entry.slug}`}>{entry.title}</Link></h2>
                 <p>{entry.summary}</p>
@@ -140,7 +166,10 @@ export function SupportJournalArticle({ entry }: { entry: JournalEntry }) {
 
       <article>
         <header className={`${styles.pageHeader} ${styles.articleHeader}`}>
-          <p className={styles.eyebrow}>{journalCategories[entry.category]}</p>
+          <p className={styles.eyebrow}>
+            <span aria-hidden="true">{journalSymbols[entry.category]}</span>{" "}
+            {journalCategories[entry.category]}
+          </p>
           <h1 className={styles.title}>{entry.title}</h1>
           <p className={styles.lead}>{entry.summary}</p>
           <div className={styles.meta}>

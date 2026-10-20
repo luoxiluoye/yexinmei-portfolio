@@ -58,6 +58,7 @@ COMPONENT_STEMS = (
     "resume-content",
     "support-pages",
     "legacy-practice",
+    "editorial-ui",
 )
 SHARED_TARGETS = (
     "components/layout/site-chrome.tsx",
@@ -161,8 +162,8 @@ def collect_targets() -> list[str]:
             "Approved source files are not ready. No patch was written and no placeholders were created.\n"
             + "\n".join(problems)
         )
-    if len(targets) != 24 or len(set(targets)) != len(targets):
-        raise ValueError("Expected exactly 24 unique approved source files")
+    if len(targets) != 25 or len(set(targets)) != len(targets):
+        raise ValueError("Expected exactly 25 unique approved source files")
     return sorted(targets)
 
 
@@ -258,7 +259,7 @@ function hashFile(root, relative, algorithm = "sha256") {
 function validateEmbedded() {
   if (spec.baseDeployment !== "dpl_9rpmmsW9wSMz5r376WsNQo75U36Z") fail("Unexpected base deployment");
   const approved = new Set(spec.approvedWrites);
-  if (approved.size !== 24 || spec.files.length !== 24) fail("Approved payload must contain exactly 24 files");
+  if (approved.size !== 25 || spec.files.length !== 25) fail("Approved payload must contain exactly 25 files");
   const seen = new Set();
   for (const item of spec.files) {
     assertRelative(item.path);

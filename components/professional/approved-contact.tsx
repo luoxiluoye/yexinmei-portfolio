@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { contact } from "@/data/contact";
+import { IconBadge, UiIcon } from "./editorial-ui";
 import styles from "./resume.module.css";
 
 export function ApprovedContact() {
@@ -34,43 +35,61 @@ export function ApprovedContact() {
   }
 
   return (
-    <main id="main-content" className={styles.page}>
-      <header className={styles.contactOpening}>
-        <img className={styles.contactArtwork} src="/assets/profile-20261020/editorial-light.webp" alt="" width={2172} height={724} />
-        <div className={styles.contactOpeningCopy}>
-          <p className={styles.eyebrow}>联系与交流</p>
+    <main id="main-content" className={`${styles.page} ${styles.contactPage}`}>
+      <header className={`${styles.pageHeader} ${styles.contactHeader}`}>
+        <div>
+          <p className={styles.eyebrow}><UiIcon name="mail" /> 联系与交流</p>
           <h1 className={styles.title}>联系我</h1>
-          <p className={styles.lead}>关于工作机会、经历与作品，<br />欢迎进一步交流。</p>
+          <p className={styles.lead}>关于工作机会、经历与作品，欢迎进一步交流。</p>
         </div>
+        <img className={styles.contactVignette} src="/assets/profile-20261020/editorial-light.webp" alt="" width={2172} height={724} />
       </header>
 
-      <section className={styles.contactDetails} aria-label="联系方式">
-        <div className={styles.contactPrimary}>
-          <div>
-            <h2 className={styles.sectionLabel}>电子邮箱</h2>
-            <a href={`mailto:${email}`} className={styles.emailAddress}>{email}</a>
-            <p className={styles.small}>可通过邮件联系并索取完整简历。</p>
+      <div className={styles.contactLayout}>
+        <aside className={styles.contactAside} aria-label="个人信息与交流方向">
+          <span className={styles.contactBadge}><UiIcon name="graduation" /> 2027 届毕业生</span>
+          <h2>罗叶馨梅</h2>
+          <p>电子科技大学<br />新闻与传播硕士在读</p>
+          <p className={styles.locationLine}><UiIcon name="pin" /> 意向城市：成都</p>
+          <div className={styles.contactDirections}>
+            <p>关注方向</p>
+            <div className={styles.toolTags}><span className={styles.toolTag}>宣传传播</span><span className={styles.toolTag}>党群工作</span><span className={styles.toolTag}>综合管理</span></div>
           </div>
-          <button type="button" className={styles.button} onClick={() => copy(email, "邮箱")} aria-label="复制邮箱">
-            {copied === "邮箱" ? "已复制" : "复制邮箱"}<span aria-hidden="true">↗</span>
-          </button>
-        </div>
-        <div className={styles.contactSecondary}>
-          <div className={styles.contactRow}>
-            <div><h2>微信</h2><p className={styles.contactValue}>{wechat}</p><p>添加时请注明姓名、单位及来意。</p></div>
-            <button type="button" className={styles.copyButton} onClick={() => copy(wechat, "微信号")} aria-label="复制微信号">{copied === "微信号" ? "已复制" : "复制微信号"}</button>
-          </div>
-          <div className={styles.contactRow}>
-            <div><h2>电话</h2><a href={`tel:${phone}`} className={styles.contactValue}>{phone}</a><p>也可以通过电话沟通。</p></div>
-            <a className={styles.copyButton} href={`tel:${phone}`}>拨打电话 <span aria-hidden="true">↗</span></a>
-          </div>
-        </div>
-        <p role="status" aria-live="polite" className={styles.copyFeedback}>{feedback}</p>
-      </section>
+          <Link className={styles.link} href="/player">了解我的经历 <span aria-hidden="true">→</span></Link>
+        </aside>
 
-      <div className={styles.footerPrompt}>
-        <p>2027 届 · 新闻与传播硕士 · 意向城市：成都</p>
-        <div className={styles.actions}><Link className={styles.link} href="/player">关于我 <span aria-hidden="true">→</span></Link><a className={styles.link} href="/portfolio">浏览作品集 <span aria-hidden="true">↗</span></a></div>
+        <section className={styles.contactDetails} aria-label="联系方式">
+          <div className={styles.contactList}>
+            <div className={styles.contactItem}>
+              <IconBadge name="mail" />
+              <div className={styles.contactItemCopy}>
+                <h2>电子邮箱</h2>
+                <a href={`mailto:${email}`} className={styles.contactAddress}>{email}</a>
+                <p>可通过邮件联系并索取完整简历。</p>
+              </div>
+              <button type="button" className={styles.copyButton} data-copied={copied === "邮箱"} onClick={() => copy(email, "邮箱")} aria-label="复制邮箱">
+                <UiIcon name={copied === "邮箱" ? "check" : "copy"} />{copied === "邮箱" ? "已复制" : "复制邮箱"}
+              </button>
+            </div>
+            <div className={styles.contactItem}>
+              <IconBadge name="message" tone="sage" />
+              <div className={styles.contactItemCopy}><h2>微信</h2><p className={styles.contactAddress}>{wechat}</p><p>添加时请注明姓名、单位及来意。</p></div>
+              <button type="button" className={styles.copyButton} data-copied={copied === "微信号"} onClick={() => copy(wechat, "微信号")} aria-label="复制微信号">
+                <UiIcon name={copied === "微信号" ? "check" : "copy"} />{copied === "微信号" ? "已复制" : "复制微信号"}
+              </button>
+            </div>
+            <div className={styles.contactItem}>
+              <IconBadge name="phone" tone="bronze" />
+              <div className={styles.contactItemCopy}><h2>电话</h2><a href={`tel:${phone}`} className={styles.contactAddress}>{phone}</a><p>也可以通过电话沟通。</p></div>
+              <a className={styles.copyButton} href={`tel:${phone}`}><UiIcon name="phone" /> 拨打电话</a>
+            </div>
+          </div>
+          <div className={styles.contactFootnote}>
+            <p><span aria-hidden="true">🌿</span> 感谢您的关注，期待与您交流。</p>
+            <a className={styles.link} href="/portfolio">浏览作品集 <span aria-hidden="true">↗</span></a>
+          </div>
+          <p role="status" aria-live="polite" className={styles.copyFeedback}>{feedback}</p>
+        </section>
       </div>
     </main>
   );

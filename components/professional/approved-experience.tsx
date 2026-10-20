@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SectionTitle, UiIcon } from "./editorial-ui";
 import {
   campusExperience,
   internships,
@@ -12,7 +13,12 @@ function ExperienceRow({ entry }: { entry: ExperienceEntry }) {
   return (
     <article className={styles.experienceRow}>
       <div className={styles.experienceMeta}>
-        {entry.period ? <p>{entry.period}</p> : null}
+        {entry.period ? (
+          <p>
+            {entry.period}
+            {entry.period.includes("至今") ? <span className={styles.currentTag}>进行中</span> : null}
+          </p>
+        ) : null}
         <h3>{entry.organization}</h3>
         <span>{entry.role}</span>
       </div>
@@ -43,15 +49,14 @@ export function ApprovedExperience() {
       </header>
 
       <nav className={styles.tags} aria-label="经历页面目录">
-        <a className={styles.tag} href="#internships">实习经历</a>
-        <a className={styles.tag} href="#campus">校园经历</a>
-        <a className={styles.tag} href="#practice">项目实践</a>
+        <a className={styles.tag} href="#internships"><UiIcon name="briefcase" />实习经历</a>
+        <a className={styles.tag} href="#campus"><UiIcon name="book" />校园经历</a>
+        <a className={styles.tag} href="#practice"><UiIcon name="folder" />项目实践</a>
       </nav>
 
       <section id="internships" className={styles.section} aria-labelledby="internships-title">
         <div className={styles.sectionHead}>
-          <span className={styles.sectionNumber}>01</span>
-          <h2 id="internships-title">实习经历</h2>
+          <SectionTitle id="internships-title" number="01">实习经历</SectionTitle>
         </div>
         <div className={styles.experienceList}>
           {internships.map((entry) => <ExperienceRow entry={entry} key={entry.organization} />)}
@@ -68,8 +73,7 @@ export function ApprovedExperience() {
 
       <section id="campus" className={styles.section} aria-labelledby="campus-title">
         <div className={styles.sectionHead}>
-          <span className={styles.sectionNumber}>02</span>
-          <h2 id="campus-title">校园经历</h2>
+          <SectionTitle id="campus-title" number="02">校园经历</SectionTitle>
         </div>
         <div className={styles.experienceList}>
           {campusExperience.map((entry) => <ExperienceRow entry={entry} key={entry.organization} />)}
@@ -78,13 +82,15 @@ export function ApprovedExperience() {
 
       <section id="practice" className={styles.section} aria-labelledby="practice-title">
         <div className={styles.sectionHead}>
-          <span className={styles.sectionNumber}>03</span>
-          <h2 id="practice-title">项目实践</h2>
+          <SectionTitle id="practice-title" number="03">项目实践</SectionTitle>
         </div>
         <div className={styles.featureGrid}>
           {records.filter((record) => ["news-writing", "visual-storytelling", "red-leaf"].includes(record.slug)).map((record) => (
             <article className={styles.feature} key={record.slug}>
-              <p className={styles.sectionLabel}>{record.category}</p>
+              <p className={styles.sectionLabel}>
+                <UiIcon name={record.slug === "news-writing" ? "pen" : record.slug === "visual-storytelling" ? "camera" : "book"} />
+                {record.category}
+              </p>
               <h3><Link href={`/quests/${record.slug}`}>{record.title}</Link></h3>
               <p>{record.summary}</p>
               <Link className={styles.link} href={`/quests/${record.slug}`}>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { IconBadge, SectionTitle, UiIcon } from "./editorial-ui";
 import { capabilities, education, honors } from "./resume-content";
 import styles from "./resume.module.css";
 
@@ -14,12 +15,15 @@ export function ApprovedProfile() {
             <div className={styles.body}>
               <p>从广播电视编导专业出发，我持续参与稿件编辑、摄影摄像和新媒体内容制作，也承担过校园宣传、学术活动与人员协调工作。</p>
               <p>我习惯先把资料与需求理清楚，再跟进沟通、制作和交付。希望在成都从事宣传传播、党群或综合管理相关工作。</p>
-              <p>工作之外，喜欢摄影与日常记录，也会尝试用新工具整理素材、制作内容。</p>
+              <p className={styles.personalNote}>
+                <span aria-hidden="true">📷</span>
+                <span>工作之外，喜欢摄影与日常记录，也会尝试用新工具整理素材、制作内容。</span>
+              </p>
             </div>
             <dl className={styles.profileFacts}>
-              <div><dt>毕业年份</dt><dd>2027 届</dd></div>
+              <div><dt>毕业年份</dt><dd><UiIcon name="calendar" />2027 届</dd></div>
               <div><dt>政治面貌</dt><dd>中共党员</dd></div>
-              <div><dt>意向城市</dt><dd>成都</dd></div>
+              <div><dt>意向城市</dt><dd><UiIcon name="pin" />成都</dd></div>
             </dl>
           </div>
           <figure className={styles.portrait}>
@@ -37,15 +41,16 @@ export function ApprovedProfile() {
 
       <section className={styles.section} aria-labelledby="education-title">
         <div className={styles.sectionHead}>
-          <h2 id="education-title">教育经历</h2>
+          <SectionTitle id="education-title" number="01">教育经历</SectionTitle>
         </div>
         <div className={styles.educationGrid}>
           {education.map((item) => (
             <article className={styles.educationItem} key={item.school}>
-                <h3>{item.school}</h3>
-                <p className={styles.educationDegree}>{item.degree}</p>
-                <p className={styles.meta}>{item.period}</p>
-                <p className={styles.small}>{item.note}</p>
+              <p className={styles.educationLabel}>{item.degree.split(" · ")[1]}</p>
+              <h3>{item.school}</h3>
+              <p className={styles.educationDegree}>{item.degree}</p>
+              <p className={styles.meta}>{item.period}</p>
+              <p className={styles.small}>{item.note}</p>
             </article>
           ))}
         </div>
@@ -53,13 +58,16 @@ export function ApprovedProfile() {
 
       <section className={styles.section} aria-labelledby="capabilities-title">
         <div className={styles.sectionHead}>
-          <h2 id="capabilities-title">专业能力</h2>
+          <SectionTitle id="capabilities-title" number="02">专业能力</SectionTitle>
           <Link className={styles.link} href="/inventory">能力与工具 <span aria-hidden="true">→</span></Link>
         </div>
         <div className={`${styles.featureGrid} ${styles.featureGridTwo}`}>
-          {capabilities.slice(0, 2).map((item) => (
+          {capabilities.slice(0, 2).map((item, index) => (
             <article className={styles.feature} key={item.title}>
-              <h3>{item.title}</h3>
+              <div className={styles.featureHeading}>
+                <IconBadge name={index === 0 ? "pen" : "people"} tone={index === 0 ? "brick" : "sage"} />
+                <h3>{item.title}</h3>
+              </div>
               <p>{item.description}</p>
               <p className={styles.evidence}>{item.evidence}</p>
             </article>
@@ -69,13 +77,16 @@ export function ApprovedProfile() {
 
       <section className={styles.section} aria-labelledby="honors-title">
         <div className={styles.sectionHead}>
-          <h2 id="honors-title">部分荣誉</h2>
+          <SectionTitle id="honors-title" number="03">部分荣誉</SectionTitle>
         </div>
         <ul className={styles.awardList}>
           {honors.map((item) => (
             <li key={item.title}>
-              <span>{item.title}</span>
-              <span className={styles.meta}>{item.organization}</span>
+              <UiIcon name="award" />
+              <div>
+                <span>{item.title}</span>
+                <span className={styles.meta}>{item.organization}</span>
+              </div>
             </li>
           ))}
         </ul>

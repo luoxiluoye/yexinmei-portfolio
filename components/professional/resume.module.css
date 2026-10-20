@@ -30,16 +30,38 @@
 .page.page .link{display:inline-flex;align-items:center;gap:18px;min-height:44px;color:var(--resume-accent);font-size:13px}
 .page.page .link:hover{text-decoration:underline;text-underline-offset:6px}
 
+/* Small, consistent details: warm red, muted bronze and sage. */
+.page.page .uiIcon{display:inline-block;flex:none;width:18px;height:18px;vertical-align:middle}
+.page.page .iconBadge{display:inline-flex;align-items:center;justify-content:center;flex:none;width:42px;height:42px;border:1px solid #e7d6ca;border-radius:6px;color:#935748;background:#f5eae3}
+.page.page .iconBadge .uiIcon{width:21px;height:21px}
+.page.page .iconBadge[data-tone="sage"]{color:#627769;border-color:#dbe2d7;background:#edf0e8}
+.page.page .iconBadge[data-tone="bronze"]{color:#96764b;border-color:#e5dbc6;background:#f4efe2}
+.page.page .headingGroup{display:flex;align-items:center;gap:14px}
+.page.page .sectionIndex{display:inline-flex;align-items:center;justify-content:center;flex:none;width:31px;height:31px;border:1px solid #dacbbc;border-radius:3px;color:#947357;background:#f5efe6;font:13px/1 Georgia,serif}
+.page.page .sectionLabel:has(.uiIcon){display:flex;align-items:center;gap:9px}
+.page.page .sectionLabel .uiIcon,.page.page .eyebrow .uiIcon{width:16px;height:16px}
+.page.page .link>span[aria-hidden],.page.page .moreLinks>a>span:last-child{transition:transform .18s ease}
+.page.page .link:hover>span[aria-hidden],.page.page .moreLinks>a:hover>span:last-child{transform:translateX(3px)}
+.page.page .toolTags{display:flex;flex-wrap:wrap;gap:7px}
+.page.page .toolTag{display:inline-flex;align-items:center;padding:4px 9px;border:1px solid #e7dfd3;border-radius:3px;background:#f5f0e8;color:#776656;font-size:11px;line-height:1.7}
+.page.page .currentTag{display:inline-flex;align-items:center;gap:5px;margin-left:8px;padding:1px 7px;border-radius:3px;background:#f0e3db;color:#8b5143;font-size:10px;line-height:1.8;white-space:nowrap}
+.page.page .currentTag::before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}
+
 /* Home: one substantial image, clear introduction and open editorial sections. */
 .page.page .hero{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);align-items:center;gap:62px;padding:56px 0 46px;border-bottom:1px solid var(--resume-line)}
 .page.page .heroText{padding-bottom:26px}
+.page.page .welcome{display:flex;align-items:center;gap:9px;margin-bottom:19px;color:#94715e;font-size:12px;letter-spacing:.06em}
+.page.page .welcome>span:first-child{font-size:16px}
+.page.page .welcomeLine{width:33px;height:1px;margin-left:4px;background:#ccb8a5}
 .page.page .heroName{margin:0 0 22px;font-family:var(--resume-serif);font-size:61px;font-weight:600;line-height:1.3;letter-spacing:.08em;color:#623e35}
 .page.page .heroEducation{margin-bottom:15px;color:var(--resume-ink);font-size:18px;line-height:1.7}
 .page.page .heroIntro{margin:27px 0 31px;color:var(--resume-muted);font-size:15px;line-height:2}
+.page.page .heroMeta>span{display:inline-flex;align-items:center;gap:6px}
+.page.page .heroMeta .uiIcon{width:15px;height:15px;color:#9c7a63}
 .page.page .heroVisual{align-self:center}
 .page.page .heroVisual>img{width:100%;aspect-ratio:1.38;object-fit:cover;object-position:59% 50%;border-radius:2px}
 .page.page .heroCaption{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding-top:14px;color:#8b7769;font-size:11px;letter-spacing:.18em}
-.page.page .heroCaption::before{content:"";width:30px;height:1px;background:#bba18d}
+.page.page .heroCaption .uiIcon{width:15px;height:15px}
 .page.page .section{padding:47px 0;border-bottom:1px solid var(--resume-line)}
 .page.page .sectionHead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:29px}
 .page.page .sectionHead>p{max-width:430px;color:var(--resume-muted);font-size:14px}
@@ -53,7 +75,15 @@
 .page.page .feature h3{margin-bottom:13px;font-size:21px}
 .page.page .feature h3 a{font-size:inherit}
 .page.page .feature p{margin-bottom:15px;color:var(--resume-muted);font-size:14px;line-height:1.95}
+.page.page .feature .sectionLabel{color:var(--resume-accent);font-size:12px;margin-bottom:8px}
 .page.page .feature .link{margin-top:auto}
+.page.page .featureHeading{display:flex;align-items:center;gap:13px;margin-bottom:17px}
+.page.page .featureHeading h3{margin:0;font-size:20px}
+.page.page .featureCards{gap:22px}
+.page.page .featureCards .feature{padding:25px 24px 17px;border:1px solid #e3dace;border-radius:4px;background:#fdfbf7;transition:border-color .18s,background .18s}
+.page.page .featureCards .feature:focus-within,.page.page .featureCards .feature:hover{border-color:#c5ad98;background:#fffdf9}
+.page.page .featureCards .feature>p{font-size:13px;line-height:1.95;margin-bottom:13px}
+.page.page .featureCards .feature .link{width:100%;justify-content:space-between;padding-top:11px;border-top:1px solid #ece4d9}
 .page.page .featureGridTwo{grid-template-columns:repeat(2,minmax(0,1fr))}
 .page.page .featureGridTwo .feature:nth-child(2n){border-right:0}
 .page.page .featureGridTwo .feature:nth-child(2n+1){border-right:1px solid var(--resume-line)}
@@ -76,8 +106,10 @@
 .page.page .workPhoto img{width:100%;height:100%;min-height:330px;object-fit:cover;transition:transform .3s}
 .page.page .workPhoto:hover img{transform:scale(1.025)}
 .page.page .workPhoto>span{display:flex;justify-content:space-between;position:absolute;inset:auto 0 0;padding:35px 20px 17px;color:#fff;background:linear-gradient(transparent,#0009);font-size:12px}
-.page.page .moreLinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:38px;margin-top:30px}
-.page.page .moreLinks>a{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid var(--resume-line);color:var(--resume-muted);font-size:13px}
+.page.page .moreLinks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:24px}
+.page.page .moreLinks>a{display:flex;justify-content:space-between;align-items:center;gap:13px;min-height:66px;padding:10px 18px;border:1px solid var(--resume-line);border-radius:3px;background:#fdfbf7;color:var(--resume-muted);font-size:13px;transition:border-color .18s,color .18s}
+.page.page .moreLinks>a>.uiIcon{color:#9a785d}
+.page.page .moreLinks>a>span:not(:last-child){flex:1}
 .page.page .moreLinks>a:hover{color:var(--resume-accent);border-color:var(--resume-accent)}
 
 /* Inner pages keep the same typography, with a distinct rhythm for each subject. */
@@ -92,6 +124,8 @@
 .page.page a.tag:hover{color:var(--resume-accent);border-color:#ad8170}
 .page.page .pageHeader+.tags{gap:26px;margin-top:22px}
 .page.page .pageHeader+.tags .tag{padding:7px 0;border:0;border-bottom:1px solid #c7b0a0;background:transparent;font-size:14px}
+.page.page .pageHeader+.tags .tag{align-items:center;gap:8px;transition:color .18s,border-color .18s}
+.page.page .pageHeader+.tags .tag .uiIcon{width:16px;height:16px}
 .page.page .split{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:55px;padding-top:35px}
 .page.page .body>p{margin-bottom:17px}
 .page.page .body>.section:first-child{padding-top:0}
@@ -135,6 +169,10 @@
 .page.page .profileFacts{display:flex;flex-wrap:wrap;gap:30px 48px;margin-top:26px;padding-top:20px;border-top:1px solid var(--resume-line)}
 .page.page .profileFacts dt{margin-bottom:5px;color:var(--resume-muted);font-size:11px;letter-spacing:.06em}
 .page.page .profileFacts dd{color:var(--resume-ink);font-size:14px}
+.page.page .profileFacts dd:has(.uiIcon){display:flex;align-items:center;gap:7px}
+.page.page .profileFacts dd .uiIcon{width:16px;height:16px;color:#9a785d}
+.page.page .profileCopy .body .personalNote{display:flex;align-items:flex-start;gap:10px;margin:18px 0 0;padding:11px 14px;border:1px solid #e8e0d5;border-radius:4px;background:#f4efe7;font-size:13px;line-height:1.85}
+.page.page .personalNote>span:first-child{flex:none;font-size:17px}
 .page.page .portrait{width:100%}
 .page.page .photo{width:100%;aspect-ratio:.73;object-fit:cover;object-position:center 38%;border-radius:2px}
 .page.page .portraitCaption{margin-top:10px;color:var(--resume-muted);text-align:right;font-size:11px;letter-spacing:.12em}
@@ -145,11 +183,14 @@
 .page.page .awardList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px;padding:0;list-style:none}
 .page.page .awardList>li{padding:18px 0;border-bottom:1px solid var(--resume-line);font-size:15px;list-style:none}
 .page.page .awardList .meta{margin-top:7px;font-size:12px}
+.page.page .awardList>li{display:flex;align-items:flex-start;gap:12px}
+.page.page .awardList>li>.uiIcon{width:17px;height:17px;margin-top:5px;color:#a0865b}
 .page.page .educationGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:70px}
 .page.page .educationItem{padding:3px 0 5px 22px;border-left:2px solid #c7a28c}
 .page.page .educationItem h3{font-size:24px;margin-bottom:8px}
 .page.page .educationDegree{font-size:15px;margin-bottom:8px;color:var(--resume-ink)}
 .page.page .educationItem .small{max-width:440px;margin-top:15px}
+.page.page .educationLabel{display:inline-flex;margin-bottom:12px;padding:3px 8px;border:1px solid #e0d4c5;border-radius:3px;color:#947052;background:#f4ede3;font-size:11px;line-height:1.7}
 
 /* Experience: a short timeline, with details available at the point of interest. */
 .page.page .experienceList{border-top:1px solid var(--resume-line)}
@@ -161,7 +202,11 @@
 .page.page .experienceMeta>span{font-size:13px;color:var(--resume-muted)}
 .page.page .experienceRow .rowBody{align-self:center}
 .page.page .experienceMore{margin-top:4px;font-size:13px}
-.page.page .experienceMore summary{width:fit-content;min-height:44px;padding:9px 0;color:var(--resume-accent);cursor:pointer}
+.page.page .experienceMore summary{display:flex;align-items:center;gap:16px;width:fit-content;min-height:44px;padding:9px 0;color:var(--resume-accent);cursor:pointer;list-style:none}
+.page.page .experienceMore summary::-webkit-details-marker{display:none}
+.page.page .experienceMore summary::after{content:"+";display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border:1px solid #dccbbc;border-radius:50%;font-size:14px;line-height:1}
+.page.page .experienceMore[open] summary::after{content:"−";background:#efe4da}
+.page.page .experienceMore summary:hover{color:#68382f}
 .page.page .experienceMore .list{font-size:14px;padding-top:7px}
 .page.page .otherExperience{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:24px;padding-top:25px;border-top:1px solid var(--resume-line)}
 .page.page .otherExperience h3{font-size:18px;margin-bottom:9px}
@@ -174,49 +219,55 @@
 .page.page .abilityBlock h2{font-size:25px;margin-bottom:16px}
 .page.page .abilityBlock>p{font-size:15px;color:var(--resume-muted);margin-bottom:12px;line-height:1.95}
 .page.page .abilityBlock .abilityMeta{padding-top:12px;margin-top:18px;border-top:1px solid var(--resume-line);font-size:12px;color:#94745b}
+.page.page .abilityHeading{display:flex;align-items:center;gap:14px;margin-bottom:19px}
+.page.page .abilityHeading h2{margin:0;font-size:24px}
+.page.page .abilityBlock>.abilityHeading+p{color:var(--resume-ink)}
+.page.page .abilityMeta .toolTags{margin:9px 0 10px}
 .page.page .journalList{max-width:860px;margin:0 auto}
 .page.page .journalEntry{padding:29px 0 33px;border-bottom:1px solid var(--resume-line)}
 .page.page .journalEntry:first-child{padding-top:0}
 .page.page .journalEntry:last-child{border-bottom:0;padding-bottom:0}
 .page.page .journalMeta{display:flex;flex-wrap:wrap;gap:12px 20px;margin-bottom:13px;font-size:12px;color:#95765d}
+.page.page .journalMeta{align-items:center}
+.page.page .journalCategory{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid #e5dbcc;border-radius:3px;background:#f4eee5;font-size:11px;line-height:1.7}
+.page.page .journalCategory>span{font-size:13px}
 .page.page .journalEntry h2{font-size:27px;line-height:1.6;margin-bottom:12px}
 .page.page .journalEntry h2 a:hover{color:var(--resume-accent)}
 .page.page .journalEntry>p{font-size:15px;line-height:1.95;color:var(--resume-muted);margin-bottom:12px}
 .page.page .articleHeader{max-width:760px;margin:0 auto}
 .page.page .articleHeader .title,.page.page .articleHeader .lead{max-width:100%}
 
-/* Contact: one generous image opening followed by a clearly visible email. */
-.page.page .contactOpening{position:relative;isolation:isolate;overflow:hidden;margin-top:34px;min-height:288px;padding:48px 44px;background:#f4efe5}
-.page.page .contactArtwork{position:absolute;z-index:-2;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
-.page.page .contactOpeningCopy{max-width:65%}
-.page.page .contactOpening .title{max-width:none;margin:11px 0 15px;color:#623e35}
-.page.page .contactOpening .lead{max-width:none;color:#6a6259}
-.page.page .contactDetails{padding:39px 0 0}
-.page.page .contactPrimary{display:flex;align-items:center;justify-content:space-between;gap:30px;padding:0 0 32px;border-bottom:1px solid var(--resume-line)}
-.page.page .contactPrimary .sectionLabel{font:400 13px/1.8 "PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:.08em}
-.page.page .emailAddress{display:inline-block;margin-bottom:12px;color:var(--resume-ink);font:400 clamp(26px,3.5vw,42px)/1.45 "Helvetica Neue",Arial,sans-serif;overflow-wrap:anywhere}
-.page.page .emailAddress:hover{color:var(--resume-accent)}
-.page.page .contactPrimary .button{cursor:pointer;flex-shrink:0}
-.page.page .contactSecondary{display:grid;grid-template-columns:1fr 1fr;gap:70px}
-.page.page .contactSecondary .contactRow{padding:27px 0 25px}
-.page.page .contactSecondary .contactValue{font-size:24px}
-
-/* Contact keeps visible text and copy controls in an open two-column layout. */
-.page.page .contactGrid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:90px;padding-top:44px}
-.page.page .contactIntro{align-self:start;padding:0 32px 0 0;border-right:1px solid var(--resume-line)}
-.page.page .contactIntro h2{margin:7px 0 17px;font-family:var(--resume-serif);font-size:32px;color:#623e35}
-.page.page .contactIntro>p:not(.sectionLabel){color:var(--resume-muted);font-size:14px;line-height:1.95}
-.page.page .contactIntro .tags{margin:18px 0 24px}
-.page.page .contactIntent{padding:20px 0 10px;border-top:1px solid var(--resume-line)}
-.page.page .contactIntent h3{margin-bottom:7px;color:var(--resume-muted);font-size:12px}
-.page.page .contactIntent p{color:var(--resume-ink);font-size:15px}
-.page.page .contactRow{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:23px 0 28px;border-bottom:1px solid var(--resume-line)}
-.page.page .contactRow h2{margin-bottom:9px;color:var(--resume-muted);font:400 13px/1.8 "PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:.05em}
-.page.page .contactValue{display:block;color:var(--resume-ink);font:400 27px/1.5 "Helvetica Neue",Arial,"PingFang SC",sans-serif;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.page.page .contactRow div>p:not(.contactValue){margin-top:9px;color:var(--resume-muted);font-size:12px}
-.page.page .copyButton{display:inline-flex;justify-content:center;align-items:center;flex-shrink:0;gap:10px;min-height:44px;min-width:100px;padding:7px 14px;border:1px solid #c8b6a5;border-radius:2px;color:#866452;background:transparent;font:400 12px/1.8 "PingFang SC","Microsoft YaHei",sans-serif;cursor:pointer}
+/* Contact uses a quiet page heading and a compact, practical address card. */
+.page.page.contactPage{padding-bottom:38px}
+.page.page .contactHeader{display:flex;align-items:center;justify-content:space-between;gap:45px;padding:39px 0 30px}
+.page.page .contactHeader .title{max-width:none;margin:10px 0 10px;font-size:36px;color:#623e35}
+.page.page .contactHeader .lead{max-width:none;font-size:14px}
+.page.page .contactVignette{flex:none;width:176px;height:110px;object-fit:cover;object-position:87% center;border:1px solid #e5ddd0;border-radius:3px}
+.page.page .contactLayout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:68px;margin-top:35px}
+.page.page .contactAside{padding:7px 0 0}
+.page.page .contactBadge{display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border:1px solid #e4d3c7;border-radius:3px;background:#f4ebe3;color:#8e6651;font-size:11px}
+.page.page .contactBadge .uiIcon{width:15px;height:15px}
+.page.page .contactAside h2{margin:19px 0 7px;font-size:24px;letter-spacing:.04em}
+.page.page .contactAside>p{font-size:13px;line-height:1.9;color:var(--resume-muted)}
+.page.page .contactAside .locationLine{display:flex;align-items:center;gap:7px;margin-top:15px;color:#8e715c;font-size:12px}
+.page.page .locationLine .uiIcon{width:15px;height:15px}
+.page.page .contactDirections{margin:20px 0 10px;padding-top:18px;border-top:1px solid var(--resume-line)}
+.page.page .contactDirections>p{margin-bottom:10px;color:var(--resume-muted);font-size:11px}
+.page.page .contactList{padding:0 25px;border:1px solid #e2d7c8;border-radius:5px;background:#fdfbf7}
+.page.page .contactItem{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:18px;min-height:128px;padding:23px 0;border-bottom:1px solid #e7dfd4}
+.page.page .contactItem:last-child{border-bottom:0}
+.page.page .contactItemCopy h2{margin:0 0 5px;color:#847468;font-size:11px;line-height:1.7;letter-spacing:.06em}
+.page.page .contactAddress{display:block;width:fit-content;max-width:100%;color:var(--resume-ink);font:400 23px/1.5 "Helvetica Neue",Arial,"PingFang SC",sans-serif;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.page.page a.contactAddress:hover{color:var(--resume-accent)}
+.page.page .contactItemCopy>p:not(.contactAddress){margin-top:5px;color:var(--resume-muted);font-size:11px;line-height:1.8}
+.page.page .copyButton{display:inline-flex;justify-content:center;align-items:center;flex-shrink:0;gap:7px;min-height:42px;min-width:104px;padding:8px 11px;border:1px solid #d2c3b2;border-radius:3px;color:#866452;background:transparent;font:400 12px/1.7 "PingFang SC","Microsoft YaHei",sans-serif;cursor:pointer;transition:color .18s,background .18s,border-color .18s}
+.page.page .copyButton .uiIcon{width:15px;height:15px}
 .page.page .copyButton:hover{background:#f2eae1;border-color:var(--resume-accent);color:var(--resume-accent)}
-.page.page .copyFeedback{min-height:40px;margin-top:14px;color:var(--resume-accent);font-size:13px;overflow-wrap:anywhere}
+.page.page .copyButton[data-copied="true"]{color:#5d7363;background:#edf0e8;border-color:#bdccb8}
+.page.page .contactFootnote{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:13px;color:var(--resume-muted);font-size:11px}
+.page.page .contactFootnote p{display:flex;align-items:center;gap:6px}
+.page.page .contactFootnote .link{font-size:12px;gap:12px;min-height:36px}
+.page.page .copyFeedback{min-height:24px;margin-top:5px;color:var(--resume-accent);font-size:12px;overflow-wrap:anywhere}
 
 @media(min-width:1600px){
   .page.page .hero{padding-top:68px;padding-bottom:56px}
@@ -233,8 +284,15 @@
   .page.page .feature{padding-right:22px}
   .page.page .row{grid-template-columns:210px 1fr;gap:32px}
   .page.page .introGrid{grid-template-columns:minmax(0,1fr) 260px;gap:60px}
-  .page.page .contactGrid{grid-template-columns:260px 1fr;gap:50px}
-  .page.page .contactValue{font-size:24px}
+  .page.page .contactLayout{grid-template-columns:220px minmax(0,1fr);gap:35px}
+  .page.page .contactList{padding:0 19px}
+  .page.page .contactItem{gap:13px;grid-template-columns:36px minmax(0,1fr) auto}
+  .page.page .contactItem>.iconBadge{width:36px;height:36px}
+  .page.page .contactAddress{font-size:21px}
+  .page.page .contactItem .copyButton{min-width:93px;font-size:11px;padding:7px 9px}
+  .page.page .featureCards .feature{padding:22px 20px 14px}
+  .page.page .featureHeading{gap:10px}
+  .page.page .featureHeading h3{font-size:19px}
 }
 @media(max-width:760px){
   .page.page{width:calc(100% - 40px);padding-bottom:36px;font-size:15px}
@@ -246,6 +304,9 @@
   .page.page .heroIntro{margin:20px 0 23px;font-size:14px}
   .page.page .heroVisual>img{aspect-ratio:1.6;object-position:center 57%}
   .page.page .heroCaption{padding-top:11px;font-size:10px}
+  .page.page .welcome{margin-bottom:15px;font-size:11px}
+  .page.page .headingGroup{gap:10px}
+  .page.page .sectionIndex{width:26px;height:26px;font-size:11px}
   .page.page .section{padding:33px 0}
   .page.page .sectionHead{align-items:flex-start;gap:16px;margin-bottom:24px}
   .page.page .sectionHead h2{font-size:23px}
@@ -256,6 +317,13 @@
   .page.page .feature:first-child{padding-top:0;border-top:0}
   .page.page .feature h3{margin-bottom:8px;font-size:20px}
   .page.page .feature p{margin-bottom:6px}
+  .page.page .featureCards{gap:14px}
+  .page.page .featureCards .feature{padding:21px 21px 12px;border:1px solid #e3dace}
+  .page.page .featureCards .feature:first-child{padding-top:21px;border-top:1px solid #e3dace}
+  .page.page .featureHeading{margin-bottom:12px}
+  .page.page .featureHeading h3{margin:0}
+  .page.page .iconBadge{width:38px;height:38px}
+  .page.page .featureCards .feature .link{margin-top:8px}
   .page.page .row{grid-template-columns:1fr;gap:16px;padding:25px 0}
   .page.page .rowMeta{color:#92755f}
   .page.page .rowMeta h3{display:inline;margin-right:12px;font-size:22px}
@@ -269,7 +337,8 @@
   .page.page .worksBand h2{font-size:28px}
   .page.page .worksBand p:not(.sectionLabel){margin:12px 0 21px}
   .page.page .workPhoto img{aspect-ratio:1.65;min-height:0}
-  .page.page .moreLinks{grid-template-columns:1fr;gap:6px;margin-top:19px}
+  .page.page .moreLinks{grid-template-columns:1fr;gap:10px;margin-top:19px}
+  .page.page .moreLinks>a{min-height:58px}
   .page.page .pageHeader{padding:33px 0 28px}
   .page.page .title{position:relative;max-width:100%;margin:11px 0 13px;font-size:34px;letter-spacing:.02em}
   .page.page .lead{position:relative;max-width:100%;font-size:14px}
@@ -293,13 +362,6 @@
   .page.page .awardList{grid-template-columns:1fr}
   .page.page .educationList h3{font-size:21px}
   .page.page .footerPrompt{flex-direction:column;align-items:flex-start;gap:18px;margin-top:28px;padding-top:25px}
-  .page.page .contactGrid{grid-template-columns:1fr;gap:32px;padding-top:28px}
-  .page.page .contactIntro{padding:0 0 24px;border:0;border-bottom:1px solid var(--resume-line)}
-  .page.page .contactIntro h2{font-size:28px}
-  .page.page .contactIntro .tags{margin:14px 0}
-  .page.page .contactIntent{margin-top:16px;padding-top:16px}
-  .page.page .contactValue{font-size:22px}
-  .page.page .contactRow{gap:14px;padding:20px 0 24px}
   .page.page .copyButton{min-width:86px;padding:7px 10px;font-size:11px}
   .page.page .article{margin-top:28px;font-size:15px}
   .page.page .list,.page.page .detailList{font-size:14px}
@@ -311,22 +373,30 @@
   .page.page .experienceMeta h3{font-size:21px}
   .page.page .otherExperience{grid-template-columns:1fr;gap:23px}
   .page.page .abilityGrid{grid-template-columns:1fr;gap:30px}
-  .page.page .abilityBlock h2{font-size:23px}
+  .page.page .abilityBlock h2{font-size:22px}
+  .page.page .abilityHeading{gap:12px;margin-bottom:16px}
   .page.page .abilityBlock>p{font-size:14px}
   .page.page .journalEntry{padding:24px 0}
   .page.page .journalEntry h2{font-size:22px}
   .page.page .journalEntry>p{font-size:14px}
-  .page.page .contactOpening{min-height:235px;margin-top:24px;padding:29px 24px}
-  .page.page .contactOpening::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#faf8f3e8 0%,#faf8f3ba 50%,#faf8f320 100%)}
-  .page.page .contactOpeningCopy{max-width:100%}
-  .page.page .contactArtwork{object-position:62% center}
-  .page.page .contactOpening .lead{font-size:14px}
-  .page.page .contactDetails{padding-top:28px}
-  .page.page .contactPrimary{align-items:flex-start;flex-direction:column;gap:18px;padding-bottom:26px}
-  .page.page .emailAddress{font-size:clamp(23px,6.4vw,34px)}
-  .page.page .contactSecondary{grid-template-columns:1fr;gap:0}
-  .page.page .contactSecondary .contactRow{padding:24px 0}
-  .page.page .contactSecondary .contactValue{font-size:22px}
+  .page.page.contactPage{padding-bottom:26px}
+  .page.page .contactHeader{padding:31px 0 25px;gap:20px}
+  .page.page .contactHeader .title{font-size:32px}
+  .page.page .contactHeader .lead{font-size:13px;line-height:1.9}
+  .page.page .contactVignette{display:none}
+  .page.page .contactLayout{grid-template-columns:1fr;gap:23px;margin-top:25px}
+  .page.page .contactAside{padding:0 0 19px;border-bottom:1px solid var(--resume-line)}
+  .page.page .contactAside h2{margin:13px 0 5px;font-size:22px}
+  .page.page .contactAside .locationLine{margin-top:10px}
+  .page.page .contactDirections{margin-top:14px;padding-top:13px}
+  .page.page .contactList{padding:0 16px}
+  .page.page .contactItem{grid-template-columns:34px minmax(0,1fr);gap:10px 12px;padding:20px 0;min-height:0}
+  .page.page .contactItem>.iconBadge{width:34px;height:34px;align-self:start;margin-top:3px}
+  .page.page .contactItem>.iconBadge .uiIcon{width:18px;height:18px}
+  .page.page .contactItem>.copyButton{grid-column:2;justify-self:start;min-height:40px}
+  .page.page .contactAddress{font-size:21px}
+  .page.page .contactFootnote{align-items:flex-start;flex-wrap:wrap;gap:3px;margin-top:14px}
+  .page.page .contactFootnote p{min-height:30px}
 }
 @media(max-width:380px){
   .page.page{width:calc(100% - 32px)}
@@ -337,9 +407,10 @@
   .page.page .button,.page.page .buttonSecondary{padding:10px 16px;gap:16px;font-size:12px}
   .page.page .sectionHead h2{font-size:21px}
   .page.page .sectionHead{gap:10px}
-  .page.page .contactValue{font-size:20px}
-  .page.page .contactRow{flex-wrap:wrap}
   .page.page .profileFacts{gap:20px 25px}
+  .page.page .sectionIndex{width:23px;height:23px;font-size:10px}
+  .page.page .headingGroup{gap:7px}
+  .page.page .contactAddress{font-size:18px}
 }
 @media(prefers-reduced-motion:reduce){
   .page.page *{scroll-behavior:auto!important;transition:none!important;animation:none!important}
@@ -349,10 +420,9 @@
   .page.page{width:100%;padding:0;font-size:11pt}
   .page.page .hero{padding:20px 0;gap:25px;grid-template-columns:1fr 260px}
   .page.page .heroName{font-size:38pt}
-  .page.page .contactArtwork{display:none}
   .page.page .section{break-inside:avoid;padding:20px 0}
-  .page.page .contactRow,.page.page .row{break-inside:avoid}
-  .page.page .copyButton,.page.page .moreLinks{display:none}
+  .page.page .copyButton,.page.page .moreLinks,.page.page .contactVignette{display:none}
+  .page.page .contactItem,.page.page .row{break-inside:avoid}
   .page.page .worksBand{break-inside:avoid}
   .page.page .link{min-height:20px}
 }
