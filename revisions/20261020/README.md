@@ -7,8 +7,10 @@ for publicity, communications, party affairs, and administrative roles.
 
 - Home, education/profile, experience list and details, contact, capabilities,
   and journal pages use `components/professional/resume.module.css`.
-- Existing public photographs are reused. No generated portraits, metrics, or
-  downloadable-resume placeholders are introduced.
+- Existing public photographs are reused. Two generated decorative images are
+  added under `public/assets/profile-20261020/`; their prompts are recorded in
+  `asset-prompts.json`. No generated portraits, metrics, or resume placeholders
+  are introduced.
 - `/portfolio` and every portfolio subroute, component, dataset, model, image,
   stylesheet, and dependency remain the deployed originals.
 
@@ -22,7 +24,10 @@ The preview is built from the complete original deployment
 commit of this branch as the deployment build command. The deployment target is
 preview; the production custom domain is not promoted or reassigned.
 
-`apply.cjs` embeds 24 explicitly approved source files. It also changes exactly
+`apply.cjs` embeds 24 explicitly approved source files, and downloads two exact
+new image paths from the same immutable GitHub commit. The image sizes, WebP
+headers and SHA256 checksums are checked before writing. New paths must be absent;
+existing assets cannot be replaced. It also changes exactly
 one route array in each of `site-frame.tsx` and `site-chrome.tsx`, moving only
 `/inventory` and `/journal` into the professional shell. `/portfolio` retains its
 existing route predicate and rendering branch byte for byte.
@@ -63,7 +68,17 @@ commit, then invokes `node` on it. The script runs `npm run build` itself.
 - Portfolio preservation is checked against the original deployed source and
   all assets by the build script, rather than against the older Git checkout.
 
-### Verified preview
+## Visual follow-up
+
+The first preview was rejected as visually awkward. The follow-up replaces the
+small resume card with a large editorial workspace image, returns to warm white
+and brick red, uses open sections in place of tinted cards, and keeps the real
+portrait in the about page. Experience lists link to their details instead of
+repeating them; skills use two open columns; journal entries follow a single
+reading column. Contact uses the second generated image and a prominent email.
+All new styling remains scoped to the non-portfolio page root.
+
+### Previously verified preview
 
 - URL: https://yexinmei-portfolio-r4fe02r48-luoyes-projects-a7639a71.vercel.app/
 - Deployment: `dpl_Ghm1mA7Ysss76y3D9bqFCnHTzsg9`; READY; preview (`target: null`).

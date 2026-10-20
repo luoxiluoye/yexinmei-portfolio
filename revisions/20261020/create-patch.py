@@ -5,6 +5,8 @@ This generator performs no network, Git, deployment, or environment operations.
 Run it after all approved files are complete.  Missing files are errors, never
 placeholders.  The emitted CommonJS script is self-contained and runs the
 existing `npm run build` only after checking the original deployment identity.
+Its only downloads are the two approved new WebP assets, fetched from the same
+immutable GitHub revision as the script and verified before any source is written.
 """
 
 from __future__ import annotations
@@ -24,6 +26,11 @@ OUTPUT = SITE / "revisions/20261020/apply.cjs"
 BASE_DEPLOYMENT = "dpl_9rpmmsW9wSMz5r376WsNQo75U36Z"
 OLD_ROUTES = '["/portfolio", "/inventory", "/journal"]'
 NEW_ROUTES = '["/portfolio"]'
+ASSET_TARGETS = (
+    "public/assets/profile-20261020/editorial-study.webp",
+    "public/assets/profile-20261020/editorial-light.webp",
+)
+MAX_ASSET_BYTES = 8 * 1024 * 1024
 
 APP_TARGETS = (
     "app/page.tsx",
@@ -159,6 +166,35 @@ def collect_targets() -> list[str]:
     return sorted(targets)
 
 
+def collect_assets(originals: dict[str, str]) -> list[dict]:
+    assets = []
+    problems: list[str] = []
+    for relative in ASSET_TARGETS:
+        try:
+            if relative in originals:
+                raise ValueError(f"New asset overlaps an original source manifest path: {relative}")
+            file = checked_local_file(relative)
+            size = file.stat().st_size
+            if not 20 <= size <= MAX_ASSET_BYTES:
+                raise ValueError(f"Approved WebP must be between 20 bytes and 8 MiB: {relative}")
+            raw = file.read_bytes()
+            if (
+                raw[:4] != b"RIFF"
+                or raw[8:12] != b"WEBP"
+                or int.from_bytes(raw[4:8], "little") + 8 != len(raw)
+            ):
+                raise ValueError(f"Approved asset is not a complete RIFF WebP file: {relative}")
+            assets.append({"path": relative, "size": len(raw), "sha256": digest(raw)})
+        except (OSError, ValueError) as error:
+            problems.append(f"  {error}")
+    if problems:
+        raise ValueError(
+            "Approved new image assets are not ready. No patch was written and no images were created.\n"
+            + "\n".join(problems)
+        )
+    return sorted(assets, key=lambda item: item["path"])
+
+
 RUNTIME = r'''
 const fs = require("node:fs");
 const path = require("node:path");
@@ -232,6 +268,22 @@ function validateEmbedded() {
         hashBuffer(Buffer.from(item.content, "utf8")) !== item.sha256) fail(`Embedded payload checksum mismatch: ${item.path}`);
     seen.add(item.path);
   }
+  const expectedAssets = [
+    "public/assets/profile-20261020/editorial-light.webp",
+    "public/assets/profile-20261020/editorial-study.webp",
+  ];
+  if (!Array.isArray(spec.assets) || spec.assets.length !== 2 ||
+      JSON.stringify(spec.assets.map(item => item.path).sort()) !== JSON.stringify(expectedAssets)) {
+    fail("Only the two approved namespaced image additions are allowed");
+  }
+  for (const asset of spec.assets) {
+    assertRelative(asset.path);
+    if (!/^[0-9a-f]{64}$/.test(asset.sha256) || !Number.isSafeInteger(asset.size) ||
+        asset.size < 20 || asset.size > 8 * 1024 * 1024 || approved.has(asset.path) ||
+        Object.hasOwn(spec.originalSha1, asset.path) || !spec.mustBeAbsent.includes(asset.path)) {
+      fail(`Invalid new image manifest: ${asset.path}`);
+    }
+  }
   if (spec.sharedPatches.length !== 2 || spec.oldRoutes !== '["/portfolio", "/inventory", "/journal"]' ||
       spec.newRoutes !== '["/portfolio"]') fail("Unexpected shared route patch");
   const expectedShared = ["components/layout/site-chrome.tsx", "components/layout/site-frame.tsx"];
@@ -273,7 +325,7 @@ function preflight(root, revision) {
   }
   for (const relative of spec.mustBeAbsent) {
     const absolute = locate(root, relative, { allowMissing: true });
-    if (fs.existsSync(absolute)) fail(`New helper would overwrite an unapproved existing file: ${relative}`);
+    if (fs.existsSync(absolute)) fail(`New approved file would overwrite an existing file: ${relative}`);
   }
   for (const relative of spec.approvedWrites) {
     // Known original files were required and hashed above. Other approved
@@ -281,6 +333,74 @@ function preflight(root, revision) {
     locate(root, relative, { allowMissing: true });
   }
   console.log(`[profile-preview] Original deployment verified: ${spec.baseDeployment}; ${Object.keys(spec.originalSha1).length} SHA1 anchors`);
+}
+
+function validateAssetBuffer(asset, buffer) {
+  const approved = spec.assets.find(item => item.path === asset.path);
+  if (!approved || approved.sha256 !== asset.sha256 || approved.size !== asset.size) fail("Unapproved new image descriptor");
+  if (!Buffer.isBuffer(buffer) || buffer.length !== asset.size ||
+      buffer.subarray(0, 4).toString("ascii") !== "RIFF" ||
+      buffer.subarray(8, 12).toString("ascii") !== "WEBP" ||
+      buffer.readUInt32LE(4) + 8 !== buffer.length || hashBuffer(buffer) !== asset.sha256) {
+    fail(`New image content or SHA256 mismatch: ${asset.path}`);
+  }
+}
+
+async function downloadAsset(asset, revision) {
+  if (!/^[0-9a-f]{40}$/.test(revision || "")) fail("New images require the pinned 40-character revision SHA");
+  const approved = spec.assets.find(item => item.path === asset.path);
+  if (!approved || approved.sha256 !== asset.sha256 || approved.size !== asset.size) fail("Unapproved image download");
+  const url = `https://raw.githubusercontent.com/luoxiluoye/yexinmei-portfolio/${revision}/${asset.path}`;
+  let response;
+  try {
+    response = await fetch(url, {
+      redirect: "error",
+      credentials: "omit",
+      signal: AbortSignal.timeout(30000),
+    });
+  } catch {
+    fail(`Unable to download pinned image: ${asset.path}`);
+  }
+  if (response.status !== 200 || !response.body) fail(`Pinned image request failed (${response.status}): ${asset.path}`);
+  const chunks = [];
+  let received = 0;
+  try {
+    for await (const chunk of response.body) {
+      const buffer = Buffer.from(chunk);
+      received += buffer.length;
+      if (received > asset.size) fail(`Pinned image exceeds its approved size: ${asset.path}`);
+      chunks.push(buffer);
+    }
+  } catch {
+    fail(`Pinned image stream failed or exceeded its approved size: ${asset.path}`);
+  }
+  const buffer = Buffer.concat(chunks, received);
+  validateAssetBuffer(asset, buffer);
+  return buffer;
+}
+
+function writeNewAsset(root, asset, buffer) {
+  validateAssetBuffer(asset, buffer);
+  const absolute = locate(root, asset.path, { allowMissing: true });
+  // Recheck at write time. O_EXCL makes the no-overwrite requirement atomic,
+  // unlike renaming a temporary file over an existing destination.
+  if (fs.existsSync(absolute)) fail(`Refusing to replace an existing asset: ${asset.path}`);
+  let ancestor = root;
+  for (const segment of asset.path.split("/").slice(0, -1)) {
+    ancestor = path.join(ancestor, segment);
+    if (!fs.existsSync(ancestor)) fs.mkdirSync(ancestor, { mode: 0o755 });
+    const stat = fs.lstatSync(ancestor);
+    if (stat.isSymbolicLink() || !stat.isDirectory()) fail(`Unsafe new image ancestor: ${asset.path}`);
+  }
+  locate(root, asset.path, { allowMissing: true });
+  const descriptor = fs.openSync(absolute,
+    fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | fs.constants.O_NOFOLLOW, 0o644);
+  try {
+    fs.writeFileSync(descriptor, buffer);
+  } finally {
+    fs.closeSync(descriptor);
+  }
+  if (hashFile(root, asset.path) !== asset.sha256) fail(`New image failed its post-write checksum: ${asset.path}`);
 }
 
 function transformShared(original, relative) {
@@ -311,8 +431,9 @@ function snapshotProtected(root, excluded) {
       fail(`Unsupported entry in protected source: ${relative}`);
     }
   }
-  // These roots come from the original Vercel source manifest. In particular,
-  // every descendant of public/ is hashed: no asset filename is exempted.
+  // These roots come from the original Vercel source manifest. Every original
+  // descendant of public/ is hashed. Only the two approved additions, required
+  // to be absent in preflight, are checked separately against their pinned SHA256.
   // Build directories and environment/credential files are not inspected.
   for (const relative of spec.protectedRoots) visit(relative);
   for (const relative of spec.protectedRootFiles) visit(relative);
@@ -373,14 +494,14 @@ function verifyWritten(root, writes) {
   }
 }
 
-function main() {
+async function main() {
   const arguments_ = process.argv.slice(2);
   if (arguments_.length > 1 || (arguments_.length && arguments_[0] !== "--verify-only" && !/^[0-9a-f]{40}$/.test(arguments_[0]))) fail("Only --verify-only or the pinned revision SHA is supported");
   const revision = /^[0-9a-f]{40}$/.test(arguments_[0] || "") ? arguments_[0] : null;
   validateEmbedded();
   const root = process.cwd();
   preflight(root, revision);
-  const excluded = new Set([...spec.approvedWrites, ...spec.sharedPatches]);
+  const excluded = new Set([...spec.approvedWrites, ...spec.sharedPatches, ...spec.assets.map(asset => asset.path)]);
   const writes = spec.files.map(item => [item.path, Buffer.from(item.content, "utf8")]);
   for (const relative of spec.sharedPatches) {
     writes.push([relative, transformShared(fs.readFileSync(locate(root, relative)), relative)]);
@@ -388,10 +509,18 @@ function main() {
   const before = snapshotProtected(root, excluded);
   console.log(`[profile-preview] Protected baseline: ${before.entries.length} files; SHA256 ${before.digest}`);
   if (arguments_[0] === "--verify-only") {
-    console.log(`[profile-preview] Verification complete; ${writes.length} approved writes prepared, no files changed, no build run`);
+    console.log(`[profile-preview] Verification complete; ${writes.length} approved source writes and ${spec.assets.length} new images planned; no download, no files changed, no build run`);
     return;
   }
+  if (!revision) fail("Applying a patch with new images requires its pinned revision SHA");
+  // Fetch and validate both images before writing any source. URLs are fixed to
+  // this repository and immutable revision, with no credentials or redirects.
+  const downloaded = await Promise.all(spec.assets.map(async asset => ({ asset, buffer: await downloadAsset(asset, revision) })));
   writes.forEach(([relative, buffer], index) => writeAtomic(root, relative, buffer, index));
+  for (const { asset, buffer } of downloaded) {
+    writeNewAsset(root, asset, buffer);
+    writes.push([asset.path, buffer]);
+  }
   verifyWritten(root, writes);
   const afterPatch = snapshotProtected(root, excluded);
   assertSameSnapshot(before, afterPatch, "after patch");
@@ -407,25 +536,25 @@ function main() {
   if (result.error) fail(`Build process failed to start (${result.error.code || "unknown error"})`);
   if (result.signal) fail(`Build terminated by ${result.signal}`);
   if (result.status !== 0) fail(`npm run build failed with exit status ${result.status}`);
-  console.log("[profile-preview] Build succeeded; portfolio source, shared protected source, data, and all public assets are unchanged");
+  console.log(`[profile-preview] Build succeeded; portfolio source, protected source, data, and every original public asset are unchanged; ${spec.assets.length} approved new images verified`);
 }
 
 if (require.main === module) {
-  try { main(); }
-  catch (error) {
+  main().catch(error => {
     console.error(error instanceof Error ? error.message : "[profile-preview] Build patch failed");
     process.exitCode = 1;
-  }
+  });
 }
 
-// Expose read-only helpers for isolated guard tests; main has no bypass flags.
-module.exports = { validateEmbedded, assertRelative, transformShared, snapshotProtected, assertSameSnapshot };
+// Imports never run main. Guard helpers support isolated temporary-directory tests.
+module.exports = { validateEmbedded, assertRelative, transformShared, snapshotProtected, assertSameSnapshot, validateAssetBuffer, downloadAsset, writeNewAsset };
 '''
 
 
 def build_script() -> tuple[str, dict]:
     originals, raw_manifest = read_source_manifest()
     targets = collect_targets()
+    assets = collect_assets(originals)
     anchor_paths = set(IDENTITY_ANCHORS) | set(SHARED_TARGETS)
     anchor_paths.update(path for path in targets if path in originals)
     anchor_paths.update(path for path in originals if path.startswith("components/portfolio/"))
@@ -455,6 +584,9 @@ def build_script() -> tuple[str, dict]:
     for item in files:
         if digest(checked_local_file(item["path"]).read_bytes()) != item["sha256"]:
             raise ValueError(f"Approved file changed during packaging; retry after edits finish: {item['path']}")
+    for asset in assets:
+        if digest(checked_local_file(asset["path"]).read_bytes()) != asset["sha256"]:
+            raise ValueError(f"Approved image changed during packaging; retry after edits finish: {asset['path']}")
 
     protected_roots = sorted({relative.split("/")[0] for relative in originals if "/" in relative})
     expected_roots = {"app", "components", "data", "lib", "public", "scripts", "styles", "types"}
@@ -465,6 +597,7 @@ def build_script() -> tuple[str, dict]:
         relative for relative in targets
         if relative.startswith("components/professional/") and relative not in originals
     )
+    must_be_absent.extend(asset["path"] for asset in assets)
     # A stale sibling module with the other extension can alter TS resolution.
     for relative in targets:
         if relative.startswith("components/professional/") and relative.endswith((".ts", ".tsx")):
@@ -483,10 +616,11 @@ def build_script() -> tuple[str, dict]:
         "protectedRoots": protected_roots,
         "protectedRootFiles": root_files,
         "files": files,
+        "assets": assets,
     }
     script = (
-        '// Generated by create-preview-patch.py; only applies to the pinned original deployment.\n'
-        '// Source files are embedded below; this script makes no external requests.\n'
+        '// Generated by revisions/20261020/create-patch.py; applies only to the pinned original deployment.\n'
+        '// Source files are embedded; only two new images are fetched from the pinned GitHub revision.\n'
         '"use strict";\n\nconst spec = '
         + json.dumps(spec, ensure_ascii=False, indent=2)
         + ";\n"
@@ -510,7 +644,7 @@ def main() -> int:
                     raise ValueError("Refusing a symlinked patch output directory")
                 directory.mkdir(exist_ok=True)
             OUTPUT.write_bytes(encoded)
-        print(f"{'Validated' if args.check else 'Generated'} {len(spec['files'])} approved files + 2 exact shared route edits")
+        print(f"{'Validated' if args.check else 'Generated'} {len(spec['files'])} approved files + 2 exact shared route edits + {len(spec['assets'])} new pinned images")
         print(f"Original SHA1 anchors: {len(spec['originalSha1'])}; protected roots: {', '.join(spec['protectedRoots'])}")
         print(f"Patch bytes: {len(encoded)}; SHA256: {digest(encoded)}")
         if not args.check:

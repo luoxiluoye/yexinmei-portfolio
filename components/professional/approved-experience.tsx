@@ -10,22 +10,24 @@ import styles from "./resume.module.css";
 
 function ExperienceRow({ entry }: { entry: ExperienceEntry }) {
   return (
-    <article className={styles.row}>
-      <div className={styles.rowMeta}>
+    <article className={styles.experienceRow}>
+      <div className={styles.experienceMeta}>
         {entry.period ? <p>{entry.period}</p> : null}
-        <p>{entry.role}</p>
+        <h3>{entry.organization}</h3>
+        <span>{entry.role}</span>
       </div>
       <div className={styles.rowBody}>
-        <h3>{entry.organization}</h3>
         <p>{entry.summary}</p>
-        <ul className={styles.list}>
-          {entry.work.map((item) => <li key={item}>{item}</li>)}
-        </ul>
         {entry.practiceSlug ? (
           <Link className={styles.link} href={`/quests/${entry.practiceSlug}`}>
             查看工作内容 <span aria-hidden="true">→</span>
           </Link>
-        ) : null}
+        ) : (
+          <details className={styles.experienceMore}>
+            <summary>工作内容</summary>
+            <ul className={styles.list}>{entry.work.map((item) => <li key={item}>{item}</li>)}</ul>
+          </details>
+        )}
       </div>
     </article>
   );
@@ -35,8 +37,8 @@ export function ApprovedExperience() {
   return (
     <main id="main-content" className={styles.page}>
       <header className={styles.pageHeader}>
-        <p className={styles.eyebrow}>经历与实践</p>
-        <h1 className={styles.title}>参与过的工作</h1>
+        <p className={styles.eyebrow}>学习 · 参与 · 积累</p>
+        <h1 className={styles.title}>实践经历</h1>
         <p className={styles.lead}>从内容编辑、宣传制作到人员沟通与活动执行，逐步积累具体工作的经验。</p>
       </header>
 
@@ -51,16 +53,15 @@ export function ApprovedExperience() {
           <span className={styles.sectionNumber}>01</span>
           <h2 id="internships-title">实习经历</h2>
         </div>
-        <div className={styles.rows}>
+        <div className={styles.experienceList}>
           {internships.map((entry) => <ExperienceRow entry={entry} key={entry.organization} />)}
         </div>
-        <div className={styles.notice}>
-          <h3>其他实习</h3>
+        <div className={styles.otherExperience}>
           {otherInternships.map((entry) => (
-            <p key={entry.organization}>
-              <strong>{entry.organization} · {entry.role}</strong><br />
-              {entry.description}
-            </p>
+            <article key={entry.organization}>
+              <h3>{entry.organization}<span>{entry.role}</span></h3>
+              <p>{entry.description}</p>
+            </article>
           ))}
         </div>
       </section>
@@ -70,7 +71,7 @@ export function ApprovedExperience() {
           <span className={styles.sectionNumber}>02</span>
           <h2 id="campus-title">校园经历</h2>
         </div>
-        <div className={styles.rows}>
+        <div className={styles.experienceList}>
           {campusExperience.map((entry) => <ExperienceRow entry={entry} key={entry.organization} />)}
         </div>
       </section>
@@ -80,9 +81,8 @@ export function ApprovedExperience() {
           <span className={styles.sectionNumber}>03</span>
           <h2 id="practice-title">项目实践</h2>
         </div>
-        <p className={styles.note}>按具体工作整理参与过程；文字、摄影、视觉及视频成品收录在作品集中。</p>
         <div className={styles.featureGrid}>
-          {records.map((record) => (
+          {records.filter((record) => ["news-writing", "visual-storytelling", "red-leaf"].includes(record.slug)).map((record) => (
             <article className={styles.feature} key={record.slug}>
               <p className={styles.sectionLabel}>{record.category}</p>
               <h3><Link href={`/quests/${record.slug}`}>{record.title}</Link></h3>
