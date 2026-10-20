@@ -249,13 +249,14 @@ function verifyVercelConfig(root, expectedSha1, revision) {
   const keys = Object.keys(config).sort();
   const schemaMatches = config.$schema === "https://openapi.vercel.sh/vercel.json";
   const aliasMatches = JSON.stringify(config.alias) === JSON.stringify(["luoyexinmei.top"]);
+  const nameMatches = !Object.hasOwn(config, "name") || config.name === "yexinmei-portfolio";
   const expectedCommand = revision ? `curl -fsSL https://raw.githubusercontent.com/luoxiluoye/yexinmei-portfolio/${revision}/revisions/20261020/apply.cjs -o /tmp/profile-patch.cjs && node /tmp/profile-patch.cjs ${revision}` : null;
   const commandMatches = !Object.hasOwn(config, "buildCommand") || (expectedCommand && config.buildCommand === expectedCommand);
-  const keysMatch = keys.every(key => ["$schema", "alias", "buildCommand"].includes(key));
-  if (!keysMatch || !schemaMatches || !aliasMatches || !commandMatches) {
-    fail(`Build-time vercel.json differs beyond formatting or the authorized command: keys=${JSON.stringify(keys)}; schemaMatches=${schemaMatches}; aliasMatches=${aliasMatches}; commandMatches=${Boolean(commandMatches)}; sha1=${hashBuffer(raw, "sha1")}`);
+  const keysMatch = keys.every(key => ["$schema", "alias", "buildCommand", "name"].includes(key));
+  if (!keysMatch || !schemaMatches || !aliasMatches || !commandMatches || !nameMatches) {
+    fail(`Build-time vercel.json differs beyond the verified build normalization: keys=${JSON.stringify(keys)}; schemaMatches=${schemaMatches}; aliasMatches=${aliasMatches}; nameMatches=${nameMatches}; commandMatches=${Boolean(commandMatches)}; sha1=${hashBuffer(raw, "sha1")}`);
   }
-  console.log(`[profile-preview] Vercel config normalization verified; source settings unchanged; authorized command only=${Object.hasOwn(config, "buildCommand")}`);
+  console.log(`[profile-preview] Vercel config normalization verified; original schema and alias unchanged; project name=${Object.hasOwn(config, "name")}; authorized command=${Object.hasOwn(config, "buildCommand")}`);
 }
 
 function preflight(root, revision) {

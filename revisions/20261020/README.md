@@ -33,6 +33,11 @@ and after the original `npm run build`, and aborts if protected bytes change.
 It never uploads source, reads credentials, changes environment variables, or
 changes project settings itself.
 
+The hosted build adds the known project `name` to `vercel.json`. Identity checks
+allow only the original schema and alias, this exact project name, and an exact
+pinned build command if present. The runtime config bytes remain protected for
+the entire patch and build. Other changes are rejected.
+
 ## Regenerate the patch
 
 After editing only the authorized files:
