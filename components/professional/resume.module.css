@@ -1,4 +1,5 @@
 /* Locally scoped: the portfolio and its inherited styles remain independent. */
+:global(html):has(.page){scroll-padding-top:110px}
 .page.page {
   --resume-ink:#33312e; --resume-text:#55514c; --resume-muted:#78716a;
   --resume-accent:#914c40; --resume-line:#e0dcd5; --resume-paper:#faf8f3; --resume-tint:#f2ede5;
@@ -15,7 +16,7 @@
 .page.page a:focus-visible,.page.page button:focus-visible,.page.page summary:focus-visible{outline:2px solid var(--resume-accent);outline-offset:5px}
 .page.page a,.page.page button{touch-action:manipulation}
 .page.page img{display:block;max-width:100%;height:auto}
-.page.page :is(section,article)[id]{scroll-margin-top:110px}
+.page.page :is(section,article)[id]{scroll-margin-top:0}
 .page.page .eyebrow{display:flex;align-items:center;gap:12px;color:var(--resume-accent);font-size:13px;letter-spacing:.13em}
 .page.page .marker{display:inline-block;width:22px;height:2px;background:var(--resume-accent)}
 .page.page .meta{display:flex;flex-wrap:wrap;gap:8px 0;color:var(--resume-muted);font-size:13px}
