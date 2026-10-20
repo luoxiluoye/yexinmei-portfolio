@@ -1,30 +1,8 @@
-import { HeroSection } from "@/components/home/hero-section";
-import { MiniPlayerCard } from "@/components/home/mini-player-card";
-import { QuestLogPreview } from "@/components/home/quest-log-preview";
-import { SkillsPreview } from "@/components/home/skills-preview";
-import { StatusBar } from "@/components/ui/status-bar";
+import { ApprovedHome } from "@/components/professional/approved-home";
+import { buildPageMetadata } from "@/lib/site-metadata";
 
-export default function HomePage() {
-  return (
-    <main id="main-content">
-      <HeroSection />
+export const metadata = buildPageMetadata({"title": "个人履历与实践记录", "description": "罗叶馨梅，电子科技大学新闻与传播硕士在读、2027 届毕业生。校园宣传、文字采编与组织协调实践。", "path": "/"});
 
-      <section className="site-container mt-4 grid gap-4 lg:mt-5 lg:grid-cols-[30fr_38fr_32fr] lg:gap-[18px]">
-        <MiniPlayerCard />
-        <QuestLogPreview />
-        <SkillsPreview />
-      </section>
-
-      <div className="site-container mt-4 pb-8 lg:mt-5 lg:pb-0">
-        <StatusBar
-          items={[
-            { label: "PLAYER", value: "YEXINMEI" },
-            { label: "STATUS", value: "ONLINE", accent: true },
-            { label: "MAIN QUEST", value: "RED LEAF" },
-            { label: "MODE", value: "BUILDING" },
-          ]}
-        />
-      </div>
-    </main>
-  );
+export default function Page() {
+  return <ApprovedHome />;
 }

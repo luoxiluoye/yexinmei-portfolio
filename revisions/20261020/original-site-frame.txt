@@ -1,0 +1,18 @@
+"use client";
+
+import type { ReactNode } from "react";
+import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const SystemOverlays = dynamic(() => import("@/components/game/system-overlays").then(module => module.SystemOverlays), { ssr: false });
+const AchievementToaster = dynamic(() => import("@/components/game/achievement-toaster").then(module => module.AchievementToaster), { ssr: false });
+
+export function SiteFrame({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const creative = ["/portfolio", "/inventory", "/journal"].some(path => pathname === path || pathname.startsWith(`${path}/`));
+
+  return <div className={creative ? "site-mode-creative" : "site-mode-professional"}>
+    {children}
+    {creative && <><SystemOverlays /><AchievementToaster /></>}
+  </div>;
+}

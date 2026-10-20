@@ -1,11 +1,8 @@
+import type { ReactNode } from "react";
 import { buildPageMetadata } from "@/lib/site-metadata";
 
-export const metadata = buildPageMetadata({
-  title: "项目经历与作品",
-  description: "罗叶馨梅的项目与实践：内容运营、社区运营、新媒体、国际传播、科技内容、AI 工作流与个人项目。",
-  path: "/quests",
-});
+export const metadata = buildPageMetadata({"title": "实践经历", "description": "罗叶馨梅的实习、校园任职及项目实践：宣传采编、内容运营、党群工作与组织协调。", "path": "/quests"});
 
-export default function QuestsLayout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
   return children;
 }

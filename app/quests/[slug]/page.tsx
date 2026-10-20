@@ -1,110 +1,33 @@
-import { PhotographyArchive } from "@/components/quests/photography-archive";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-
-import { QuestVisitAchievement } from "@/components/game/quest-visit-achievement";
 import { getQuestBySlug, getQuestSlugs } from "@/data/quests";
 import { buildPageMetadata } from "@/lib/site-metadata";
-import { QuestContext } from "@/components/quests/quest-context";
-import { QuestDetailSidebar } from "@/components/quests/quest-detail-sidebar";
-import { QuestGallery } from "@/components/quests/quest-gallery";
-import { QuestHero } from "@/components/quests/quest-hero";
-import { QuestMeta } from "@/components/quests/quest-meta";
-import { QuestOutcomes } from "@/components/quests/quest-outcomes";
-import { QuestRealCaseSection } from "@/components/quests/quest-real-case";
-import { QuestSection } from "@/components/quests/quest-section";
-import { PixelButton } from "@/components/ui/pixel-button";
+import { getPracticeRecord, records } from "@/components/professional/resume-content";
+import { PracticeDetail } from "@/components/professional/practice-details";
+import { LegacyPractice, legacyPracticeTitle } from "@/components/professional/legacy-practice";
 
-type QuestPageProps = {
-  params: Promise<{ slug: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
-  return getQuestSlugs();
+  return Array.from(new Set([...getQuestSlugs().map(item => item.slug), ...records.map(item => item.slug)]))
+    .filter(slug => slug !== "red-leaf")
+    .map(slug => ({ slug }));
 }
 
-export async function generateMetadata({ params }: QuestPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const quest = getQuestBySlug(slug);
-
-  if (!quest) return { title: "Quest Not Found", robots: { index: false, follow: false } };
-
-  return buildPageMetadata({
-    title: quest.title,
-    description: quest.summary,
-    path: `/quests/${slug}`,
-  });
+  const curated = getPracticeRecord(slug);
+  const legacy = getQuestBySlug(slug);
+  const record = curated ?? legacy;
+  if (!record) return { title: "未找到这段经历", robots: { index: false, follow: false } };
+  const title = curated?.title ?? (legacy ? legacyPracticeTitle(legacy) : record.title);
+  return buildPageMetadata({ title, description: record.summary, path: `/quests/${slug}` });
 }
 
-export default async function QuestPage({ params }: QuestPageProps) {
+export default async function Page({ params }: Props) {
   const { slug } = await params;
+  if (getPracticeRecord(slug)) return <PracticeDetail slug={slug} />;
   const quest = getQuestBySlug(slug);
-
   if (!quest) notFound();
-
-  return (
-    <main id="main-content" className="site-container portfolio-page case-file py-4 lg:py-8">
-      <QuestVisitAchievement slug={slug} />
-
-      <div className="sticky top-[calc(var(--rpg-mobile-header-height)+var(--rpg-mobile-level-height))] z-30 -mx-4 mb-3 border-b border-divider bg-background px-4 lg:hidden">
-        <div className="flex min-h-11 items-center justify-between gap-3">
-          <Link
-            href="/quests"
-            className="inline-flex min-h-11 items-center font-pixel text-[10px] text-foreground transition-[transform,color] hover:-translate-x-px hover:-translate-y-px hover:text-accent"
-          >
-            ← 返回项目
-          </Link>
-          <p className="shrink-0 font-pixel text-[9px] text-muted">04. QUEST DETAIL</p>
-        </div>
-      </div>
-
-      <div className="hidden lg:block">
-        <p className="font-pixel text-[11px] text-muted">04. QUEST DETAIL</p>
-        <PixelButton href="/quests" variant="secondary" size="sm" className="mt-3">
-          ← 返回全部项目
-        </PixelButton>
-      </div>
-
-      <div className="mt-3">
-        <QuestHero quest={quest} />
-      </div>
-
-      <nav aria-label="项目章节快捷入口" className="case-jump-links lg:hidden">
-        <a href="#quick-look">项目概览</a>
-        {slug === "visual-storytelling" && <a href="#photography">摄影作品</a>}
-        <a href="#context">项目背景</a><a href="#actions">我的工作</a><a href="#outcomes">结果与收获</a>
-      </nav>
-
-      <section className="case-file__layout mt-4 grid gap-4 pb-8 lg:mt-8 lg:grid-cols-[72fr_28fr] lg:gap-5 lg:pb-0">
-        <article className="min-w-0">
-          <QuestMeta quest={quest} />
-          {slug === "visual-storytelling" && <PhotographyArchive />}
-
-          <div className="case-file__body mt-4">
-            <QuestContext quest={quest} index={2} />
-            <QuestSection id="actions" index={3} label="WHAT I DID" title="我实际做了什么" bullets={quest.actions} />
-            {quest.realCase && <QuestRealCaseSection realCase={quest.realCase} index={4} />}
-            <QuestOutcomes index={5} outcomes={quest.outcomes} metrics={quest.outcomeMetrics} />
-            <QuestSection id="learnings" index={6} label="LEARNINGS" title="复盘与收获" content={quest.learnings} />
-            <QuestGallery gallery={quest.gallery} />
-          </div>
-
-          <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-            <PixelButton href="/quests" variant="primary" className="w-full sm:w-auto">
-              返回项目
-            </PixelButton>
-            <PixelButton href="/contact" variant="secondary" className="w-full sm:w-auto">
-              联系我
-            </PixelButton>
-          </div>
-        </article>
-
-        <aside className="hidden lg:block">
-          <QuestDetailSidebar photography={slug === "visual-storytelling"} />
-        </aside>
-      </section>
-    </main>
-  );
+  return <LegacyPractice quest={quest} />;
 }
-
