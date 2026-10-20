@@ -78,6 +78,34 @@ repeating them; skills use two open columns; journal entries follow a single
 reading column. Contact uses the second generated image and a prominent email.
 All new styling remains scoped to the non-portfolio page root.
 
+### Verified visual follow-up
+
+- URL: https://yexinmei-portfolio-3xfeafw8c-luoyes-projects-a7639a71.vercel.app/
+- Deployment: `dpl_BzsmKUz9uDndEokDKKLcEcKwuFBM`; READY; preview (`target: null`).
+- Build patch commit: `3f9f275356559591f23fccf1c8c356ff5747dec3`.
+- The final build generated 31 static pages and finished successfully. The 442
+  protected original files retain the same manifest before patching, after
+  patching and after build:
+  `79db1cd9486e488b70b58e05e2861f0be86a8268305c0367fcc0dfb92116a15e`.
+- Both image payloads were retrieved from the pinned commit and verified. The
+  homepage hero is 1536 x 1024 / 121270 bytes. The contact image is 2172 x 724 /
+  76088 bytes. WebP conversion retained their dimensions without retouching.
+- Desktop visual review covered home, profile, experience, contact, skills and
+  journal. Email and WeChat copy produced correct text and success feedback;
+  experience disclosure and detail navigation worked; journal article navigation
+  worked. All eight curated practices retain an entry point.
+- Review found and fixed a stale contact-row padding rule, and a sticky-navigation
+  overlap after entering an inner page from the homepage footer. The final browser
+  check measured the skills title at 184 px, below the 95 px navigation, with
+  `scrollY=0`. The scroll offset uses `html:has(.page)` and becomes `auto` on the
+  portfolio route; no professional page root is present there.
+- The original photography view still exposes 35 photo controls. The inspection
+  browser's known WebGL limitation remains; no portfolio renderer was changed.
+- Mobile breakpoints received code review. A separate phone viewport was not
+  available in this browser environment.
+- Production `luoyexinmei.top` remains on the original deployment; this link is a
+  separately reviewable preview.
+
 ### Previously verified preview
 
 - URL: https://yexinmei-portfolio-r4fe02r48-luoyes-projects-a7639a71.vercel.app/
