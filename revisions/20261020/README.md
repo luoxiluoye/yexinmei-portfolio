@@ -24,7 +24,7 @@ The preview is built from the complete original deployment
 commit of this branch as the deployment build command. The deployment target is
 preview; the production custom domain is not promoted or reassigned.
 
-`apply.cjs` embeds 24 explicitly approved source files, and downloads two exact
+`apply.cjs` embeds 25 explicitly approved source files, and downloads two exact
 new image paths from the same immutable GitHub commit. The image sizes, WebP
 headers and SHA256 checksums are checked before writing. New paths must be absent;
 existing assets cannot be replaced. It also changes exactly
@@ -77,6 +77,48 @@ portrait in the about page. Experience lists link to their details instead of
 repeating them; skills use two open columns; journal entries follow a single
 reading column. Contact uses the second generated image and a prominent email.
 All new styling remains scoped to the non-portfolio page root.
+
+### Compact contact and UI details
+
+The next follow-up keeps the accepted warm editorial direction and adds a small,
+consistent UI vocabulary in `editorial-ui.tsx`: decorative line icons in muted
+brick, bronze and sage; compact numbered section labels; tool tags; and a few
+contextual emoji. No dependency or factual resume content was added.
+
+Contact now uses a normal page heading with a 176 x 110 decorative image, a short
+profile aside, and three aligned contact rows. The desktop email is 23 px instead
+of 42 px. Copy controls retain the original guarded asynchronous logic and now
+show a checkmark and muted green success state. Experience disclosures expose
+plus/minus indicators; tool chips wrap naturally; reduced-motion preferences and
+visible keyboard focus remain supported.
+
+- URL: https://yexinmei-portfolio-if36ojb9p-luoyes-projects-a7639a71.vercel.app/
+- Contact: https://yexinmei-portfolio-if36ojb9p-luoyes-projects-a7639a71.vercel.app/contact
+- Deployment: `dpl_GrJKjc7SR712ZwvGKG5VZ6yqKH2t`; READY; preview (`target: null`).
+- Build patch commit: `21157054d84bb685bef4305378799930024b7ddb`.
+- Patch includes 25 explicitly approved source files, two exact shared route
+  edits, and the same two pinned new images: 29 writes in total.
+- The 442 protected original files have the same manifest before the patch,
+  after the patch and after the successful build:
+  `79db1cd9486e488b70b58e05e2861f0be86a8268305c0367fcc0dfb92116a15e`.
+- TypeScript, patch syntax and whitespace checks passed. An independent source
+  review checked responsive contact widths, mobile feature cards, icon/title
+  specificity, and nested tool-tag spacing. The project-category specificity
+  issue found in review was corrected before deployment.
+- Desktop browser inspection covered home, contact, profile, capabilities,
+  journal and experience. Contact has nine small SVG elements, a 36 px heading
+  and 23 px email; the heading is fully below the 95 px navigation. No horizontal
+  overflow was observed. Navigation from a lower-page link to capabilities still
+  restores the title below the sticky navigation (184 px from the viewport top).
+- Email and WeChat copy show success and yield their correct clipboard strings.
+  Clipboard reads are taken after the browser bridge has synchronized, in a
+  separate observation call. Experience expands by click and collapses by Enter,
+  with matching minus/plus indicators; section navigation reaches its target.
+- Portfolio retains `portfolio-studio-page`, has zero professional module classes,
+  and root scroll padding returns to `auto`. Its photography route still exposes
+  35 photo controls. The existing inspection-browser WebGL limitation is unchanged.
+- Mobile layouts were reviewed in source; this environment did not provide a
+  separate phone viewport. Production remains on the original deployment.
 
 ### Verified visual follow-up
 
