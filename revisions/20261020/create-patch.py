@@ -239,7 +239,26 @@ function validateEmbedded() {
   for (const relative of [...spec.protectedRoots, ...spec.protectedRootFiles, ...Object.keys(spec.originalSha1)]) assertRelative(relative);
 }
 
-function preflight(root) {
+function verifyVercelConfig(root, expectedSha1, revision) {
+  const raw = fs.readFileSync(locate(root, "vercel.json"));
+  if (hashBuffer(raw, "sha1") === expectedSha1) return;
+  let config;
+  try { config = JSON.parse(raw.toString("utf8")); }
+  catch { fail("The build-time vercel.json is not valid JSON"); }
+  if (!config || Array.isArray(config) || typeof config !== "object") fail("Unexpected build-time Vercel config");
+  const keys = Object.keys(config).sort();
+  const schemaMatches = config.$schema === "https://openapi.vercel.sh/vercel.json";
+  const aliasMatches = JSON.stringify(config.alias) === JSON.stringify(["luoyexinmei.top"]);
+  const expectedCommand = revision ? `curl -fsSL https://raw.githubusercontent.com/luoxiluoye/yexinmei-portfolio/${revision}/revisions/20261020/apply.cjs -o /tmp/profile-patch.cjs && node /tmp/profile-patch.cjs ${revision}` : null;
+  const commandMatches = !Object.hasOwn(config, "buildCommand") || (expectedCommand && config.buildCommand === expectedCommand);
+  const keysMatch = keys.every(key => ["$schema", "alias", "buildCommand"].includes(key));
+  if (!keysMatch || !schemaMatches || !aliasMatches || !commandMatches) {
+    fail(`Build-time vercel.json differs beyond formatting or the authorized command: keys=${JSON.stringify(keys)}; schemaMatches=${schemaMatches}; aliasMatches=${aliasMatches}; commandMatches=${Boolean(commandMatches)}; sha1=${hashBuffer(raw, "sha1")}`);
+  }
+  console.log(`[profile-preview] Vercel config normalization verified; source settings unchanged; authorized command only=${Object.hasOwn(config, "buildCommand")}`);
+}
+
+function preflight(root, revision) {
   const rootStat = fs.lstatSync(root);
   if (!rootStat.isDirectory() || rootStat.isSymbolicLink()) fail("Build root must be a regular directory");
   // The materialized source starts at app/, components/, etc., never src/app/.
@@ -248,7 +267,8 @@ function preflight(root) {
     if (!fs.lstatSync(absolute).isDirectory()) fail(`Required source directory is unavailable: ${relative}`);
   }
   for (const [relative, expected] of Object.entries(spec.originalSha1)) {
-    if (hashFile(root, relative, "sha1") !== expected) fail(`Original deployment SHA1 mismatch: ${relative}`);
+    if (relative === "vercel.json") verifyVercelConfig(root, expected, revision);
+    else if (hashFile(root, relative, "sha1") !== expected) fail(`Original deployment SHA1 mismatch: ${relative}`);
   }
   for (const relative of spec.mustBeAbsent) {
     const absolute = locate(root, relative, { allowMissing: true });
@@ -354,10 +374,11 @@ function verifyWritten(root, writes) {
 
 function main() {
   const arguments_ = process.argv.slice(2);
-  if (arguments_.some(value => value !== "--verify-only") || arguments_.length > 1) fail("Only the optional --verify-only argument is supported");
+  if (arguments_.length > 1 || (arguments_.length && arguments_[0] !== "--verify-only" && !/^[0-9a-f]{40}$/.test(arguments_[0]))) fail("Only --verify-only or the pinned revision SHA is supported");
+  const revision = /^[0-9a-f]{40}$/.test(arguments_[0] || "") ? arguments_[0] : null;
   validateEmbedded();
   const root = process.cwd();
-  preflight(root);
+  preflight(root, revision);
   const excluded = new Set([...spec.approvedWrites, ...spec.sharedPatches]);
   const writes = spec.files.map(item => [item.path, Buffer.from(item.content, "utf8")]);
   for (const relative of spec.sharedPatches) {
